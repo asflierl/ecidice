@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 
-import de.i0n.concurrent.GuardedBy;
 import de.i0n.concurrent.ThreadSafe;
 
 /**
@@ -28,10 +27,7 @@ public final class Localizer {
     private static final String SCOPES_PACKAGE_NAME_FORMAT = "%s.scopes.%s";
     private static final Localizer instance = new Localizer();
     
-    @GuardedBy("instance") private final Map<Scope, ScopeResource<?>> bundles =
-        new EnumMap<Scope, ScopeResource<?>>(Scope.class);
-    
-    @GuardedBy("instance") private Locale locale;
+    private volatile Map<Scope, ScopeResource<?>> bundles;
     
     /**
      * Creates a the sole instance of this class, setting English as initial
@@ -50,51 +46,54 @@ public final class Localizer {
      * <p>
      * Contains some assertions to ensure type safety at runtime.
      * 
-     * @param loc the new locale to set
+     * @param locale the new locale to set
      */
     @SuppressWarnings("unchecked") // type safety ensured at runtime
-    private void reset(Locale loc) {
-        synchronized (instance) {
-            bundles.clear();
-            locale = loc;
-            
-            for (Scope scope : Scope.values()) {
-                final Class<?> type;
-                try {
-                    type = Class.forName(String.format(
-                            SCOPES_PACKAGE_NAME_FORMAT, 
-                            getClass().getPackage().getName(),
-                            scope.name()));
-                } catch (ClassNotFoundException exc) {
-                    throw new AssertionError("scope '" + scope 
-                            + "' should have a corresponding class");
-                }
-                        
-                assert type.isEnum() : "type should be an enum";
-                assert L10nEnum.class.isAssignableFrom(type) 
-                    : "type should implement L10nEnum";
-                
-                put(scope, type.asSubclass(Enum.class));
+    private void reset(Locale locale) {
+        final Map<Scope, ScopeResource<?>> scopes = 
+            new EnumMap<Scope, ScopeResource<?>>(Scope.class);
+           
+        for (Scope scope : Scope.values()) {
+            final Class<?> type;
+            try {
+                type = Class.forName(String.format(
+                        SCOPES_PACKAGE_NAME_FORMAT, 
+                        getClass().getPackage().getName(),
+                        scope.name()));
+            } catch (ClassNotFoundException exc) {
+                throw new AssertionError("scope '" + scope 
+                        + "' should have a corresponding class");
             }
+                    
+            assert type.isEnum() : "type should be an enum";
+            assert L10nEnum.class.isAssignableFrom(type) 
+                : "type should implement L10nEnum";
+            assert !scopes.containsKey(scope) 
+                : "scope should only be used once";
+ 
+            scopes.put(scope, load(type.asSubclass(Enum.class), locale));            
         }
+        
+        bundles = scopes;
     }
     
     /**
      * Creates a new {@link ScopeResource} for the supplied scope and enum type
-     * and stores it in {@link #bundles}.
+     * and returns it.
      * 
      * @param <T> the enum type associated with the scope
-     * @param scope the scope to load and store
      * @param type the enum type's class
+     * @param locale the locale to use
+     * @return the newly constructed {@link ScopeResource}
      */
-    private <T extends Enum<T>> void put(Scope scope, Class<T> type) {
-        assert !bundles.containsKey(scope) : "scope should only be used once";
-        
-        bundles.put(scope, new ScopeResource<T>(type, locale));
+    private <T extends Enum<T>> ScopeResource<T> load(Class<T> type, 
+            Locale locale) {
+        return new ScopeResource<T>(type, locale);
     }
     
     /**
-     * Sets a new (global) locale.
+     * Sets a new (global) locale reloading all localized strings for the new
+     * locale.
      * 
      * @param locale the new locale
      */
@@ -112,8 +111,6 @@ public final class Localizer {
      * @return a localised string, associated with <code>key</code>
      */
     public static <T extends Enum<T> & L10nEnum> String get(T key) {
-        synchronized (instance) {
-            return instance.bundles.get(key.getScope()).get(key);
-        }
+        return instance.bundles.get(key.getScope()).get(key);
     }
 }

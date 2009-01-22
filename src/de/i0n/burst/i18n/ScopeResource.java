@@ -2,6 +2,8 @@ package de.i0n.burst.i18n;
 
 import java.util.*;
 
+import de.i0n.concurrent.Immutable;
+
 /**
  * Works like a {@link ResourceBundle} for receiving translated strings, but
  * uses enum keys instead of strings as keys for faster access times.
@@ -10,6 +12,7 @@ import java.util.*;
  *
  * @param <T> the l10n enum type
  */
+@Immutable
 class ScopeResource <T extends Enum<T>> {
     private Map<?, String> strings;
     
