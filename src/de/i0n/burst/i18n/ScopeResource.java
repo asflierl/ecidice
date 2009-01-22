@@ -27,11 +27,15 @@ class ScopeResource <T extends Enum<T>> {
         final ResourceBundle bundle = ResourceBundle.getBundle(type.getName(), 
                 locale);
         
-        final Set<String> rscKeys = 
+        final Set<String> bundleKeys = 
             new HashSet<String>(Collections.list(bundle.getKeys()));
         
-        for (T key : type.getEnumConstants()) {
-            assert rscKeys.contains(key.name());
+        final Set<T> enumKeys = EnumSet.allOf(type);
+        
+        assert bundleKeys.equals(enumKeys) : 
+            "enum keys should match the ones in the associated bundle";
+        
+        for (T key : enumKeys) {
             map.put(key, bundle.getString(key.name()));
         }
         
