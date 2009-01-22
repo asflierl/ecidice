@@ -57,5 +57,9 @@
  * Any republication or derived work distributed in source code form
  * must include the copyright and license notice.
  * </p>
+ * <p>
+ * i0n: Code in this package imported from jcip.net and changed because I did 
+ * not like the runtime retention policy of thes annotations.
+ * </p>
  */
-package net.jcip.annotations;
+package de.i0n.concurrent;

@@ -1,5 +1,7 @@
-package net.jcip.annotations;
-import java.lang.annotation.*;
+/*
+ * Code imported from jcip.net and changed because I did not like the runtime
+ * retention policy of these annotations. Original license notice below. 
+ */
 
 /*
  * Copyright (c) 2005 Brian Goetz and Tim Peierls
@@ -11,7 +13,8 @@ import java.lang.annotation.*;
  * must include this copyright and license notice.
  */
 
-
+package de.i0n.concurrent;
+import java.lang.annotation.*;
 
 /**
  * The class to which this annotation is applied is thread-safe.  This means that

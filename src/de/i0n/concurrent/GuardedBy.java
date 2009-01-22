@@ -1,4 +1,9 @@
 /*
+ * Code imported from jcip.net and changed because I did not like the runtime
+ * retention policy of these annotations. Original license notice below. 
+ */
+
+/*
  * Copyright (c) 2005 Brian Goetz and Tim Peierls
  * Released under the Creative Commons Attribution License
  *   (http://creativecommons.org/licenses/by/2.5)
@@ -8,7 +13,7 @@
  * must include this copyright and license notice.
  */
 
-package net.jcip.annotations;
+package de.i0n.concurrent;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
