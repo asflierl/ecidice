@@ -1,16 +1,17 @@
 package de.i0n.burst;
+import static de.i0n.burst.i18n.Localizer.localize;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import com.jme.app.AbstractGame.ConfigShowMode;
 import com.jme.math.Vector3f;
 import com.jme.util.GameTaskQueueManager;
+import com.jmex.editors.swing.settings.GameSettingsPanel;
 import com.jmex.game.StandardGame;
 import com.jmex.game.state.DebugGameState;
 import com.jmex.game.state.GameStateManager;
 
-import de.i0n.burst.i18n.Localizer;
 import de.i0n.burst.i18n.scopes.Application;
 import de.i0n.burst.shape.Bubble;
 
@@ -21,12 +22,14 @@ public class App {
     }
         
     public void init() {
-        StandardGame app = new StandardGame(Localizer.get(Application.AppName));
-        app.setConfigShowMode(ConfigShowMode.NeverShow);
-        app.getSettings().setWidth(1024);
-        app.getSettings().setHeight(768);
-        app.getSettings().setDepth(32);
-        app.getSettings().setFullscreen(true);
+        StandardGame app = new StandardGame(localize(Application.AppName));
+        
+        try {
+            GameSettingsPanel.prompt(app.getSettings(), localize(Application.AppName));
+        } catch (InterruptedException exc) {
+            System.exit(1);
+        }
+        
         app.start();
         
         DebugGameState gameState = new DebugGameState();

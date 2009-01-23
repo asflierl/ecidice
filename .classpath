@@ -62,10 +62,7 @@
 			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jogl/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="lib/jogl/jogl.jar"/>
 	<classpathentry kind="lib" path="lib/jorbis/jorbis-0.0.17.jar"/>
-	<classpathentry kind="lib" path="lib/junit/junit-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/jinput.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util_applet.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util.jar"/>

@@ -110,7 +110,7 @@ public final class Localizer {
      * @param key the key specifying the string to translate
      * @return a localised string, associated with <code>key</code>
      */
-    public static <T extends Enum<T> & L10nEnum> String get(T key) {
+    public static <T extends Enum<T> & L10nEnum> String localize(T key) {
         return instance.bundles.get(key.getScope()).get(key);
     }
 }
