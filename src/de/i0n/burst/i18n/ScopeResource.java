@@ -32,10 +32,14 @@ class ScopeResource <T extends Enum<T>> {
         
         final Set<String> bundleKeys = 
             new HashSet<String>(Collections.list(bundle.getKeys()));
-        
         final Set<T> enumKeys = EnumSet.allOf(type);
+        final Set<String> enumNames = new HashSet<String>(enumKeys.size());
         
-        assert bundleKeys.equals(enumKeys) : 
+        for (T key : enumKeys) {
+            enumNames.add(key.name());
+        }
+        
+        assert bundleKeys.equals(enumNames) : 
             "enum keys should match the ones in the associated bundle";
         
         for (T key : enumKeys) {
