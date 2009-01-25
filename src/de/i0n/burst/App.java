@@ -1,64 +1,35 @@
 package de.i0n.burst;
 import static de.i0n.burst.i18n.Localizer.localize;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import com.jme.math.Vector3f;
-import com.jme.util.GameTaskQueueManager;
 import com.jmex.editors.swing.settings.GameSettingsPanel;
 import com.jmex.game.StandardGame;
-import com.jmex.game.state.DebugGameState;
 import com.jmex.game.state.GameStateManager;
 
 import de.i0n.burst.i18n.scopes.Application;
-import de.i0n.burst.shape.Bubble;
+import de.i0n.burst.scene.World;
 
 public class App {
     
     public static void main(String[] args) throws Exception {
+        System.setProperty("jme.stats", "set");
         new App().init();
     }
         
     public void init() {
-        StandardGame app = new StandardGame(localize(Application.AppName));
+        StandardGame game = new StandardGame(localize(Application.AppName));
         
         try {
-            GameSettingsPanel.prompt(app.getSettings(), localize(Application.AppName));
+            if (GameSettingsPanel.prompt(game.getSettings(), 
+                    localize(Application.AppName)) == false) {
+                System.exit(0);
+            }
         } catch (InterruptedException exc) {
             System.exit(1);
         }
         
-        app.start();
-        
-        DebugGameState gameState = new DebugGameState();
-        GameStateManager.getInstance().attachChild(gameState);
-        gameState.setActive(true);
-        
-        app.getCamera().setLocation(new Vector3f(0f, 0f, 40f));
-        
-        final List<Bubble> bubbles = new ArrayList<Bubble>();
-        for (int ring = 0; ring < Bubble.MAXINDEX; ++ring) {
-            for (int index = 0; index < Bubble.MAXINDEX; ++index) {
-                bubbles.add(new Bubble(ring, index));
-            }
-        }
-        
-        GameTaskQueueManager.getManager().update(new Callable<Void>() {
-            public Void call() {
-                for (Bubble obj : bubbles) {
-                    obj.lock();
-                }
-                return null;
-            }
-        });
-        
-        for (Bubble obj : bubbles) {
-            obj.updateRenderState();
-            gameState.getRootNode().attachChild(obj);
-        }
-        
-        gameState.getRootNode().updateRenderState();
+        game.start();
+        World world = new World(game);
+        GameStateManager.getInstance().attachChild(world);
+        world.setActive(true);
     }
 }
