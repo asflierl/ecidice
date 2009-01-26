@@ -11,6 +11,11 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
+/**
+ * Represents a single bubble on the game board.
+ * 
+ * @author i0n
+ */
 public class Bubble extends Node {
     private static final long serialVersionUID = 1L;
     private static final float R = 1f;   // radius
@@ -22,6 +27,13 @@ public class Bubble extends Node {
     private final int column;
     private final int maxindex;
     
+    /**
+     * Creates a new bubble and places it on the board.
+     * 
+     * @param row the row this bubble is in
+     * @param column the column this bubble is in
+     * @param maxindex the maximum number of columns and rows
+     */
     public Bubble(int row, int column, int maxindex) {
         super(String.format("BubbleNode-%d-%d", row, column));
         this.row = row;
@@ -35,6 +47,11 @@ public class Bubble extends Node {
         updateRenderState();
     }
     
+    /**
+     * Creates and returns the surrounding sphere.
+     * 
+     * @return a new, transparent sphere
+     */
     private Sphere createSphere() {
         Sphere sphere = new Sphere(String.format("Bubble-%d-%d", row, column));
         
@@ -96,7 +113,13 @@ public class Bubble extends Node {
 
         return sphere;
     }
-     
+    
+    /**
+     * Adds a light on top of the sphere.
+     * 
+     * @param sphere the sphere that shall be decorated
+     * @return the newly added light
+     */
     private PointLight addLight(Sphere sphere) {
         PointLight light = new PointLight();
         light.setLocation(sphere.getCenter().add(new Vector3f(R / 2f, R / 2f, 
@@ -108,7 +131,7 @@ public class Bubble extends Node {
         light.setSpecular(ColorRGBA.white);
         light.setDiffuse(ColorRGBA.white);
         light.setLightMask(LightState.MASK_AMBIENT | 
-                LightState.MASK_GLOBALAMBIENT | LightState.MASK_SPECULAR);
+                LightState.MASK_GLOBALAMBIENT);
         light.setEnabled(true);
         
         LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();

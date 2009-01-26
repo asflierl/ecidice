@@ -12,10 +12,18 @@ import com.jme.system.DisplaySystem;
 import com.jmex.game.state.BasicGameStateNode;
 import com.jmex.game.state.GameStateNode;
 
+/**
+ * Represents the game board, i.e. the area with 8 rows of 8 columns of bubbles.
+ * 
+ * @author i0n
+ */
 public class Board extends BasicGameStateNode<GameStateNode<?>> {
     private static final long serialVersionUID = 1L;
     private static final int MAXINDEX = 8;
     
+    /**
+     * Constructs a new game board with all its children objects.
+     */
     public Board() {
         super("game board");
         
@@ -26,6 +34,9 @@ public class Board extends BasicGameStateNode<GameStateNode<?>> {
         rootNode.updateRenderState();
     }
     
+    /**
+     * Adds the 64 bubbles as children to this node.
+     */
     private void addBubbles() {
         final List<Bubble> bubbles = new ArrayList<Bubble>();
         for (int ring = 0; ring < MAXINDEX; ++ring) {
@@ -39,6 +50,9 @@ public class Board extends BasicGameStateNode<GameStateNode<?>> {
         }
     }
      
+    /**
+     * Enables alpha blending for the whole board.
+     */
     private void setupBlending() {
         // Blending
         final BlendState alphaState = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
@@ -52,6 +66,9 @@ public class Board extends BasicGameStateNode<GameStateNode<?>> {
         rootNode.setRenderState(alphaState);
     }
     
+    /**
+     * Adds a specular highlighting point light.
+     */
     private void addHighlights() {
         LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
 
