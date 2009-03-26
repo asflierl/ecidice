@@ -18,7 +18,7 @@ class ScopeResource <T extends Enum<T>> {
     
     /**
      * Creates the resource bundle from the properties file associated with the
-     * specified l10n enum type, reads it's values and stores the enum key to
+     * specified l10n enum type, reads its values and stores the enum key to
      * value associations in an internal map.
      * 
      * @param type the class object of the l10n enum type

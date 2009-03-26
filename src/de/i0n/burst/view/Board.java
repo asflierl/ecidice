@@ -1,4 +1,4 @@
-package de.i0n.burst.scene;
+package de.i0n.burst.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import com.jmex.game.state.GameStateNode;
  */
 public class Board extends BasicGameStateNode<GameStateNode<?>> {
     private static final long serialVersionUID = 1L;
-    private static final int MAXINDEX = 8;
     
     /**
      * Constructs a new game board with all its children objects.
@@ -39,9 +38,9 @@ public class Board extends BasicGameStateNode<GameStateNode<?>> {
      */
     private void addBubbles() {
         final List<Bubble> bubbles = new ArrayList<Bubble>();
-        for (int ring = 0; ring < MAXINDEX; ++ring) {
-            for (int index = 0; index < MAXINDEX; ++index) {
-                bubbles.add(new Bubble(ring, index, MAXINDEX));
+        for (int ring = 0; ring < 8.; ++ring) {
+            for (int index = 0; index < 8; ++index) {
+                bubbles.add(new Bubble(ring, index, 8));
             }
         }
         

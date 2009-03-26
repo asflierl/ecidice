@@ -1,14 +1,12 @@
-package de.i0n.burst.scene;
+package de.i0n.burst.view;
 
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 /**
@@ -18,11 +16,13 @@ import com.jme.system.DisplaySystem;
  */
 public class Bubble extends Node {
     private static final long serialVersionUID = 1L;
+    
     private static final float R = 1f;   // radius
     private static final float D = 2.5f; // distance
     
-    private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 0.25f);
-    
+    //private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 0.25f);
+    private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 1f);
+
     private final int row;
     private final int column;
     private final int maxindex;
@@ -41,7 +41,7 @@ public class Bubble extends Node {
         this.maxindex = maxindex;
         
         Sphere sphere = createSphere();
-        addLight(sphere);
+        //addLight(sphere);
         
         attachChild(sphere);
         updateRenderState();
@@ -60,39 +60,12 @@ public class Bubble extends Node {
         
         sphere.updateGeometry(new Vector3f(xpos, ypos, 0f), 8, 24, R);
 
-        final ColorRGBA color;
-        switch (row) {
-        case 0:
-            color = ColorRGBA.white;
-            break;
-        case 1:
-            color = ColorRGBA.red;
-            break;
-        case 2:
-            color = ColorRGBA.green;
-            break;
-        case 3:
-            color = ColorRGBA.yellow;
-            break;
-        case 4:
-            color = ColorRGBA.blue;
-            break;
-        case 5:
-            color = ColorRGBA.orange;
-            break;
-        case 6:
-            color = ColorRGBA.magenta;
-            break;
-        case 7:
-            color = ColorRGBA.cyan;
-            break;
-        default:
-            color = ColorRGBA.black;
-        }
+        final ColorRGBA color = getColor();
         
         // Material
         MaterialState materialState = DisplaySystem.getDisplaySystem()
             .getRenderer().createMaterialState();
+        materialState.setEmissive(color);
         materialState.setAmbient(ColorRGBA.black.mult(alphaMask));
         materialState.setDiffuse(color.mult(alphaMask));
         materialState.setSpecular(ColorRGBA.white);
@@ -101,7 +74,7 @@ public class Bubble extends Node {
         materialState.setEnabled(true);
         
         sphere.setRenderState(materialState);
-        
+        /*
         sphere.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         
         // ZBuffer
@@ -110,8 +83,36 @@ public class Bubble extends Node {
         z.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
         z.setWritable(false);
         sphere.setRenderState(z);
-
+        */
         return sphere;
+    }
+    
+    /**
+     * Returns the color for this bubble, depending on its row.
+     * 
+     * @return a color for this bubble
+     */
+    private ColorRGBA getColor() {
+        switch (row) {
+        case 0:
+            return ColorRGBA.white;
+        case 1:
+            return ColorRGBA.red;
+        case 2:
+            return ColorRGBA.green;
+        case 3:
+            return ColorRGBA.yellow;
+        case 4:
+            return ColorRGBA.blue;
+        case 5:
+            return ColorRGBA.orange;
+        case 6:
+            return ColorRGBA.magenta;
+        case 7:
+            return ColorRGBA.cyan;
+        default:
+            return ColorRGBA.black;
+        }
     }
     
     /**

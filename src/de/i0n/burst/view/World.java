@@ -1,4 +1,4 @@
-package de.i0n.burst.scene;
+package de.i0n.burst.view;
 
 import com.jme.math.Vector3f;
 import com.jmex.game.StandardGame;
