@@ -1,11 +1,11 @@
 package de.i0n.burst.model;
 
-public class BubbleModel {
+public class Bubble {
     private final int[] neighbours = new int[Direction.values().length];
     
     private BubbleColor color;
     
-    public BubbleModel(BubbleColor color) {
+    public Bubble(BubbleColor color) {
         this.color = color;
     }
     
@@ -15,7 +15,7 @@ public class BubbleModel {
         }
     }
     
-    public void updateNeighbours(Direction dir, BubbleModel neighbour) {
+    public void updateNeighbours(Direction dir, Bubble neighbour) {
         
     }
     

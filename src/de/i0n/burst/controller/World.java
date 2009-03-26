@@ -1,10 +1,11 @@
-package de.i0n.burst.view;
+package de.i0n.burst.controller;
 
 import com.jme.math.Vector3f;
 import com.jmex.game.StandardGame;
 import com.jmex.game.state.BasicGameStateNode;
 import com.jmex.game.state.FPSGameState;
 import com.jmex.game.state.GameState;
+
 
 /**
  * Root gamestate of the game world.

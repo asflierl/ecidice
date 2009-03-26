@@ -1,12 +1,12 @@
 package de.i0n.burst.model;
 
-public class BoardModel {
+public class Board {
     private final int dimension;
-    private final BubbleModel[] bubbles;
+    private final Bubble[] bubbles;
     
-    public BoardModel(int dimension) {
+    public Board(int dimension) {
         this.dimension = dimension;
-        bubbles = new BubbleModel[dimension * dimension];
+        bubbles = new Bubble[dimension * dimension];
     }
     
     public int getDimension() {

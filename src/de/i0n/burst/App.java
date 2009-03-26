@@ -9,8 +9,8 @@ import com.jmex.editors.swing.settings.GameSettingsPanel;
 import com.jmex.game.StandardGame;
 import com.jmex.game.state.GameStateManager;
 
+import de.i0n.burst.controller.World;
 import de.i0n.burst.i18n.scopes.Application;
-import de.i0n.burst.view.World;
 
 /**
  * Entry point (aka main class) for the startup of the whole application.

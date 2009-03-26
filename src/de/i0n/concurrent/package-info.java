@@ -59,7 +59,7 @@
  * </p>
  * <p>
  * i0n: Code in this package imported from jcip.net and changed because I did 
- * not like the runtime retention policy of thes annotations.
+ * not like the runtime retention policy of these annotations.
  * </p>
  */
 package de.i0n.concurrent;

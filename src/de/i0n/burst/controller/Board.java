@@ -1,4 +1,4 @@
-package de.i0n.burst.view;
+package de.i0n.burst.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jmex.game.state.BasicGameStateNode;
 import com.jmex.game.state.GameStateNode;
+
+import de.i0n.burst.view.Bubble;
 
 /**
  * Represents the game board, i.e. the area with 8 rows of 8 columns of bubbles.
