@@ -14,19 +14,19 @@ import com.jmex.game.state.GameState;
  * 
  * @author i0n
  */
-public class World extends BasicGameStateNode<GameState> {
+public class WorldController extends BasicGameStateNode<GameState> {
     private static final long serialVersionUID = 1L;
     
     private final StandardGame game;
-    private final Board board;
+    private final BoardController boardController;
     
-    public World(StandardGame game) {
+    public WorldController(StandardGame game) {
         super("game world");
         this.game = game;
 
-        board = new Board();
-        attachChild(board);
-        board.setActive(true);
+        boardController = new BoardController();
+        attachChild(boardController);
+        boardController.setActive(true);
         
         FPSGameState fps = new FPSGameState();
         attachChild(fps);

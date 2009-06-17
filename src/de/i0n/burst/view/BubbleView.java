@@ -3,10 +3,12 @@ package de.i0n.burst.view;
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 /**
@@ -14,14 +16,14 @@ import com.jme.system.DisplaySystem;
  * 
  * @author i0n
  */
-public class Bubble extends Node {
+public class BubbleView extends Node {
     private static final long serialVersionUID = 1L;
     
     private static final float R = 1f;   // radius
     private static final float D = 2.5f; // distance
     
-    //private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 0.25f);
-    private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 1f);
+    private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 0.25f);
+    //private static final ColorRGBA alphaMask = new ColorRGBA(1f, 1f, 1f, 1f);
 
     private final int row;
     private final int column;
@@ -34,14 +36,14 @@ public class Bubble extends Node {
      * @param column the column this bubble is in
      * @param maxindex the maximum number of columns and rows
      */
-    public Bubble(int row, int column, int maxindex) {
+    public BubbleView(int row, int column, int maxindex) {
         super(String.format("BubbleNode-%d-%d", row, column));
         this.row = row;
         this.column = column;
         this.maxindex = maxindex;
         
         Sphere sphere = createSphere();
-        //addLight(sphere);
+        addLight(sphere);
         
         attachChild(sphere);
         updateRenderState();
@@ -53,7 +55,7 @@ public class Bubble extends Node {
      * @return a new, transparent sphere
      */
     private Sphere createSphere() {
-        Sphere sphere = new Sphere(String.format("Bubble-%d-%d", row, column));
+        Sphere sphere = new Sphere(String.format("BubbleView-%d-%d", row, column));
         
         float xpos = column * D - (maxindex - 1) * D / 2f;
         float ypos = row * D - (maxindex - 1) * D / 2f;
@@ -74,7 +76,7 @@ public class Bubble extends Node {
         materialState.setEnabled(true);
         
         sphere.setRenderState(materialState);
-        /*
+        
         sphere.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         
         // ZBuffer
@@ -83,7 +85,7 @@ public class Bubble extends Node {
         z.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
         z.setWritable(false);
         sphere.setRenderState(z);
-        */
+        
         return sphere;
     }
     

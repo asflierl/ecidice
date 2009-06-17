@@ -9,7 +9,7 @@ import com.jmex.editors.swing.settings.GameSettingsPanel;
 import com.jmex.game.StandardGame;
 import com.jmex.game.state.GameStateManager;
 
-import de.i0n.burst.controller.World;
+import de.i0n.burst.controller.WorldController;
 import de.i0n.burst.i18n.scopes.Application;
 
 /**
@@ -50,10 +50,10 @@ public class App {
         game.start();
         game.setUncaughtExceptionHandler(new FallbackHandler());
         
-        World world = new World(game);
-        GameStateManager.getInstance().attachChild(world);
+        WorldController worldController = new WorldController(game);
+        GameStateManager.getInstance().attachChild(worldController);
         MouseInput.get().setCursorVisible(true);
-        world.setActive(true);
+        worldController.setActive(true);
     }
     
     /**

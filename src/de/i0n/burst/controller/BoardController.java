@@ -12,20 +12,20 @@ import com.jme.system.DisplaySystem;
 import com.jmex.game.state.BasicGameStateNode;
 import com.jmex.game.state.GameStateNode;
 
-import de.i0n.burst.view.Bubble;
+import de.i0n.burst.view.BubbleView;
 
 /**
  * Represents the game board, i.e. the area with 8 rows of 8 columns of bubbles.
  * 
  * @author i0n
  */
-public class Board extends BasicGameStateNode<GameStateNode<?>> {
+public class BoardController extends BasicGameStateNode<GameStateNode<?>> {
     private static final long serialVersionUID = 1L;
     
     /**
      * Constructs a new game board with all its children objects.
      */
-    public Board() {
+    public BoardController() {
         super("game board");
         
         addBubbles();
@@ -39,14 +39,14 @@ public class Board extends BasicGameStateNode<GameStateNode<?>> {
      * Adds the 64 bubbles as children to this node.
      */
     private void addBubbles() {
-        final List<Bubble> bubbles = new ArrayList<Bubble>();
+        final List<BubbleView> bubbleViews = new ArrayList<BubbleView>();
         for (int ring = 0; ring < 8.; ++ring) {
             for (int index = 0; index < 8; ++index) {
-                bubbles.add(new Bubble(ring, index, 8));
+                bubbleViews.add(new BubbleView(ring, index, 8));
             }
         }
         
-        for (Bubble obj : bubbles) {
+        for (BubbleView obj : bubbleViews) {
             rootNode.attachChild(obj);
         }
     }
