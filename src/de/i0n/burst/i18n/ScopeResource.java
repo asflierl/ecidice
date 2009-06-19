@@ -6,7 +6,8 @@ import de.i0n.concurrent.Immutable;
 
 /**
  * Works like a {@link ResourceBundle} for receiving translated strings, but
- * uses enum keys instead of strings as keys for faster access times.
+ * uses enum keys instead of strings as keys for faster access times and type
+ * safety.
  * 
  * @author i0n
  *
