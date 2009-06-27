@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jme/jme-audio.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
@@ -69,5 +68,7 @@
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lib/jme-colladabinding.jar"/>
 	<classpathentry kind="lib" path="lib/jme/jme-ogrexml.jar"/>
+	<classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
