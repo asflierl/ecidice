@@ -10,7 +10,9 @@ import de.i0n.burst.i18n.Localizer;
 import de.i0n.burst.util.Logging;
 
 /**
- * The application's entry point object. 
+ * The application's entry point object.
+ * 
+ * @author Andreas Flierl
  */
 object Main extends Logging {
   /**

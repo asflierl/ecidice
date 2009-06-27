@@ -1,6 +1,5 @@
 /*
- * Code imported from jcip.net and changed because I did not like the runtime
- * retention policy of these annotations. Original license notice below. 
+ * Code imported from jcip.net and ported to scala by Andreas Flierl 2009.
  */
 
 /*
@@ -13,12 +12,7 @@
  * must include this copyright and license notice.
  */
 
-package de.i0n.concurrent;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package de.i0n.concurrent
 
 /**
  * The field or method to which this annotation is applied can only be accessed
@@ -52,8 +46,4 @@ import java.lang.annotation.Target;
  * <code>class-name.class</code> : The Class object for the specified class should be used as the lock object.
  * </li>
  */
-@Target({ElementType.FIELD, ElementType.METHOD})
-@Retention(RetentionPolicy.SOURCE)
-public @interface GuardedBy {
-    String value();
-}
+class GuardedBy(value: String) extends StaticAnnotation

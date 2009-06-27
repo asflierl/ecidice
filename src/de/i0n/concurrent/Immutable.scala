@@ -1,8 +1,6 @@
 /*
- * Code imported from jcip.net and changed because I did not like the runtime
- * retention policy of these annotations. Original license notice below. 
+ * Code imported from jcip.net and ported to scala by Andreas Flierl 2009.
  */
-
 /*
  * Copyright (c) 2005 Brian Goetz and Tim Peierls
  * Released under the Creative Commons Attribution License
@@ -14,7 +12,6 @@
  */
 
 package de.i0n.concurrent;
-import java.lang.annotation.*;
 
 /**
  * The class to which this annotation is applied is immutable.  This means that
@@ -32,7 +29,4 @@ import java.lang.annotation.*;
  * Immutable objects are inherently thread-safe; they may be passed between threads or
  * published without synchronization.
  */
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
-public @interface Immutable { /* NOP */ }
+class Immutable extends StaticAnnotation

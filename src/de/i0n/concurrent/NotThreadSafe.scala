@@ -1,6 +1,5 @@
 /*
- * Code imported from jcip.net and changed because I did not like the runtime
- * retention policy of these annotations. Original license notice below. 
+ * Code imported from jcip.net and ported to scala by Andreas Flierl 2009.
  */
 
 /*
@@ -13,8 +12,7 @@
  * must include this copyright and license notice.
  */
 
-package de.i0n.concurrent;
-import java.lang.annotation.*;
+package de.i0n.concurrent
 
 /**
  * The class to which this annotation is applied is not thread-safe.
@@ -23,7 +21,4 @@ import java.lang.annotation.*;
  * idea to assume a class is thread-safe without good reason.
  * @see ThreadSafe
  */
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
-public @interface NotThreadSafe { /* NOP */ }
+class NotThreadSafe extends StaticAnnotation
