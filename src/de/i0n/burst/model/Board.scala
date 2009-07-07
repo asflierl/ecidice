@@ -1,10 +1,8 @@
-/*
- * Board.scala
- *
- * Represents the game board, i.e. the floor tiles that the dice rest upon.
- */
 package de.i0n.burst.model
 
+/**
+ * Represents the game board, i.e. the floor tiles that the dice rest upon.
+ */
 class Board(val width: Int, val depth: Int) {
   val tiles = new Array[Array[Tile]](width, depth)
   for (x <- Stream.range(0, depth - 1)) {
