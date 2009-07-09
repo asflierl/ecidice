@@ -3,6 +3,8 @@ package de.i0n.burst.model
 /**
  * Represents the game board, i.e. the floor tiles that the dice rest upon.
  * 
+ * @author Andreas Flierl
+ * 
  * @param width the number of tiles from left to right
  * @param depth the number of tiles from front to back
  */
