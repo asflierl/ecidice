@@ -6,9 +6,13 @@ package de.i0n.burst.model
  * or destination of a dice's movement.
  * 
  * @author Andreas Flierl
+ * 
+ * @param tile the tile that provides this space
+ * @param content what's in this space
  */
 class Space(val tile: Tile, var content: Content) {
-  def isFloor = (tile.floor == this)
+  def isFloor = (this == tile.floor)
+  def isRaised = (this == tile.raised)
 }
 
 abstract class Content
@@ -29,4 +33,4 @@ case class Occupied(d: Dice) extends Content
  * An instance of this class is present on the "from" and "to" spaces that are
  * involved in a dice's movement during the movement.
  */
-case class Movement(from: Space, to: Space, when: TimeSpan) extends Content
+case class Movement(from: Space, to: Space, when: Timespan) extends Content

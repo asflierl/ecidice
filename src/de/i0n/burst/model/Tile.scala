@@ -8,8 +8,8 @@ package de.i0n.burst.model
  */
 class Tile(val x: Int, val y: Int) {
   var visibility = Tile.Visibility.VISIBLE
-  val floor = new Space(this, Empty)
-  val raised = new Space(this, Empty)
+  lazy val floor = new Space(this, Empty)
+  lazy val raised = new Space(this, Empty)
 }
 object Tile {
   object Visibility extends Enumeration {

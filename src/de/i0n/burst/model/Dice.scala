@@ -1,5 +1,7 @@
 package de.i0n.burst.model
 
+import scala.compat.Platform
+
 /**
  * A single 6-side dice.
  * <p>
@@ -27,7 +29,7 @@ class Dice(birthplace: Space) {
   /**
    * Holds the state of this dice in respect to the game rules.
    */
-  val state = Dice.Appearing(birthplace, new Timespan(Platform.currentTime, 1000))
+  val state = Dice.Appearing(birthplace, new Timespan(Dice.TIME_TO_APPEAR))
   
   def top = topFace
   def bottom = opposite(topFace)
@@ -44,18 +46,20 @@ class Dice(birthplace: Space) {
     frontFace = f
   }
   
-  def rotateUp = set(front, right, bottom)
-  def rotateDown = set(back, right, top)
-  def rotateRight = set(left, top, front)
-  def rotateLeft = set(right, bottom, front)
+  def rotateUp() = set(front, right, bottom)
+  def rotateDown() = set(back, right, top)
+  def rotateRight() = set(left, top, front)
+  def rotateLeft() = set(right, bottom, front)
   
-  def spinClockwise = set(top, back, right)
-  def spinCounterClockwise = set(top, front, left)
+  def spinClockwise() = set(top, back, right)
+  def spinCounterClockwise() = set(top, front, left)
   
-  def flipUpOrDown = set(bottom, right, back)
-  def flipLeftOrRight = set(bottom, left, front)
+  def flipUpOrDown() = set(bottom, right, back)
+  def flipLeftOrRight() = set(bottom, left, front)
 }
 object Dice {
+  val TIME_TO_APPEAR = 5000L
+  
   /**
    * Supertype of a dice's possible states.
    */
@@ -65,7 +69,7 @@ object Dice {
    * The dice is appearing. It can not be controlled nor moved. It occupies 
    * some space.
    */
-  case class Appearing(where: Space, when: TimeSpan) extends State
+  case class Appearing(where: Space, when: Timespan) extends State
   
   /**
    * The dice is solid now. It can be controlled by a player. It occupies
@@ -84,6 +88,6 @@ object Dice {
    * The initiator can change as more dice are added to the burst. The dice
    * occupies some space.
    */
-  case class Bursting(var initiator: Player, when: TimeSpan, where: Space) 
+  case class Bursting(var initiator: Player, when: Timespan, where: Space) 
     extends State
 }
