@@ -66,7 +66,7 @@ class Timespan(private var ttl: Float) {
   /**
    * Returns how close this timespan is to its end as a percentage of the 
    * initial time-to-live + the total delay. The returned number is in the
-   * interval [0;1].
+   * interval [0,1].
    */
   def progress = 1f - (timeToLive / (initial + totalDelay)) 
 }

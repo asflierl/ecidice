@@ -1,25 +1,25 @@
-#Wed Jul 08 17:53:28 CEST 2009
+#Fri Jul 10 00:49:54 CEST 2009
 <file>=false
 Xcheck-null=false
 Xcheckinit=false
 Xdisable-assertions=false
 Xexperimental=false
 Xfuture=false
-Xlog-implicits=true
+Xlog-implicits=false
 Xno-uescape=false
 Xno-varargs-conversion=false
-Yclosure-elim=true
-Ydead-code=true
+Yclosure-elim=false
+Ydead-code=false
 Ydetach=false
-Yinline=true
+Yinline=false
 Ylinearizer=rpo
 Yno-generic-signatures=false
 Yno-imports=false
 Yno-predefs=false
 Yself-in-annots=false
-Ywarn-dead-code=true
+Ywarn-dead-code=false
 eclipse.preferences.version=1
 g=vars
-optimise=true
+optimise=false
 scala.compiler.useProjectSettings=true
 target=jvm-1.5
