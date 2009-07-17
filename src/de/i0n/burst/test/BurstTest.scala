@@ -3,5 +3,5 @@ package de.i0n.burst.test
 import org.scalatest._
 
 trait BurstTest {
-  val DELTA = .000001f
+  val DELTA = 1e-6f
 }

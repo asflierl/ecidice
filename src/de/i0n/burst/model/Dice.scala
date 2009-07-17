@@ -11,7 +11,7 @@ import scala.compat.Platform
  *  6512
  *  4
  * </pre>
- * where 6 is on top, 4 in front, 5 on the right side. 
+ * where 6 is on top, 5 on the right side, 4 on the front. 
  * This can alternatively be represented as
  * <pre>
  *  65
@@ -21,22 +21,23 @@ import scala.compat.Platform
  * 
  * @author Andreas Flierl
  */
-class Dice(birthplace: Space) {
+class Dice private {
+  private var birthplace : Space = _
   private var topFace = 6
-  private var frontFace = 4
   private var rightFace = 5
+  private var frontFace = 4
   
   /**
    * Holds the state of this dice in respect to the game rules.
    */
-  val state = Dice.Appearing(birthplace, new Timespan(Dice.TIME_TO_APPEAR))
+  var state : Dice.State = _
   
   def top = topFace
   def bottom = opposite(topFace)
-  def front = frontFace
-  def back = opposite(frontFace)
   def right = rightFace
   def left = opposite(rightFace)
+  def front = frontFace
+  def back = opposite(frontFace)
   
   private def opposite(eyes: Int) = 7 - eyes
   
@@ -59,6 +60,18 @@ class Dice(birthplace: Space) {
 }
 object Dice {
   val TIME_TO_APPEAR = 5000L
+  
+  /**
+   * Creates a new dice instance that appears in the specified space. The
+   * space instance's content is set to "occupied by the new dice".
+   */
+  def apply(birthplace: Space) = {
+    val d = new Dice()
+    d.birthplace = birthplace
+    birthplace.content = Occupied(d)
+    d.state = Dice.Appearing(birthplace, new Timespan(TIME_TO_APPEAR))
+    d
+  }
   
   /**
    * Supertype of a dice's possible states.
