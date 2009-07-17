@@ -33,7 +33,7 @@ class Timespan(private var ttl: Float) {
    * Returns how long the initial time-to-live has been extended after the
    * creation of this instance.
    */
-  def delay = totalDelay
+  def delayed = totalDelay
   
   /**
    * Indicates to this instance that the specified amount of time has elapsed.
@@ -41,7 +41,7 @@ class Timespan(private var ttl: Float) {
    * 
    * @param amount the elapsed time; negative values are ignored
    */
-  def elapsed(amount: Float) = {
+  def elapse(amount: Float) = {
     if (amount > ttl) {
       ttl = 0
       totalElapsed += ttl
