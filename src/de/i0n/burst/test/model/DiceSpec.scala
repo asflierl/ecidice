@@ -5,6 +5,11 @@ import org.scalatest.matchers._
 
 import de.i0n.burst.model._
 
+/**
+ * Tests the dice model.
+ * 
+ * @author Andreas Flierl
+ */
 class DiceSpec extends Spec with ShouldMatchers with BeforeAndAfter 
     with BurstTest {
   

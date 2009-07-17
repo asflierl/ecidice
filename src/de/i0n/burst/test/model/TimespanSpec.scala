@@ -5,6 +5,11 @@ import org.scalatest.matchers._
 
 import de.i0n.burst.model.Timespan
 
+/**
+ * Tests the timespan model class.
+ * 
+ * @author Andreas Flierl
+ */
 class TimespanSpec extends Spec with ShouldMatchers with BeforeAndAfter 
     with BurstTest {
   
