@@ -1,4 +1,4 @@
-package de.i0n.burst.i18n
+package de.i0n.ecidice.i18n
 
 /**
  * Defines the words and phrases that require localization.

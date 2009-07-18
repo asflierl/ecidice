@@ -1,4 +1,4 @@
-package de.i0n.burst
+package de.i0n.ecidice
 
 import com.jme.input.MouseInput;
 import com.jmex.editors.swing.settings.GameSettingsPanel;
@@ -7,9 +7,9 @@ import com.jme.app.AbstractGame;
 import com.jme.system.PreferencesGameSettings;
 import com.jmex.game.state.GameStateManager;
 
-import de.i0n.burst.controller.WorldController;
-import de.i0n.burst.i18n.Localizer;
-import de.i0n.burst.util.Logging;
+import de.i0n.ecidice.controller.WorldController;
+import de.i0n.ecidice.i18n.Localizer;
+import de.i0n.ecidice.util.Logging;
 
 import java.util.prefs.Preferences;
 

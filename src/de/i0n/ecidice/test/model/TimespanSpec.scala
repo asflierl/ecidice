@@ -1,9 +1,9 @@
-package de.i0n.burst.test.model
+package de.i0n.ecidice.test.model
 
 import org.scalatest._
 import org.scalatest.matchers._
 
-import de.i0n.burst.model.Timespan
+import de.i0n.ecidice.model.Timespan
 
 /**
  * Tests the timespan model class.

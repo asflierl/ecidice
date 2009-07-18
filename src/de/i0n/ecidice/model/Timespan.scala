@@ -1,4 +1,4 @@
-package de.i0n.burst.model
+package de.i0n.ecidice.model
 
 /**
  * Represents a period of time of a specified length or time-to-live. This

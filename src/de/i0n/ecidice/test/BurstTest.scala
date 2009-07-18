@@ -1,4 +1,4 @@
-package de.i0n.burst.test
+package de.i0n.ecidice.test
 
 import org.scalatest._
 

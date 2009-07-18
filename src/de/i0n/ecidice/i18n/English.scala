@@ -1,4 +1,4 @@
-package de.i0n.burst.i18n
+package de.i0n.ecidice.i18n
 
 /**
  * Contains the actual localizations for the language English.
@@ -6,6 +6,6 @@ package de.i0n.burst.i18n
  * @author Andreas Flierl
  */
 object English extends Localization {
-  def appName = "Burst"
-  def windowTitle = "Burst - by i0n.de"
+  def appName = "ecidice"
+  def windowTitle = "ecidice - a game by Andreas Flierl"
 }

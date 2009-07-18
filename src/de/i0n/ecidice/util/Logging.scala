@@ -1,4 +1,4 @@
-package de.i0n.burst.util
+package de.i0n.ecidice.util
 
 import java.util.logging.{ Logger => JLogger }
 import java.util.logging.Level

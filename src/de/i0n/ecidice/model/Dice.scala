@@ -1,4 +1,4 @@
-package de.i0n.burst.model
+package de.i0n.ecidice.model
 
 import scala.compat.Platform
 

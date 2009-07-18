@@ -1,4 +1,4 @@
-package de.i0n.burst.model
+package de.i0n.ecidice.model
 
 /**
  * Represents the game board, i.e. the floor tiles that the dice rest upon.
