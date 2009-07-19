@@ -1,4 +1,4 @@
-package de.i0n.ecidice.i18n
+package ecidice.i18n
 
 import de.i0n.concurrent._
 

@@ -1,4 +1,4 @@
-package de.i0n.ecidice.model
+package ecidice.model
 
 /**
  * Represents a period of time, i.e. the time interval [start, end]

@@ -1,4 +1,4 @@
-package de.i0n.ecidice.model
+package ecidice.model
 
 /**
  * Represents a tile in the game board. Each tile has an (inititally empty)

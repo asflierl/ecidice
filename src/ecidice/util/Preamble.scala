@@ -1,4 +1,4 @@
-package de.i0n.ecidice.util
+package ecidice.util
 
 /**
  * Contains useful implicit conversions.

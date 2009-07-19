@@ -1,9 +1,9 @@
-package de.i0n.ecidice.test.model
+package ecidice.test.model
 
 import org.scalatest._
 import org.scalatest.matchers._
 
-import de.i0n.ecidice.model._
+import ecidice.model._
 
 /**
  * Tests the dice model.

@@ -1,4 +1,4 @@
-package de.i0n.ecidice.util
+package ecidice.util
 
 import java.util.logging.{ Logger => JLogger }
 import java.util.logging.Level

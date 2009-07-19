@@ -1,4 +1,4 @@
-package de.i0n.ecidice.i18n
+package ecidice.i18n
 
 /**
  * Contains the actual localizations for the language English.

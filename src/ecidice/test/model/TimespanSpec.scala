@@ -1,12 +1,12 @@
-package de.i0n.ecidice.test.model
+package ecidice.test.model
 
 import org.scalatest._
 import org.scalatest.matchers._
 
-import de.i0n.ecidice.model.Game
-import de.i0n.ecidice.model.Timespan
+import ecidice.model.Game
+import ecidice.model.Timespan
 
-import de.i0n.ecidice.util.Preamble._
+import ecidice.util.Preamble._
 
 /**
  * Tests the timespan model class.

@@ -1,4 +1,4 @@
-package de.i0n.ecidice.view;
+package ecidice.view;
 
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;

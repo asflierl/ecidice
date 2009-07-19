@@ -1,4 +1,4 @@
-package de.i0n.ecidice.test
+package ecidice.test
 
 import org.scalatest._
 

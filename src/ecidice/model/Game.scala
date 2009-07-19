@@ -1,4 +1,4 @@
-package de.i0n.ecidice.model
+package ecidice.model
 
 class Game {
   private val board = new Board(10, 10)

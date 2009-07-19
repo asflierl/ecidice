@@ -1,4 +1,4 @@
-package de.i0n.ecidice.model
+package ecidice.model
 
 import scala.compat.Platform
 

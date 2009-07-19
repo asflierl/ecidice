@@ -1,4 +1,4 @@
-package de.i0n.ecidice.util
+package ecidice.util
 
 /**
  * Decorates a floating point number, providing useful non-primitive operations.

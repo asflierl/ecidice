@@ -1,4 +1,4 @@
-package de.i0n.ecidice.model
+package ecidice.model
 
 /**
  * Represents an area or space on the game board, either on the ground or on a

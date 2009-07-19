@@ -1,4 +1,4 @@
-package de.i0n.ecidice.controller;
+package ecidice.controller;
 
 import com.jme.math.Vector3f;
 import com.jmex.game.StandardGame;
