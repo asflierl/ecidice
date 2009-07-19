@@ -5,23 +5,23 @@ import org.scalatest.matchers._
 
 import de.i0n.ecidice.model._
 
-class BoardSpec extends Spec with ShouldMatchers with BeforeAndAfter 
+class GameSpec extends Spec with ShouldMatchers with BeforeAndAfter 
     with BurstTest {
   private val SIZE = 10
       
   private val p = new Player()
-  private var b : Board = _
+  private var g : Game = _
   
   override def beforeEach() = {
-    b = new Board(SIZE, SIZE)
+    g = new Game
   }
   
-  describe("The game board") {
-    describe("when empty") {
+  describe("The game") {
+    describe("when the board is empty") {
       it("should not grant control on any tile") {
         for (x <- Stream.range(0, SIZE)) {
           for (y <- Stream.range(0, SIZE)) {
-            b.requestControl(x, y, p) should be (false)
+            g.requestControl(x, y, p) should be (false)
           }
         }
       }

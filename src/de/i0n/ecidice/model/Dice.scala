@@ -64,12 +64,16 @@ object Dice {
   /**
    * Creates a new dice instance that appears in the specified space. The
    * space instance's content is set to "occupied by the new dice".
+   * 
+   * @param game the game this dice will participate in
+   * @param birthplace the space this dice will occupy initially
    */
-  def apply(birthplace: Space) = {
+  def apply(game: Game, birthplace: Space) = {
     val d = new Dice()
     d.birthplace = birthplace
     birthplace.content = Occupied(d)
-    d.state = Dice.Appearing(birthplace, new Timespan(TIME_TO_APPEAR))
+    d.state = Dice.Appearing(birthplace, new Timespan(game, game.now, 
+                                                      TIME_TO_APPEAR))
     d
   }
   

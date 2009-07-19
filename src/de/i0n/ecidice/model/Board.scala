@@ -16,16 +16,7 @@ class Board(val width: Int, val depth: Int) {
     }
   }
   
-  def requestControl(x: Int, y: Int, p: Player) : Boolean = {
-    val t = tiles(x)(y)
-    requestControl(t.raised) || requestControl(t.floor)
-  }
-  
-  private def requestControl(where: Space) = where.content match {
-    case Occupied(d) => d.state match {
-      case Dice.Solid(s, c) => c.isEmpty
-      case _ => false
-    }
-    case _ => false
+  def apply(x: Int, y: Int) = {
+    tiles(x)(y)
   }
 }

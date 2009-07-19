@@ -13,11 +13,12 @@ import de.i0n.ecidice.model._
 class DiceSpec extends Spec with ShouldMatchers with BeforeAndAfter 
     with BurstTest {
   
+  private val g = new Game
   private val t = new Tile(0, 0)
   private var d : Dice = _
   
   override def beforeEach() = {
-    d = Dice(t.floor)
+    d = Dice(g, t.floor)
   }
   
   def checkDice(top: Int, right: Int, front: Int) = {
