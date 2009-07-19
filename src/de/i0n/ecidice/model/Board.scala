@@ -16,6 +16,13 @@ class Board(val width: Int, val depth: Int) {
     }
   }
   
+  /**
+   * Returns the tile at the specified position.
+   * 
+   * @param x the horizontal position (left to right)
+   * @param y the vertical position (front to back)
+   * @return the tile at the specified coordinates
+   */
   def apply(x: Int, y: Int) = {
     tiles(x)(y)
   }

@@ -14,7 +14,7 @@ import de.i0n.ecidice.util.Preamble._
  * @author Andreas Flierl
  */
 class TimespanSpec extends Spec with ShouldMatchers with BeforeAndAfter 
-    with BurstTest {
+    with EcidiceTest {
   
   private var g : Game = _
   private var ts : Timespan = _

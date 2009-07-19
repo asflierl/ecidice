@@ -5,6 +5,8 @@ package de.i0n.ecidice.model
  * 
  * @author Andreas Flierl
  * 
+ * @param game the game whose time this timespan is relative to
+ * @param start the instant this timespan starts
  * @param ttl the initial time-to-live (aka duration)
  */
 class Timespan(game: Game, val start: Float, ttl: Float) {

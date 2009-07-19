@@ -11,7 +11,13 @@ package de.i0n.ecidice.model
  * @param content what's in this space
  */
 class Space(val tile: Tile, var content: Content) {
+  /** Returns whether this space is in the floor level. */
   def isFloor = (this == tile.floor)
+  
+  /** 
+   * Returns whether this space is on the raised level (i.e. on top of a 
+   * dice). 
+   */
   def isRaised = (this == tile.raised)
 }
 

@@ -11,7 +11,7 @@ import de.i0n.ecidice.model._
  * @author Andreas Flierl
  */
 class DiceSpec extends Spec with ShouldMatchers with BeforeAndAfter 
-    with BurstTest {
+    with EcidiceTest {
   
   private val g = new Game
   private val t = new Tile(0, 0)

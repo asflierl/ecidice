@@ -6,7 +6,7 @@ import org.scalatest.matchers._
 import de.i0n.ecidice.model._
 
 class GameSpec extends Spec with ShouldMatchers with BeforeAndAfter 
-    with BurstTest {
+    with EcidiceTest {
   private val SIZE = 10
       
   private val p = new Player()
