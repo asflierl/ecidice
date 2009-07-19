@@ -1,11 +1,6 @@
 package ecidice.test.model
 
-import org.scalatest._
-import org.scalatest.matchers._
-
-import ecidice.model.Game
-import ecidice.model.Timespan
-
+import ecidice.model._
 import ecidice.util.Preamble._
 
 /**
@@ -13,8 +8,7 @@ import ecidice.util.Preamble._
  * 
  * @author Andreas Flierl
  */
-class TimespanSpec extends Spec with ShouldMatchers with BeforeAndAfter 
-    with EcidiceTest {
+class TimespanSpec extends TestBase {
   
   private var g : Game = _
   private var ts : Timespan = _

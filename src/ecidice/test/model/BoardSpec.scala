@@ -1,12 +1,8 @@
 package ecidice.test.model
 
-import org.scalatest._
-import org.scalatest.matchers._
-
 import ecidice.model._
 
-class GameSpec extends Spec with ShouldMatchers with BeforeAndAfter 
-    with EcidiceTest {
+class GameSpec extends TestBase {
   private val SIZE = 10
       
   private val p = new Player()

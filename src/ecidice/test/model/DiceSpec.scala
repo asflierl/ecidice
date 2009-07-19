@@ -1,8 +1,5 @@
 package ecidice.test.model
 
-import org.scalatest._
-import org.scalatest.matchers._
-
 import ecidice.model._
 
 /**
@@ -10,8 +7,7 @@ import ecidice.model._
  * 
  * @author Andreas Flierl
  */
-class DiceSpec extends Spec with ShouldMatchers with BeforeAndAfter 
-    with EcidiceTest {
+class DiceSpec extends TestBase {
   
   private val g = new Game
   private val t = new Tile(0, 0)
