@@ -73,29 +73,21 @@ class Dice private {
     frontFace = f
   }
   
-  /** Rotates this dice upwards (to the back). */
-  def rotateUp() = set(front, right, bottom)
-  
-  /** Rotates this dice downwards (to the front). */
-  def rotateDown() = set(back, right, top)
-  
-  /** Rotates this dice to the right. */
-  def rotateRight() = set(left, top, front)
-  
-  /** Rotates this dice to the left. */
-  def rotateLeft() = set(right, bottom, front)
-  
-  /** Spins this dice clock-wise (top and bottom remain unchanged). */
-  def spinClockwise() = set(top, back, right)
-  
-  /** Spins this dice counter-clock-wise (top and bottom remain unchanged). */
-  def spinCounterClockwise() = set(top, front, left)
-  
-  /** Flips this dice 180&deg; up (or down, doesn't matter). */
-  def flipUpOrDown() = set(bottom, right, back)
-  
-  /** Flips this dice 180&deg; left (or right, doesn't matter). */
-  def flipLeftOrRight() = set(bottom, left, front)
+  /**
+   * Changes this dice's rotation according to the specified transform.
+   * 
+   * @param how the transform to apply
+   */
+  def change(how: Transform.Value) = how match {
+    case Transform.ROTATE_UP => set(front, right, bottom)
+    case Transform.ROTATE_DOWN => set(back, right, top)
+    case Transform.ROTATE_RIGHT => set(left, top, front)
+    case Transform.ROTATE_LEFT => set(right, bottom, front)
+    case Transform.SPIN_CLOCKWISE => set(top, back, right)
+    case Transform.SPIN_COUNTERCLOCKWISE => set(top, front, left)
+    case Transform.FLIP_UP_OR_DOWN => set(bottom, right, back)
+    case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
+  }
 }
 object Dice {
   val TIME_TO_APPEAR = 5000L
@@ -141,9 +133,9 @@ object Dice {
   
   /**
    * The dice will burst soon-ish. A burst is always initiated by a player. 
-   * The initiator can change as more dice are added to the burst. The dice
-   * occupies some space.
+   * The initiator for dice's burst is always the player who added it to a burst
+   * group. The dice occupies some space.
    */
-  case class Bursting(var initiator: Player, when: Timespan, where: Space) 
+  case class Bursting(val initiator: Player, group: BurstGroup, where: Space) 
     extends State
 }

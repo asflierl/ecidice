@@ -9,7 +9,7 @@ import ecidice.model._
  */
 class DiceSpec extends TestBase {
   
-  private val g = new Game
+  private val g = new Game(1)
   private val t = new Tile(0, 0)
   private var d : Dice = _
   
@@ -41,42 +41,42 @@ class DiceSpec extends TestBase {
     }
 
     it("should correctly rotate upwards (towards the back)") {
-      d.rotateUp()
+      d.change(Transform.ROTATE_UP)
       checkDice(4, 5, 1)
     }
     
     it("should correctly rotate downwards (towards the front)") {
-      d.rotateDown()
+      d.change(Transform.ROTATE_DOWN)
       checkDice(3, 5, 6)
     }
     
     it("should correctly rotate to the right") {
-      d.rotateRight()
+      d.change(Transform.ROTATE_RIGHT)
       checkDice(2, 6, 4)
     }
     
     it("should correctly rotate to the left") {
-      d.rotateLeft()
+      d.change(Transform.ROTATE_LEFT)
       checkDice(5, 1, 4)
     }
     
     it("should correctly spin clockwise") {
-      d.spinClockwise()
+      d.change(Transform.SPIN_CLOCKWISE)
       checkDice(6, 3, 5)
     }
     
     it("should correctly spin counter-clockwise") {
-      d.spinCounterClockwise()
+      d.change(Transform.SPIN_COUNTERCLOCKWISE)
       checkDice(6, 4, 2)
     }
     
     it("should correctly flip up/down") {
-      d.flipUpOrDown()
+      d.change(Transform.FLIP_UP_OR_DOWN)
       checkDice(1, 5, 3)
     }
     
     it("should correctly flip left or right") {
-      d.flipLeftOrRight()
+      d.change(Transform.FLIP_LEFT_OR_RIGHT)
       checkDice(1, 2, 4)
     }
   }
