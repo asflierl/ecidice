@@ -1,6 +1,6 @@
 package ecidice.model
 
-abstract class Content
+sealed abstract class Content
 
 /**
  * Denotes that a space is empty. A dice can move or appear here (if this is
@@ -18,5 +18,5 @@ case class Occupied(d: Dice) extends Content
  * An instance of this class is present on the "from" and "to" spaces that are
  * involved in a dice's movement during the movement.
  */
-abstract case class Movement(dice: Dice, from: Space, to: Space, when: Timespan,
-  action: Transform.Value) extends Content
+case class Movement(dice: Dice, from: Space, to: Space, when: Timespan,
+  transform: Transform.Value) extends Content

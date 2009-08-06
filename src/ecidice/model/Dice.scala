@@ -21,8 +21,7 @@ import scala.compat.Platform
  * 
  * @author Andreas Flierl
  */
-class Dice private {
-  private var birthplace : Space = _
+class Dice {
   private var topFace = 6
   private var rightFace = 5
   private var frontFace = 4
@@ -89,29 +88,11 @@ class Dice private {
     case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
   }
 }
-object Dice {
-  val TIME_TO_APPEAR = 5000L
-  
-  /**
-   * Creates a new dice instance that appears in the specified space. The
-   * space instance's content is set to "occupied by the new dice".
-   * 
-   * @param game the game this dice will participate in
-   * @param birthplace the space this dice will occupy initially
-   */
-  def apply(game: Game, birthplace: Space) = {
-    val d = new Dice()
-    d.birthplace = birthplace
-    birthplace.content = Occupied(d)
-    d.state = Dice.Appearing(birthplace, new Timespan(game, game.now, 
-                                                      TIME_TO_APPEAR))
-    d
-  }
-  
+object Dice {    
   /**
    * Supertype of a dice's possible states.
    */
-  abstract class State
+  sealed abstract class State
   
   /**
    * The dice is appearing. It can not be controlled nor moved. It occupies 

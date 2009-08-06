@@ -16,8 +16,8 @@ class Board(val width: Int, val depth: Int) {
     }
   }
   
-  val spawnPoints = (0, 0) :: (width - 1, 0) :: 
-    (width - 1, depth - 1) :: (0, depth - 1) :: Nil
+  val spawnPoints = tiles(0)(0) :: tiles(width - 1)(0) :: 
+    tiles(width - 1)(depth - 1) :: tiles(0)(depth - 1) :: Nil
   
   /**
    * Returns the tile at the specified position.
@@ -26,7 +26,14 @@ class Board(val width: Int, val depth: Int) {
    * @param y the vertical position (front to back)
    * @return the tile at the specified coordinates
    */
-  def apply(x: Int, y: Int) = {
+  def apply(x: Int, y: Int) : Tile = {
     tiles(x)(y)
   }
+  
+  def apply(p: (Int, Int)) : Tile = apply(p._1, p._2)
+  
+  def isWithinBounds(x: Int, y: Int) : Boolean = 
+    (x >= 0 && x < width) && (y >= 0 && y < depth)
+  
+  def isWithinBounds(p: (Int, Int)) : Boolean = isWithinBounds(p._1, p._2)
 }

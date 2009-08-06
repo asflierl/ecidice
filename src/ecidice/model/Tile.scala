@@ -6,10 +6,12 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class Tile(val x: Int, val y: Int) {
+case class Tile(val x: Int, val y: Int) {
   var visibility = Tile.Visibility.VISIBLE
   lazy val floor = new Space(this, Empty)
   lazy val raised = new Space(this, Empty)
+  
+  def pos = (x, y)
 }
 object Tile {
   object Visibility extends Enumeration {

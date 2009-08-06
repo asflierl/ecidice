@@ -9,12 +9,10 @@ import ecidice.model._
  */
 class DiceSpec extends TestBase {
   
-  private val g = new Game(1)
-  private val t = new Tile(0, 0)
   private var d : Dice = _
   
   override def beforeEach() = {
-    d = Dice(g, t.floor)
+    d = new Dice
   }
   
   def checkDice(top: Int, right: Int, front: Int) = {

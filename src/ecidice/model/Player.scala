@@ -1,11 +1,14 @@
 package ecidice.model
 
-class Player(game: Game, spawnPoint: (Int, Int)) {
-  private var position = spawnPoint
-  private var dice: Option[Dice] = None
+class Player(game: Game, spawnPoint: Tile) {
+  var state : Player.State = Player.Standing(spawnPoint)
+}
+object Player {
+  sealed abstract class State
   
-  def x = position._1
-  def y = position._2
+  case class Standing(p: Tile) extends State
   
+  case class Controlling(dice: Dice) extends State
   
+  case class Moving(from: Tile, to: Tile, when: Timespan) extends State
 }
