@@ -1,0 +1,12 @@
+All files, excluding the ones in the "lib" and "media" directories are 
+subject to a modified BSD license. Read the source files' headers and this
+website for details: http://creativecommons.org/licenses/BSD/
+
+The libraries in the "lib" directory are subject to their individual licenses.
+Each of them has a respective text file at its root directory that describes 
+the applicable license.
+
+The media files in the "media" directory are provided under the Creative Commons
+Attribution-Share Alike 3.0 Unported License. To view a copy of this license,
+visit http://creativecommons.org/licenses/by-sa/3.0/
+ 
