@@ -29,16 +29,11 @@
 
 package ecidice.model
 
-class Player(game: Game, spawnPoint: Tile) {
-  var state : Player.State = Player.Standing(spawnPoint)
-}
-object Player {
-  sealed abstract class State
-  
-  case class Standing(p: Tile) extends State
-  
-  case class Controlling(dice: Dice) extends State
-  
-  case class Moving(p: Player, from: Tile, to: Tile, when: Timespan)
-    extends State with Timed
+/**
+ * Indicates that a game event is timed and needs to be tracked/managed.
+ * 
+ * @author Andreas Flierl
+ */
+trait Timed {
+  def when : Timespan
 }

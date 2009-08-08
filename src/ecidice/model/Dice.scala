@@ -29,8 +29,6 @@
 
 package ecidice.model
 
-import scala.compat.Platform
-
 /**
  * A single 6-side dice.
  * <p>
@@ -127,7 +125,7 @@ object Dice {
    * The dice is appearing. It can not be controlled nor moved. It occupies 
    * some space.
    */
-  case class Appearing(where: Space, when: Timespan) extends State
+  case class Appearing(where: Space, when: Timespan) extends State with Timed
   
   /**
    * The dice is solid now. It can be controlled by a player. It occupies
@@ -140,12 +138,12 @@ object Dice {
    * The movement object defines the space occupied while moving.
    */
   case class Moving(move: Movement, controller: Player) extends State
-  
+    
   /**
-   * The dice will burst soon-ish. A burst is always initiated by a player. 
-   * The initiator for dice's burst is always the player who added it to a burst
-   * group. The dice occupies some space.
+   * The dice has been locked and is part of a burst group, i.e. it is either
+   * charging or bursting. This state is always initiated by a player. The dice
+   * occupies some space.
    */
-  case class Bursting(val initiator: Player, group: BurstGroup, where: Space) 
+  case class Locked(val initiator: Player, group: BurstGroup, where: Space)
     extends State
 }

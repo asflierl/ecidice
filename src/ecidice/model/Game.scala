@@ -29,10 +29,13 @@
 
 package ecidice.model
 
+import scala.collection.mutable._
+
 class Game(numPlayers: Int) {
   private val board = new Board(10, 10)
   private var currentTime = 0f
   
+  private val timedStuff = new ArrayBuffer[Timed]
   
   val MOVE_DURATION = 0.25f
   val APPEAR_DURATION = 5f
@@ -56,7 +59,7 @@ class Game(numPlayers: Int) {
    */
   def update(elapsed: Float) {
     currentTime += elapsed
-    //TODO everything that has a duration/timespan needs to be checked and updated!
+    //TODO the timed stuff has to be processed
   }
   
   /**
@@ -138,8 +141,10 @@ class Game(numPlayers: Int) {
       val pos = positionAfterMove(t, dir)
       
       if (board.isWithinBounds(pos)) {
-        p.state = Player.Moving(t, board(pos), 
+        val mov = Player.Moving(p, t, board(pos), 
                                 new Timespan(this, now, MOVE_DURATION))
+        p.state = mov
+        timedStuff += mov
         true
       } else false // destination out of board bounds
     }
@@ -184,7 +189,8 @@ class Game(numPlayers: Int) {
     /* Player wants to move to the same place she's already moving to: 
      * leave things as they are and return <code>true</code>.
      */
-    case Player.Moving(a, b, _) if (b.pos == positionAfterMove(a, dir)) => true
+    case Player.Moving(_, a, b, _) if (b.pos == positionAfterMove(a, dir)) 
+      => true
     
     case _ => false
   }
@@ -217,6 +223,7 @@ class Game(numPlayers: Int) {
     from.content = m
     to.content = m
     d.state = Dice.Moving(m, p)
+    timedStuff += m
   }
   
   /**
@@ -234,12 +241,21 @@ class Game(numPlayers: Int) {
     case Direction.LEFT => (t.x - 1, t.y)
   }
   
+  /**
+   * Spawns a dice at the specified position on the board and updates the
+   * state in the participating components accordingly.
+   * 
+   * @param x the horizontal position on the board
+   * @param y the depth position on the board
+   */
   def spawnDice(x: Int, y: Int) = board(x, y).floor.content match {
     case Empty => {
       val d = new Dice()
       board(x, y).floor.content = Occupied(d)
-      d.state = Dice.Appearing(board(x, y).floor, 
+      val app = Dice.Appearing(board(x, y).floor, 
                                new Timespan(this, now, APPEAR_DURATION))
+      d.state = app
+      timedStuff += app
       Some(d)
     }
     case _ => None

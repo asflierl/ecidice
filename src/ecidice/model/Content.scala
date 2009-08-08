@@ -48,4 +48,4 @@ case class Occupied(d: Dice) extends Content
  * involved in a dice's movement during the movement.
  */
 case class Movement(dice: Dice, from: Space, to: Space, when: Timespan,
-  transform: Transform.Value) extends Content
+    transform: Transform.Value) extends Content with Timed
