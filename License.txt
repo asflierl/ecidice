@@ -1,5 +1,5 @@
 All files, excluding the ones in the "lib" and "media" directories are 
-subject to a modified BSD license. Read the source files' headers and this
+subject to a 3-clause BSD license. Read the source files' headers and this
 website for details: http://creativecommons.org/licenses/BSD/
 
 The libraries in the "lib" directory are subject to their individual licenses.
