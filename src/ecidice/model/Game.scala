@@ -31,8 +31,13 @@ package ecidice.model
 
 import scala.collection.mutable._
 
-class Game(numPlayers: Int) {
-  private val board = new Board(10, 10)
+/**
+ * Central mediator that manages the objects participating in a game and updates
+ * their state according to requested actions within the game rules.
+ * 
+ * @author Andreas Flierl
+ */
+class Game(numPlayers: Int, board: Board) {
   private var currentTime = 0f
   
   private val timedStuff = new ArrayBuffer[Timed]

@@ -1,6 +1,6 @@
-All files, excluding the ones in the "lib" and "media" directories are 
-subject to a 3-clause BSD license. Read the source files' headers and this
-website for details: http://creativecommons.org/licenses/BSD/
+All files of this project, excluding the ones in the "lib" and "media" 
+directories are subject to a 3-clause BSD license. Read the source files'
+headers and this website for details: http://creativecommons.org/licenses/BSD/
 
 The libraries in the "lib" directory are subject to their individual licenses.
 Each of them has a respective text file at its root directory that describes 

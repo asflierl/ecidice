@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.test
+package ecidice
 
 import org.scalatest._
 import org.scalatest.matchers._

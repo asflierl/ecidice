@@ -39,12 +39,13 @@ package ecidice.model
  */
 class Board(val width: Int, val depth: Int) {
   private val tiles = new Array[Array[Tile]](width, depth)
-  for (x <- Stream.range(0, depth)) {
-    for (y <- Stream.range(0, width)) {
-      tiles(x)(y) = new Tile(x, y)
-    }
+  for (x <- Stream.range(0, width); y <- Stream.range(0, depth)) {
+    tiles(x)(y) = new Tile(x, y)
   }
   
+  /**
+   * Currently hard-coded for 4 players.
+   */
   val spawnPoints = tiles(0)(0) :: tiles(width - 1)(0) :: 
     tiles(width - 1)(depth - 1) :: tiles(0)(depth - 1) :: Nil
   
@@ -52,17 +53,36 @@ class Board(val width: Int, val depth: Int) {
    * Returns the tile at the specified position.
    * 
    * @param x the horizontal position (left to right)
-   * @param y the vertical position (front to back)
+   * @param y the depth position (front to back)
    * @return the tile at the specified coordinates
    */
   def apply(x: Int, y: Int) : Tile = {
     tiles(x)(y)
   }
   
+  /**
+   * Returns the tile at the specified position.
+   * 
+   * @param p the position as a tuple (x, y)
+   * @return the tile at the specified coordinates
+   */
   def apply(p: (Int, Int)) : Tile = apply(p._1, p._2)
   
+  /**
+   * Returns whether the specified coordinates are within this board's bounds.
+   * 
+   * @param x the horizontal position (left to right)
+   * @param y the depth position (front to back)
+   * @return whether the specified position is within bounds
+   */
   def isWithinBounds(x: Int, y: Int) : Boolean = 
     (x >= 0 && x < width) && (y >= 0 && y < depth)
   
+  /**
+   * Returns whether the specified coordinates are within this board's bounds.
+   * 
+   * @param p the position to examine as tuple (x, y)
+   * @return whether the specified position is within bounds
+   */
   def isWithinBounds(p: (Int, Int)) : Boolean = isWithinBounds(p._1, p._2)
 }

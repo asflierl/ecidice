@@ -27,9 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.test.model
-
-import ecidice.model._
+package ecidice.model
 
 /**
  * Tests the dice model.
