@@ -32,7 +32,8 @@ package ecidice
 import org.scalatest._
 import org.scalatest.matchers._
 
-trait TestBase extends Spec with ShouldMatchers with BeforeAndAfter {
+trait TestBase extends Spec with Assertions with ShouldMatchers 
+    with BeforeAndAfter {
   /** Tolerance for float values in the tests. */
   val DELTA = 1e-5f
 }

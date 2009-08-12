@@ -42,7 +42,7 @@ class TimespanSpec extends TestBase {
   private var ts : Timespan = _
   
   override def beforeEach() = {
-    g = new Game(1)
+    g = new Game(1, new Board(3, 3))
     ts = new Timespan(g, g.now + 1f, 1f)
   }
   

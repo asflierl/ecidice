@@ -107,6 +107,7 @@ class Game(numPlayers: Int, board: Board) {
       case Dice.Solid(s, c) => 
         if (c.isEmpty) {
           d.state = Dice.Solid(s, Some(p))
+          p.state = Player.Controlling(d)
           Some(d) 
         } else {
           None

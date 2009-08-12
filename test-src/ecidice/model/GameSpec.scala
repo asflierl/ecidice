@@ -30,25 +30,137 @@
 package ecidice.model
 
 class GameSpec extends TestBase {
-  private val SIZE = 10
+  private val SIZE = 3
 
   private var b : Board = _
   private var g : Game = _
-  private var p : Player = _
+  private var p1 : Player = _
+  private var p2 : Player = _
   
   override def beforeEach() = {
-    b = new Board(10, 10)
-    g = new Game(1, b)
-    p = g.players(0)
+    b = new Board(SIZE, SIZE)
+    g = new Game(2, b)
+    p1 = g.players(0)
+    p2 = g.players(1)
   }
   
+  /**
+   * Helper method that places a player at a position.
+   * 
+   * @param p the player to place
+   * @param x the horizontal component of the target position
+   * @param y the depth component of the target position
+   */
+  private def placePlayer(p: Player, x: Int, y: Int) : Unit = 
+    p.state = Player.Standing(b(x, y))
+  
+  /**
+   * Same as the above, only with a coordinate tuple for the position.
+   */
+  private def placePlayer(p: Player, pos: (Int, Int)) : Unit =
+    p.state = Player.Standing(b(pos))
+  
+  /**
+   * Helper method that creates a new dice and places it at the topmost 
+   * available space at the specified position or throws an exception if this
+   * fails.
+   * 
+   * @param x the horizontal component of the position to place the dice
+   * @param y the depth component of the position to place the dice
+   * @return the newly created and placed dice
+   */
+  private def placeDice(x: Int, y: Int) : Dice = {
+    val t = b(x, y)
+    val s = t.floor.content match {
+      case Empty => t.floor
+      case Occupied(_) => t.raised
+      case _ => throw new IllegalStateException("tile not in a state for a dice to be placed")
+    }
+    val d = new Dice
+    s.content = Occupied(d)
+    d.state = Dice.Solid(s, None)
+    d
+  }
+  
+  /**
+   * Same as the above, only with a coordinate tuple for the position.
+   */
+  private def placeDice(pos: (Int, Int)) : Unit = placeDice(pos._1, pos._2)
+    
   describe("The game") {
     describe("when the board is empty") {
       it("should not grant control on any tile") {
         for (x <- 0 until SIZE; y <- 0 until SIZE) {
-          p.state = Player.Standing(b(x, y))
-          g.requestControl(p) should be (None)
+          placePlayer(p1, x, y)
+          
+          expect(None, "pos: " + (x, y))(g.requestControl(p1))
+          p1.state should be (Player.Standing(b(x, y)))
         }
+      }
+    }
+    
+    describe("with or without dice on it") {  
+      it("should allow a player in the center to move in all directions") {
+        Direction.elements.foreach((dir) => {
+          placePlayer(p1, 1, 1)
+          
+          assert(g.requestMove(p1, dir), "dir: " + dir)
+          p1.state should have ('class (classOf[Player.Moving]))
+        })
+      }
+      
+      it("should prevent a player in a corner from moving out of board bounds") {
+        // these moves should be allowed
+        List(((0,0), Direction.UP, Direction.RIGHT),
+             ((2,0), Direction.UP, Direction.LEFT),
+             ((0,2), Direction.DOWN, Direction.RIGHT),
+             ((2,2), Direction.DOWN, Direction.LEFT)
+        ).foreach((trip) =>    
+          Direction.elements.foreach((dir) => {
+            placePlayer(p1, trip._1)
+            
+            expect((dir == trip._2 || dir == trip._3), 
+                   "pos: " + trip._1 + ", dir: " + dir)(g.requestMove(p1, dir))
+          })
+        )
+      }
+      
+      it("should prevent a player at a board edge from moving out of board bounds") {
+        //these moves should not be allowed
+        List(((1,0), Direction.DOWN),
+             ((0,1), Direction.LEFT),
+             ((1,2), Direction.UP),
+             ((2,1), Direction.RIGHT)
+        ).foreach((trip) =>
+          Direction.elements.foreach((dir) => {
+            placePlayer(p1, trip._1)
+            
+            expect((dir != trip._2), 
+                   "pos: " + trip._1 + ", dir: " + dir)(g.requestMove(p1, dir))
+          })
+        )
+      }
+    }
+    
+    describe("with some dice on it") {
+      it("should grant control over a single dice on the floor") {
+        placePlayer(p1, 1, 1)
+        val d = placeDice(1, 1)
+        
+        g.requestControl(p1) should be (Some(d))
+        d.state should be (Dice.Solid(b(1,1).floor, Some(p1)))
+        p1.state should be (Player.Controlling(d))
+      }
+      
+      it("should grant control over the topmost of 2 stacked dice") {
+        placePlayer(p1, 1, 1)
+        val d1 = placeDice(1, 1)
+        val d2 = placeDice(1, 1)
+        
+        g.requestControl(p1) should be (Some(d2))
+        d2.state should be (Dice.Solid(b(1,1).raised, Some(p1)))
+        d1.state should be (Dice.Solid(b(1,1).floor, None))
+        p1.state should be (Player.Controlling(d2))
       }
     }
   }

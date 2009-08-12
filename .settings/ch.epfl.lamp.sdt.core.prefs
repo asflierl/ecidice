@@ -1,4 +1,4 @@
-#Fri Jul 10 00:49:54 CEST 2009
+#Wed Aug 12 08:21:59 CEST 2009
 <file>=false
 Xcheck-null=false
 Xcheckinit=false
@@ -21,5 +21,5 @@ Ywarn-dead-code=false
 eclipse.preferences.version=1
 g=vars
 optimise=false
-scala.compiler.useProjectSettings=true
+scala.compiler.useProjectSettings=false
 target=jvm-1.5

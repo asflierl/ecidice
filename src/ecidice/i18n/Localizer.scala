@@ -29,15 +29,12 @@
 
 package ecidice.i18n
 
-import de.i0n.concurrent._
-
 /**
  * Provides a very basic localization service
  * 
  * @author Andreas Flierl
  * @see Localization
  */
-@ThreadSafe
 object Localizer {
   @volatile private var loc : Localization = English
   
