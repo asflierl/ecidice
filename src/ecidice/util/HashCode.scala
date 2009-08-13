@@ -27,35 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice.util
 
 /**
- * Lists possible transformations of a dice.
+ * Aims to help with the generation of hash codes (Any#hashCode).
  * 
  * @author Andreas Flierl
  */
-object Transform extends Enumeration {
-  /** Rotates a dice upwards (to the back). */
-  val ROTATE_UP = Value("rotate up")
-  
-  /** Rotates a dice downwards (to the front). */
-  val ROTATE_DOWN = Value("rotate down")
-  
-  /** Rotates a dice to the right. */
-  val ROTATE_LEFT = Value("rotate left")
-  
-  /** Rotates a dice to the left. */
-  val ROTATE_RIGHT = Value("rotate right")
-  
-  /** Spins a dice clock-wise (top and bottom remain unchanged). */
-  val SPIN_CLOCKWISE = Value("spin clockwise")
-  
-  /** Spins a dice counter-clock-wise (top and bottom remain unchanged). */
-  val SPIN_COUNTERCLOCKWISE = Value("spin counterclockwise")
-  
-  /** Flips a dice 180&deg; up (or down, doesn't matter). */
-  val FLIP_UP_OR_DOWN = Value("flip up or down")
-  
-  /** Flips a dice 180&deg; left (or right, doesn't matter). */
-  val FLIP_LEFT_OR_RIGHT = Value("flip left or right")
+object HashCode {
+  def apply(l: Int*) : Int = (1 /: l)(_ * 41 + _)
 }

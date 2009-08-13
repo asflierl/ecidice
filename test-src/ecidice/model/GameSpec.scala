@@ -30,15 +30,13 @@
 package ecidice.model
 
 class GameSpec extends TestBase {
-  private val SIZE = 3
-
   private var b : Board = _
   private var g : Game = _
   private var p1 : Player = _
   private var p2 : Player = _
   
   override def beforeEach() = {
-    b = new Board(SIZE, SIZE)
+    b = new Board(3, 3)
     g = new Game(2, b)
     p1 = g.players(0)
     p2 = g.players(1)
@@ -87,10 +85,10 @@ class GameSpec extends TestBase {
    */
   private def placeDice(pos: (Int, Int)) : Unit = placeDice(pos._1, pos._2)
     
-  describe("The game") {
+  describe("The game (3 x 3 board)") {
     describe("when the board is empty") {
       it("should not grant control on any tile") {
-        for (x <- 0 until SIZE; y <- 0 until SIZE) {
+        for (x <- 0 to 2; y <- 0 to 2) {
           placePlayer(p1, x, y)
           
           expect(None, "pos: " + (x, y))(g.requestControl(p1))
@@ -109,36 +107,29 @@ class GameSpec extends TestBase {
         })
       }
       
-      it("should prevent a player in a corner from moving out of board bounds") {
-        // these moves should be allowed
-        List(((0,0), Direction.UP, Direction.RIGHT),
+      // these moves should be allowed
+      val allowed = List(((0,0), Direction.UP, Direction.RIGHT),
              ((2,0), Direction.UP, Direction.LEFT),
              ((0,2), Direction.DOWN, Direction.RIGHT),
-             ((2,2), Direction.DOWN, Direction.LEFT)
-        ).foreach((trip) =>    
-          Direction.elements.foreach((dir) => {
-            placePlayer(p1, trip._1)
-            
-            expect((dir == trip._2 || dir == trip._3), 
-                   "pos: " + trip._1 + ", dir: " + dir)(g.requestMove(p1, dir))
-          })
-        )
+             ((2,2), Direction.DOWN, Direction.LEFT))
+      
+      for (tc <- allowed; dir <- Direction.elements) {
+        it("should correctly handle a player at %s moving %s".format(tc._1, dir)) {
+          placePlayer(p1, tc._1)
+          
+          g.requestMove(p1, dir) should be (dir == tc._2 || dir == tc._3)
+        }
       }
       
-      it("should prevent a player at a board edge from moving out of board bounds") {
-        //these moves should not be allowed
-        List(((1,0), Direction.DOWN),
-             ((0,1), Direction.LEFT),
-             ((1,2), Direction.UP),
-             ((2,1), Direction.RIGHT)
-        ).foreach((trip) =>
-          Direction.elements.foreach((dir) => {
-            placePlayer(p1, trip._1)
-            
-            expect((dir != trip._2), 
-                   "pos: " + trip._1 + ", dir: " + dir)(g.requestMove(p1, dir))
-          })
-        )
+      //these moves should not be allowed
+      val notAllowed = List(((1,0), Direction.DOWN), ((0,1), Direction.LEFT),
+           ((1,2), Direction.UP), ((2,1), Direction.RIGHT))
+      
+      for (tc <- notAllowed; dir <- Direction.elements) {
+        it("should correctly handle a player at %s moving %s".format(tc._1, dir)) {
+          placePlayer(p1, tc._1)
+          g.requestMove(p1, dir) should be (dir != tc._2)
+        }
       }
     }
     
@@ -161,6 +152,44 @@ class GameSpec extends TestBase {
         d2.state should be (Dice.Solid(b(1,1).raised, Some(p1)))
         d1.state should be (Dice.Solid(b(1,1).floor, None))
         p1.state should be (Player.Controlling(d2))
+      }
+      
+      for (dir <- Direction.elements) {
+        it("should allow a player to grab the only dice at the center tile " 
+            + "and move %s with it".format(dir)) {
+          placePlayer(p1, 1, 1)
+          val d1 = placeDice(1, 1)
+            
+          g.requestControl(p1) should be (Some(d1))
+          g.requestMove(p1, dir) should be (true)
+        }
+        
+        it("should allow a player to grab the top of 2 dice at the center tile " 
+            + "and move %s with it".format(dir)) {
+          placePlayer(p1, 1, 1)
+          val d1 = placeDice(1, 1)
+          val d2 = placeDice(1, 1)
+            
+          g.requestControl(p1) should be (Some(d2))
+          g.requestMove(p1, dir) should be (true)
+        }
+      }
+      
+      it("should allow a player to grab a tile from the floor and move onto another") {
+        placePlayer(p1, 1, 1)
+        val d1 = placeDice(1, 1)
+        val d2 = placeDice(1, 2)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestMove(p1, Direction.UP) should be (true)
+        p1.state should be (Player.Controlling(d1))
+        
+        val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
+                         g.nowFor(g.MOVE_DURATION), Transform.FLIP_UP_OR_DOWN)
+        
+        d1.state should be (Dice.Moving(m, p1)) 
+        b(1,1).floor.content should be(m)
+        b(1,2).raised.content should be(m)
       }
     }
   }

@@ -57,6 +57,8 @@ class Game(numPlayers: Int, board: Board) {
   
   def now = currentTime
   
+  def nowFor(someTime: Float) = new Timespan(this, now, someTime)
+  
   /**
    * Updates this game after the specified amount of time has elapsed.
    * 
@@ -147,8 +149,7 @@ class Game(numPlayers: Int, board: Board) {
       val pos = positionAfterMove(t, dir)
       
       if (board.isWithinBounds(pos)) {
-        val mov = Player.Moving(p, t, board(pos), 
-                                new Timespan(this, now, MOVE_DURATION))
+        val mov = Player.Moving(p, t, board(pos), nowFor(MOVE_DURATION))
         p.state = mov
         timedStuff += mov
         true
@@ -173,7 +174,7 @@ class Game(numPlayers: Int, board: Board) {
             case _ : Movement => false // destination floor involved in movement
             case _ : Occupied => t.raised.content match {
               case Empty => {
-                startDiceMovement(d, p, s, t.floor, dir)                
+                startDiceMovement(d, p, s, t.raised, dir)                
                 true
               }
               case _ => false // destination floor + raised non-empty
@@ -223,8 +224,7 @@ class Game(numPlayers: Int, board: Board) {
       case Direction.LEFT | Direction.RIGHT => Transform.FLIP_LEFT_OR_RIGHT
     }
       
-    val m = Movement(d, from, to, new Timespan(this, now, MOVE_DURATION), 
-                     transform)
+    val m = Movement(d, from, to, nowFor(MOVE_DURATION), transform)
     
     from.content = m
     to.content = m
@@ -258,8 +258,7 @@ class Game(numPlayers: Int, board: Board) {
     case Empty => {
       val d = new Dice()
       board(x, y).floor.content = Occupied(d)
-      val app = Dice.Appearing(board(x, y).floor, 
-                               new Timespan(this, now, APPEAR_DURATION))
+      val app = Dice.Appearing(board(x, y).floor, nowFor(APPEAR_DURATION))
       d.state = app
       timedStuff += app
       Some(d)

@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.util.HashCode
+
 /**
  * Represents a period of time, i.e. the time interval [start, end]
  * 
@@ -38,7 +40,7 @@ package ecidice.model
  * @param start the instant this timespan starts
  * @param ttl the initial time-to-live (aka duration)
  */
-class Timespan(game: Game, val start: Float, ttl: Float) {
+class Timespan(game: Game, val start: Float, private val ttl: Float) {
   private var to = start + ttl
   
   def end = to
@@ -57,4 +59,20 @@ class Timespan(game: Game, val start: Float, ttl: Float) {
     if (game.now <= start) 0f
     else if (game.now >= to) 1f
     else (game.now - start) / (to - start)
+  
+  /**
+   * Note that this definition of equality uses the initialization parameters
+   * not current (mutable) state.
+   */
+  override def equals(obj: Any) = obj match {
+    case x : Timespan => (x.start == start) && (x.ttl == ttl)
+    case _ => false
+  }
+  
+  /**
+   * Along the same lines as <code>equals</code>, this method uses the 
+   * initialization parameters not current (mutable) state to compute the hash
+   * code.
+   */
+  override def hashCode = HashCode(start.hashCode, ttl.hashCode)
 }
