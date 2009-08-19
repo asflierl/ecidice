@@ -169,16 +169,21 @@ class Game(numPlayers: Int, board: Board) {
           t.floor.content match {
             case Empty => {
               startDiceMovement(d, p, s, t.floor, dir)
-              true
+              true // floor is free to be moved to
             }
             case _ : Movement => false // destination floor involved in movement
-            case _ : Occupied => t.raised.content match {
-              case Empty => {
-                startDiceMovement(d, p, s, t.raised, dir)                
-                true
-              }
-              case _ => false // destination floor + raised non-empty
-            }
+            case Occupied(fd) => fd.state match { // floor level occupied
+              case Dice.Solid(_, c) => 
+                if (c != None) false // floor dice controlled by another player
+                else t.raised.content match {
+                  case Empty => {
+                    startDiceMovement(d, p, s, t.raised, dir)                
+                    true // raised is free to be moved to
+                  }
+                  case _ => false // destination floor + raised non-empty
+                }
+              case _ => false // can only move onto solid dice
+            } 
           }
         } else false // destination out of board bounds 
       }
@@ -253,6 +258,7 @@ class Game(numPlayers: Int, board: Board) {
    * 
    * @param x the horizontal position on the board
    * @param y the depth position on the board
+   * @return optionally the new dice
    */
   def spawnDice(x: Int, y: Int) = board(x, y).floor.content match {
     case Empty => {

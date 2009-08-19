@@ -143,7 +143,7 @@ class GameSpec extends TestBase {
         p1.state should be (Player.Controlling(d))
       }
       
-      it("should grant control over the topmost of 2 stacked dice") {
+      it("should grant control over the upper of 2 stacked dice") {
         placePlayer(p1, 1, 1)
         val d1 = placeDice(1, 1)
         val d2 = placeDice(1, 1)
@@ -164,7 +164,7 @@ class GameSpec extends TestBase {
           g.requestMove(p1, dir) should be (true)
         }
         
-        it("should allow a player to grab the top of 2 dice at the center tile " 
+        it("should allow a player to grab the upper of 2 dice at the center tile " 
             + "and move %s with it".format(dir)) {
           placePlayer(p1, 1, 1)
           val d1 = placeDice(1, 1)
@@ -175,14 +175,13 @@ class GameSpec extends TestBase {
         }
       }
       
-      it("should allow a player to grab a tile from the floor and move onto another") {
+      it("should allow a player to grab a dice from the floor and move onto another dice") {
         placePlayer(p1, 1, 1)
         val d1 = placeDice(1, 1)
         val d2 = placeDice(1, 2)
         
         g.requestControl(p1) should be (Some(d1))
         g.requestMove(p1, Direction.UP) should be (true)
-        p1.state should be (Player.Controlling(d1))
         
         val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
                          g.nowFor(g.MOVE_DURATION), Transform.FLIP_UP_OR_DOWN)
@@ -190,6 +189,139 @@ class GameSpec extends TestBase {
         d1.state should be (Dice.Moving(m, p1)) 
         b(1,1).floor.content should be(m)
         b(1,2).raised.content should be(m)
+      }
+      
+      it("should allow a player to grab the upper of 2 dice and move onto another dice") {
+        placePlayer(p1, 1, 1)
+        placeDice(1, 1)
+        val d1 = placeDice(1, 1)
+        val d2 = placeDice(0, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestMove(p1, Direction.LEFT) should be (true)
+        
+        val m = Movement(d1, b(1,1).raised, b(0,1).raised, 
+                         g.nowFor(g.MOVE_DURATION), Transform.ROTATE_LEFT)
+        
+        d1.state should be (Dice.Moving(m, p1)) 
+        b(1,1).raised.content should be(m)
+        b(0,1).raised.content should be(m)
+      }
+      
+      it("should allow a player to grab the upper of 2 dice and move to an empty tile") {
+        placePlayer(p1, 1, 1)
+        placeDice(1, 1)
+        val d1 = placeDice(1, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestMove(p1, Direction.RIGHT) should be (true)
+        
+        val m = Movement(d1, b(1,1).raised, b(2,1).floor, 
+                         g.nowFor(g.MOVE_DURATION), Transform.FLIP_LEFT_OR_RIGHT)
+        
+        d1.state should be (Dice.Moving(m, p1)) 
+        b(1,1).raised.content should be(m)
+        b(2,1).floor.content should be(m)
+      }
+      
+      it("should not grant control over an appearing dice") {
+        placePlayer(p1, 1, 1)
+        val d1 = g.spawnDice(1, 1).getOrElse(fail("dice could not be spawned"))
+        g.requestControl(p1) should be (None)
+      }
+      
+      it("should not allow a player to move onto an appearing dice") {
+        placePlayer(p1, 2, 1)
+        val d1 = placeDice(2, 1)
+        
+        val d2 = g.spawnDice(1, 1).getOrElse(fail("dice could not be spawned"))
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestMove(p1, Direction.LEFT) should be (false)
+      }
+    }
+    
+    describe("with 2 players involved") {
+      it("should not grant a player control over a dice at the floor level " +
+         "that is already controlled by another player") {
+        placePlayer(p1, 1, 1)
+        placePlayer(p2, 1, 1)
+        val d1 = placeDice(1, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestControl(p2) should be (None)
+      }
+      
+      it("should not grant a player control over a dice at the raised level " +
+         "that is already controlled by another player") {
+        placePlayer(p1, 1, 1)
+        placePlayer(p2, 1, 1)
+        placeDice(1, 1)
+        val d1 = placeDice(1, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestControl(p2) should be (None)
+      }
+      
+      it("should not let a player move with a dice from the floor onto a " +
+         "dice that is controlled by another player") {
+        placePlayer(p1, 1, 1)
+        placePlayer(p2, 2, 1)
+        
+        val d1 = placeDice(1, 1)
+        val d2 = placeDice(2, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestControl(p2) should be (Some(d2))
+        
+        g.requestMove(p2, Direction.LEFT) should be (false)
+      }
+      
+      it("should not let a player move with a dice from the raised level " +
+         "onto a dice that is controlled by another player") {
+        placePlayer(p1, 1, 1)
+        placePlayer(p2, 2, 1)
+        
+        val d1 = placeDice(1, 1)
+        placeDice(2, 1)
+        val d2 = placeDice(2, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestControl(p2) should be (Some(d2))
+        
+        g.requestMove(p2, Direction.LEFT) should be (false)
+      }
+      
+      it("should not let 2 players move onto the same floor space") {
+        placePlayer(p1, 0, 2)
+        placePlayer(p2, 1, 1)
+        
+        placeDice(0, 2)
+        val d1 = placeDice(0, 2)
+        val d2 = placeDice(1, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestControl(p2) should be (Some(d2))
+        
+        g.requestMove(p1, Direction.RIGHT) should be (true)
+        g.requestMove(p2, Direction.UP) should be (false)
+      }
+      
+      it("should not let 2 players move onto the same raised space") {
+        placePlayer(p1, 0, 0)
+        placePlayer(p2, 1, 1)
+        
+        val d1 = placeDice(0, 0)
+        placeDice(1, 1)
+        val d2 = placeDice(1, 1)
+        
+        placeDice(0, 1)
+        
+        g.requestControl(p1) should be (Some(d1))
+        g.requestControl(p2) should be (Some(d2))
+        
+        g.requestMove(p1, Direction.UP) should be (true)
+        g.requestMove(p2, Direction.LEFT) should be (false)
       }
     }
   }
