@@ -66,7 +66,8 @@ class Game(numPlayers: Int, board: Board) {
    */
   def update(elapsed: Float) {
     currentTime += elapsed
-    //TODO the timed stuff has to be processed
+    
+    //TODO the timed stuff has to be processed (movement, appearing, charging, bursting)
   }
   
   /**

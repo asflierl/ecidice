@@ -1,2 +1,4 @@
-bin
 .manager
+bin
+build
+env.properties
