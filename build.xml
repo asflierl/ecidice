@@ -30,6 +30,12 @@
 <project name="ecidice" default="all">
 	<description>
 	  Build script for the ecidice project.
+		
+	  The main goal of this ant build is to provide an easy means to package
+	  the application for deployment. For everything to work correctly, the
+	  Scala tools must be installed. The scala.home property must point to the
+	  home directory of the Scala installation. Set it in your own env.properties 
+	  file in the project root.
   </description>
 
 	<property file="env.properties" />
@@ -48,6 +54,12 @@
 		<pathelement location="${main.build.dir}" />
   </path>
 	
+	<path id="test.classpath">
+    <path refid="main.build.classpath" />
+    <fileset dir="${lib.dir}/scalatest" includes="*.jar" />
+    <pathelement location="${test.build.dir}" />
+  </path>
+	
 	<taskdef resource="scala/tools/ant/antlib.xml">
     <classpath>
       <pathelement location="${scala.home}/lib/scala-compiler.jar" />
@@ -59,18 +71,51 @@
 		
 	</target>
 	
-	<target name="clean">
-	 <delete dir="${build.dir}" quiet="true" />
+	<target name="clean" description="deletes all build artifacts">
+	  <delete dir="${build.dir}" quiet="true" />
 	</target>
-	
+
 	<target name="main.compile" description="compiles the main program">
 	  <mkdir dir="${main.build.dir}" />
 	  <scalac srcdir="${main.src.dir}"
 		        destdir="${main.build.dir}"
 		        classpathref="main.build.classpath"
+	  	      target="jvm-1.5"
 		        force="changed">
 	    <include name="**/*.scala" />
 	  </scalac>
 	</target>
-
+	
+  <target name="test.compile" description="compiles the tests">
+    <mkdir dir="${test.build.dir}" />
+    <scalac srcdir="${test.src.dir}"
+            destdir="${test.build.dir}"
+            classpathref="test.classpath"
+            target="jvm-1.5"
+            force="changed">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+	
+	<target name="doc" description="builds the HTML API docs with scaladoc">
+	  <mkdir dir="${doc.build.dir}" />
+		<scaladoc srcdir="${main.src.dir}"
+		          destdir="${doc.build.dir}"
+		          deprecation="yes" unchecked="yes"
+		          windowtitle="ecidice API documentation"
+		          doctitle="ecidice documentation"
+		          classpathref="main.build.classpath">
+      <include name="**/*.scala"   />
+		</scaladoc>
+  </target>
+	
+	<target name="test.run" description="runs all tests using scalatest"
+      depends="main.compile,test.compile">
+		<java classname="org.scalatest.tools.Runner"
+		      classpathref="test.classpath">
+			<arg value="-p" />
+			<arg value="${test.build.dir}" />
+			<arg value="-o" />
+	  </java>
+  </target>
 </project>
