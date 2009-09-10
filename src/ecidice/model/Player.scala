@@ -35,10 +35,10 @@ class Player(game: Game, spawnPoint: Tile) {
 object Player {
   sealed abstract class State
   
-  case class Standing(p: Tile) extends State
+  case class Standing(where: Tile) extends State
   
   case class Controlling(dice: Dice) extends State
   
-  case class Moving(p: Player, from: Tile, to: Tile, when: Timespan)
+  case class Moving(player: Player, from: Tile, to: Tile, when: Timespan)
     extends State with Timed
 }

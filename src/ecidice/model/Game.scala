@@ -29,7 +29,7 @@
 
 package ecidice.model
 
-import scala.collection.mutable._
+import scala.collection.immutable._
 
 /**
  * Central mediator that manages the objects participating in a game and updates
@@ -37,15 +37,21 @@ import scala.collection.mutable._
  * 
  * @author Andreas Flierl
  */
+//TODO it probably should be possible to move onto charging dice!
+//TODO bursting dice should be ethereal
+//TODO falling dice must be modeled (probably linked to burst time?)
+//TODO relinquish control must be modeled
+//TODO some kind of scoring system 
 class Game(numPlayers: Int, board: Board) {
-  private var currentTime = 0f
-  
-  private val timedStuff = new ArrayBuffer[Timed]
-  
   val MOVE_DURATION = 0.25f
   val APPEAR_DURATION = 5f
+  val CHARGE_DURATION = 10f
+  val BURST_DURATION = 1f
   
   lazy val players = createPlayers(0)
+  
+  private var currentTime = 0f
+  private var timedStuff : List[Timed] = Nil
   
   /**
    * Creates <code>num</code> players in this game, starting at the board's 
@@ -67,7 +73,109 @@ class Game(numPlayers: Int, board: Board) {
   def update(elapsed: Float) {
     currentTime += elapsed
     
-    //TODO the timed stuff has to be processed (movement, appearing, charging, bursting)
+    var stuffToRemove : List[Timed] = Nil
+    var moves : List[Movement] = Nil
+    
+    // process timed stuff that is over
+    timedStuff.foreach((x) => if (x.when.isOver) {
+      stuffToRemove = x :: stuffToRemove
+      
+      x match {
+        case da : Dice.Appearing => diceAppeared(da)
+        case m : Movement => moves = m :: moves // process those later
+        case pm : Player.Moving => playerMovementEnded(pm) 
+        case bg : BurstGroup => burstGroupTimedOut(bg)
+      }
+    })
+    
+    moves.foreach((m) => {
+      
+    })
+  }
+  
+  private def diceAppeared(da : Dice.Appearing) = {
+    val s = da.where
+    //TODO is the board full now?
+    s.content match { 
+      case Occupied(d) => d.state = Dice.Solid(s, None) 
+      case _ => throw new IllegalStateException("space unoccupied")
+    }
+  }
+  
+  private def diceMovementEnded(m : Movement) = {
+    m.dice.change(m.transform)
+      
+    if (m.dice.top == 1) {
+      board.tiles filter (_.floor.content.isInstanceOf[Occupied])
+    }
+        
+    val group = find(m.dice, m.to.tile)    
+    
+    Nil //TODO
+  }
+  
+  private def playerMovementEnded(pm : Player.Moving) = {
+    pm.player.state = Player.Standing(pm.to)
+  }
+  
+  private def burstGroupTimedOut(bg : BurstGroup) = {
+    bg.state match {
+      case BurstGroup.Charging => {
+        bg.state = BurstGroup.Bursting
+        bg.when.lengthen(BURST_DURATION)
+      } 
+      case BurstGroup.Bursting => {
+        bg.dice.foreach((d) => {
+          //TODO give the initiator some points
+          d.state match {
+            case Dice.Locked(_, g, s) if (bg == g) => s.content = Empty
+            case _ => throw new IllegalStateException("dice not locked")
+          }
+          d.state = Dice.Burst
+        })
+      }
+    }
+  }
+  
+  /**
+   * Finds and returns all dice (including <code>src</code>) that show the same 
+   * top face as <code>src</code> and that are reachable from <code>src</code>
+   * via other such dice (by only moving up, down, left or right once or 
+   * several times). The <code>src</code> dice is expected to be in the state
+   * <code>Dice.Moving</code> and already have the transform associated with
+   * the move applied to it. Other than that, only solid dice that are 
+   * uncontrolled are considered.
+   * <p>
+   * As an example consider the following 3 x 3 board:
+   * <pre>
+   *     X Y Z
+   *   ---------
+   * A | 6 4 6 |
+   * B | 6 3 6 |
+   * C | 6 6 3 |
+   *   ---------
+   * </pre>
+   * 
+   * Starting from CX, this method would return AX, BX, CX and CY. Starting from
+   * BY, it would only return BY. Starting from BZ, it would return AZ and BZ.
+   */
+  private[model] def find(src: Dice, start: Tile) : Set[Dice] = {
+    def findFromDice(d: Dice, g: Set[Dice]) : Set[Dice] = 
+      if (d.top != src.top || g.contains(d)) g
+      else d.state match {
+        case Dice.Solid(s, c) if (c == None) => findFromTile(s.tile, g + d)
+        case _ => g
+      }
+    
+    def findFromTile(t: Tile, g: Set[Dice]) = {
+      var res = g
+      Direction.elements.foreach(
+        board.diceInDir(t, _, Tile.Level.FLOOR).foreach( 
+          (next) => res = findFromDice(next, res)))
+      res
+    }
+    
+    findFromTile(start, Set(src))
   }
   
   /**
@@ -147,12 +255,12 @@ class Game(numPlayers: Int, board: Board) {
      * around.
      */
     case Player.Standing(t @ Tile(x, y)) => {
-      val pos = positionAfterMove(t, dir)
+      val pos = board.positionInDir(t, dir)
       
       if (board.isWithinBounds(pos)) {
         val mov = Player.Moving(p, t, board(pos), nowFor(MOVE_DURATION))
         p.state = mov
-        timedStuff += mov
+        timedStuff = mov :: timedStuff
         true
       } else false // destination out of board bounds
     }
@@ -163,7 +271,7 @@ class Game(numPlayers: Int, board: Board) {
      */
     case Player.Controlling(d) => d.state match {
       case Dice.Solid(s, Some(c)) if (p == c) => {
-        val pos = positionAfterMove(s.tile, dir)
+        val pos = board.positionInDir(s.tile, dir)
         
         if (board.isWithinBounds(pos)) {
           val t = board(pos)
@@ -173,7 +281,10 @@ class Game(numPlayers: Int, board: Board) {
               true // floor is free to be moved to
             }
             case _ : Movement => false // destination floor involved in movement
-            case Occupied(fd) => fd.state match { // floor level occupied
+            case Occupied(fd) => fd.state match {
+              
+              // floor level occupied -> further analysis
+              
               case Dice.Solid(_, c) => 
                 if (c != None) false // floor dice controlled by another player
                 else t.raised.content match {
@@ -184,6 +295,7 @@ class Game(numPlayers: Int, board: Board) {
                   case _ => false // destination floor + raised non-empty
                 }
               case _ => false // can only move onto solid dice
+              
             } 
           }
         } else false // destination out of board bounds 
@@ -194,7 +306,7 @@ class Game(numPlayers: Int, board: Board) {
        * <code>true</code>.
        */
       case Dice.Moving(m @ Movement(_, a, b, _, _), c) 
-        if (p == c && b.tile.pos == positionAfterMove(a.tile, dir)) => true
+        if (p == c && b.tile.pos == board.positionInDir(a.tile, dir)) => true
       
       case _ => false // dice appearing, bursting or moving in another direction
     }
@@ -202,7 +314,7 @@ class Game(numPlayers: Int, board: Board) {
     /* Player wants to move to the same place she's already moving to: 
      * leave things as they are and return <code>true</code>.
      */
-    case Player.Moving(_, a, b, _) if (b.pos == positionAfterMove(a, dir)) 
+    case Player.Moving(_, a, b, _) if (b.pos == board.positionInDir(a, dir)) 
       => true
     
     case _ => false
@@ -235,22 +347,7 @@ class Game(numPlayers: Int, board: Board) {
     from.content = m
     to.content = m
     d.state = Dice.Moving(m, p)
-    timedStuff += m
-  }
-  
-  /**
-   * Determines the position resulting from a movement from tile <code>t</code>
-   * in direction <code>dir</code>.
-   * 
-   * @param t a tile marking the starting position
-   * @param dir the direction to move in
-   * @return the position resulting from the movement
-   */
-  private def positionAfterMove(t: Tile, dir: Direction.Value) = dir match {
-    case Direction.UP => (t.x, t.y + 1)
-    case Direction.DOWN => (t.x, t.y - 1)
-    case Direction.RIGHT => (t.x + 1, t.y)
-    case Direction.LEFT => (t.x - 1, t.y)
+    timedStuff = m :: timedStuff
   }
   
   /**
@@ -267,7 +364,7 @@ class Game(numPlayers: Int, board: Board) {
       board(x, y).floor.content = Occupied(d)
       val app = Dice.Appearing(board(x, y).floor, nowFor(APPEAR_DURATION))
       d.state = app
-      timedStuff += app
+      timedStuff = app :: timedStuff
       Some(d)
     }
     case _ => None

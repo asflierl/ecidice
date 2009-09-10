@@ -40,7 +40,7 @@ package ecidice.model
  * @param content what's in this space
  */
 class Space(val tile: Tile, var content: Content) {
-  /** Returns whether this space is in the floor level. */
+  /** Returns whether this space is on the floor level. */
   def isFloor = (this == tile.floor)
   
   /** 

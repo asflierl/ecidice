@@ -29,69 +29,40 @@
 
 package ecidice.model
 
-import ecidice.util.Preamble._
-
 /**
- * Spec-based tests of the timespan model.
+ * Spec-based tests of the board model.
  * 
  * @author Andreas Flierl
  */
-class TimespanSpec extends TestBase {
-  
-  private var g : Game = _
-  private var ts : Timespan = _
+class BoardSpec extends TestBase {
+  private val width = 5
+  private val depth = 3
+  private var b : Board = _
   
   override def beforeEach() = {
-    g = new Game(1, new Board(3, 3))
-    ts = new Timespan(g, g.now + 1f, 1f)
+    b = new Board(width, depth)
   }
   
-  describe("A timespan") {
+  describe("A %d x %d board".format(width, depth)) {
+    "asd %d".format(1)
     
-    describe("when newly created") { 
-      it("should return the correct end time") {
-        ts.end should be (2f)
+    it("should return its tiles in the right order") {
+      val iter = b.tiles
+      
+      for (x <- 0 until width; y <- 0 until depth) {
+        iter.hasNext should be (true)
+        iter.next should be(b(x, y))
       }
       
-      it("should display 0% progress directly after initialisation") {
-        ts.progress should be (0f)
-      }
-      
-      it("should ignore negative values passed to 'lengthen'") {
-        ts.lengthen(-2f)
-        ts.end should be (2f)
-        ts.progress should be (0f)
-      }
+      iter.hasNext should be (false)
     }
-  
-    describe("after some time elapsed") {
-      it("should report 0% progress if the gametime is before the timespan start") {
-        g.update(.5f)
-        ts.progress should be (0f)
-      }
-      
-      it("should report 0% progress if the gametime equals the timespan start") {
-        g.update(1f)
-        ts.progress should be (0f)
-      }
-      
-      it("should report the correct progress if the gametime lies in the timespan") {
-        g.update(1f)
-        for (x <- 0f to 1f step .1f) {
-          ts.progress should be (x plusOrMinus DELTA)
-          g.update(.1f)
-        }
-      }
-      
-      it("should report 100% progress if the gametime equals the timespan end") {
-        g.update(2f)
-        ts.progress should be (1f)
-      }
-      
-      it("should report 100% progress if the gametime is after the timespan end") {
-        g.update(4f)
-        ts.progress should be (1f)
-      }
-    }
+    
+    List( (Direction.UP,    (2, 2)),
+          (Direction.DOWN,  (2, 0)),
+          (Direction.LEFT,  (1, 1)),  
+          (Direction.RIGHT, (3, 1)) ).foreach((tc) =>
+      it("should return the correct position after moving %s from the center".format(tc._1.toString)) {
+        b.positionInDir(b(2, 1), tc._1) should be(tc._2)
+    })
   }
 }

@@ -51,6 +51,8 @@ class Timespan(game: Game, val start: Float, private val ttl: Float) {
     }
   }
   
+  def isOver = (progress == 1f)
+  
   /**
    * Returns where in this timespan the associated game is now as a number in
    * the interval [0, 1].

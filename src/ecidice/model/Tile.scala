@@ -46,4 +46,8 @@ object Tile {
   object Visibility extends Enumeration {
     val VISIBLE, HIDDEN = Value
   }
+  
+  object Level extends Enumeration {
+    val FLOOR, RAISED = Value
+  }
 }

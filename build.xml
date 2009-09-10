@@ -112,7 +112,8 @@
 	<target name="test.run" description="runs all tests using scalatest"
       depends="main.compile,test.compile">
 		<java classname="org.scalatest.tools.Runner"
-		      classpathref="test.classpath">
+		      classpathref="test.classpath"
+			    fork="false">
 			<arg value="-p" />
 			<arg value="${test.build.dir}" />
 			<arg value="-o" />

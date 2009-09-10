@@ -29,6 +29,11 @@
 
 package ecidice.model
 
+/**
+ * Spec-based tests of the game model.
+ * 
+ * @author Andreas Flierl
+ */
 class GameSpec extends TestBase {
   private var b : Board = _
   private var g : Game = _
@@ -85,7 +90,7 @@ class GameSpec extends TestBase {
    */
   private def placeDice(pos: (Int, Int)) : Unit = placeDice(pos._1, pos._2)
     
-  describe("The game (3 x 3 board)") {
+  describe("A game of ecidice (on a 3 x 3 board)") {
     describe("when the board is empty") {
       it("should not grant control on any tile") {
         for (x <- 0 to 2; y <- 0 to 2) {
@@ -239,6 +244,42 @@ class GameSpec extends TestBase {
         g.requestControl(p1) should be (Some(d1))
         g.requestMove(p1, Direction.LEFT) should be (false)
       }
+      
+      it("should correctly find a group of matching dice") {
+        val d = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+        d(8).change(Transform.ROTATE_UP)
+        d(4).change(Transform.ROTATE_UP)
+        
+        val inc = d.filter(_.top == 6)
+        val exc = d.filter(_.top != 6)
+        
+        val s = g.find(d(0), b(0, 0))
+        
+        inc.foreach(s should contain(_))
+        exc.foreach(s should not contain(_))
+      }
+      
+      it("should correctly find only one of two groups of matching dice") {
+        val d00 = placeDice(0, 0)
+        val d10 = placeDice(1, 0)
+        val d02 = placeDice(0, 2)
+        val d12 = placeDice(1, 2)
+        val d11 = placeDice(1, 1)
+        d11.change(Transform.ROTATE_LEFT)
+        
+        val s = g.find(d12, b(1, 2))
+        
+        List(d02, d12) foreach (s should contain(_))
+        List(d00, d10, d11) foreach (s should not contain(_))
+      }
+      
+      it("should correctly find a board full of matching dice") {
+        val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+        
+        val s = g.find(dice(4), b(1, 1))
+        
+        dice foreach (s should contain(_))
+      }
     }
     
     describe("with 2 players involved") {
@@ -323,6 +364,8 @@ class GameSpec extends TestBase {
         g.requestMove(p1, Direction.UP) should be (true)
         g.requestMove(p2, Direction.LEFT) should be (false)
       }
+      
+
     }
   }
 }

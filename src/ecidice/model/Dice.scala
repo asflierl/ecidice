@@ -49,6 +49,9 @@ package ecidice.model
  * @author Andreas Flierl
  */
 class Dice {
+  private val serial = Dice.serial
+  Dice.serial += 1
+  
   private var topFace = 6
   private var rightFace = 5
   private var frontFace = 4
@@ -114,8 +117,13 @@ class Dice {
     case Transform.FLIP_UP_OR_DOWN => set(bottom, right, back)
     case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
   }
+  
+  override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, 
+                                                      right, front)
 }
-object Dice {    
+object Dice {
+  private var serial = 0
+    
   /**
    * Supertype of a dice's possible states.
    */
@@ -146,4 +154,6 @@ object Dice {
    */
   case class Locked(val initiator: Player, group: BurstGroup, where: Space)
     extends State
+    
+  case object Burst extends State
 }

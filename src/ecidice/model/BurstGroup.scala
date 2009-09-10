@@ -29,18 +29,20 @@
 
 package ecidice.model
 
-import scala.collection.mutable._
+import scala.collection.immutable._
 
 class BurstGroup(val when: Timespan) extends Timed {
-  private val dice = new HashSet[Dice]
+  private var diceSet : Set[Dice] = new HashSet[Dice]
   
   var state : BurstGroup.State = _
   
   def +=(d: Dice) { 
-    dice += (d) 
+    diceSet += d 
   }
   
-  def contains(d: Dice) = dice.contains(d)
+  def dice = diceSet
+  
+  def contains(d: Dice) = diceSet.contains(d)
 }
 object BurstGroup {
   abstract sealed class State

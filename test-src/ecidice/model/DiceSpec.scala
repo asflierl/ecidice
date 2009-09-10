@@ -30,7 +30,7 @@
 package ecidice.model
 
 /**
- * Tests the dice model.
+ * Spec-based tests of the dice model.
  * 
  * @author Andreas Flierl
  */

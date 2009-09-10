@@ -38,16 +38,34 @@ package ecidice.model
  * @param depth the number of tiles from front to back
  */
 class Board(val width: Int, val depth: Int) {
-  private val tiles = new Array[Array[Tile]](width, depth)
+  private val tileArr = new Array[Array[Tile]](width, depth)
   for (x <- Stream.range(0, width); y <- Stream.range(0, depth)) {
-    tiles(x)(y) = new Tile(x, y)
+    tileArr(x)(y) = new Tile(x, y)
+  }
+  
+  /**
+   * Returns an iterator that traverses over all tiles of this board. The tiles
+   * are returned from front to back, from left to right.
+   */
+  def tiles = new Iterator[Tile] {
+    var x = 0
+    var y = 0
+    
+    override def hasNext = x < width
+    
+    override def next = {
+      val tile = tileArr(x)(y)
+      y += 1
+      if (y == depth) { x += 1; y = 0 }
+      tile
+    }
   }
   
   /**
    * Currently hard-coded for 4 players.
    */
-  val spawnPoints = tiles(0)(0) :: tiles(width - 1)(0) :: 
-    tiles(width - 1)(depth - 1) :: tiles(0)(depth - 1) :: Nil
+  val spawnPoints = tileArr(0)(0) :: tileArr(width - 1)(0) :: 
+    tileArr(width - 1)(depth - 1) :: tileArr(0)(depth - 1) :: Nil
   
   /**
    * Returns the tile at the specified position.
@@ -57,7 +75,7 @@ class Board(val width: Int, val depth: Int) {
    * @return the tile at the specified coordinates
    */
   def apply(x: Int, y: Int) : Tile = {
-    tiles(x)(y)
+    tileArr(x)(y)
   }
   
   /**
@@ -67,6 +85,34 @@ class Board(val width: Int, val depth: Int) {
    * @return the tile at the specified coordinates
    */
   def apply(p: (Int, Int)) : Tile = apply(p._1, p._2)
+  
+  /**
+   * Determines the position resulting from a movement from tile <code>t</code>
+   * in direction <code>dir</code>.
+   * 
+   * @param t a tile marking the starting position
+   * @param dir the direction to move in
+   * @return the position resulting from the movement
+   */
+  def positionInDir(t: Tile, dir: Direction.Value) = dir match {
+    case Direction.UP => (t.x, t.y + 1)
+    case Direction.DOWN => (t.x, t.y - 1)
+    case Direction.RIGHT => (t.x + 1, t.y)
+    case Direction.LEFT => (t.x - 1, t.y)
+  }
+  
+  def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) 
+      : Option[Dice] = {
+    val pos = positionInDir(t, dir)
+    if (isWithinBounds(pos)) {
+      val tgt = this(pos).floor
+      
+      tgt.content match {
+        case Occupied(d) => Some(d)
+        case _ => None
+      }
+    } else None
+  }
   
   /**
    * Returns whether the specified coordinates are within this board's bounds.
