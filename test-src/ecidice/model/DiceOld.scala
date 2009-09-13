@@ -29,12 +29,16 @@
 
 package ecidice.model
 
+import org.scalatest._
+import org.scalatest.matchers._
+
 /**
  * Spec-based tests of the dice model.
  * 
  * @author Andreas Flierl
  */
-class DiceSpec extends TestBase {
+class DiceOld extends Spec with Assertions with ShouldMatchers 
+    with BeforeAndAfter {
   
   private var d : Dice = _
   

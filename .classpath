@@ -72,5 +72,9 @@
 	<classpathentry kind="lib" path="lib/jme/jme-ogrexml.jar"/>
 	<classpathentry kind="lib" path="lib/scalatest/scalatest-0.9.5.jar"/>
 	<classpathentry kind="lib" path="lib/jme/jme-colladabinding.jar"/>
+	<classpathentry kind="lib" path="lib/scala/scala-library.jar"/>
+	<classpathentry kind="lib" path="lib/scalacheck/ScalaCheck-1.5.jar"/>
+	<classpathentry kind="lib" path="lib/specs/specs-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/junit/junit4.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

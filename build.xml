@@ -57,6 +57,9 @@
 	<path id="test.classpath">
     <path refid="main.build.classpath" />
     <fileset dir="${lib.dir}/scalatest" includes="*.jar" />
+		<fileset dir="${lib.dir}/specs" includes="*.jar" />
+		<fileset dir="${lib.dir}/scalacheck" includes="*.jar" />
+		<fileset dir="${lib.dir}/junit" includes="*.jar" />
     <pathelement location="${test.build.dir}" />
   </path>
 	
@@ -86,7 +89,8 @@
 	  </scalac>
 	</target>
 	
-  <target name="test.compile" description="compiles the tests">
+  <target name="test.compile" description="compiles the tests"
+  	 depends="main.compile">
     <mkdir dir="${test.build.dir}" />
     <scalac srcdir="${test.src.dir}"
             destdir="${test.build.dir}"
@@ -111,12 +115,11 @@
 	
 	<target name="test.run" description="runs all tests using scalatest"
       depends="main.compile,test.compile">
-		<java classname="org.scalatest.tools.Runner"
+		<java classname="run"
 		      classpathref="test.classpath"
 			    fork="false">
-			<arg value="-p" />
-			<arg value="${test.build.dir}" />
-			<arg value="-o" />
-	  </java>
+			<arg value="ecidice.EcidiceSpec"/>
+			<arg value="--color" />
+		</java>
   </target>
 </project>

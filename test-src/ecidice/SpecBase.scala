@@ -29,11 +29,12 @@
 
 package ecidice
 
-import org.scalatest._
-import org.scalatest.matchers._
+import org.specs._
+import org.specs.util._
 
-trait TestBase extends Spec with Assertions with ShouldMatchers 
-    with BeforeAndAfter {
+trait SpecBase extends Specification with DataTables {
   /** Tolerance for float values in the tests. */
   val DELTA = 1e-5f
+  
+  detailedDiffs
 }

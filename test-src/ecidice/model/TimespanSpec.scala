@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import org.specs._
+
 import ecidice.util.Preamble._
 
 /**
@@ -36,61 +38,55 @@ import ecidice.util.Preamble._
  * 
  * @author Andreas Flierl
  */
-class TimespanSpec extends TestBase {
-  
-  private var g : Game = _
-  private var ts : Timespan = _
-  
-  override def beforeEach() = {
-    g = new Game(1, new Board(3, 3))
-    ts = new Timespan(g, g.now + 1f, 1f)
-  }
-  
-  describe("A timespan") {
+class TimespanSpec extends SpecBase {  
+  "A timespan" should {
     
-    describe("when newly created") { 
-      it("should return the correct end time") {
-        ts.end should be (2f)
+    var g : Game = new Game(1, new Board(3, 3))
+    var ts : Timespan = new Timespan(g, g.now + 1f, 1f)
+    
+    "initially" >> { 
+      "return the correct end time" in {
+        ts.end must_== 2f
       }
       
-      it("should display 0% progress directly after initialisation") {
-        ts.progress should be (0f)
+      "display 0% progress directly after initialisation" in {
+        ts.progress mustEqual 0f
       }
       
-      it("should ignore negative values passed to 'lengthen'") {
-        ts.lengthen(-2f)
-        ts.end should be (2f)
-        ts.progress should be (0f)
+      "ignore negative values passed to 'lengthen'" in {
+        ts lengthen(-2f)
+        ts.end must_== 2f
+        ts.progress mustEqual 0f
       }
     }
   
-    describe("after some time elapsed") {
-      it("should report 0% progress if the gametime is before the timespan start") {
+    "after some time elapsed" >> {
+      "report 0% progress if the gametime is before the timespan start" in {
         g.update(.5f)
-        ts.progress should be (0f)
+        ts.progress mustEqual 0f
       }
       
-      it("should report 0% progress if the gametime equals the timespan start") {
+      "report 0% progress if the gametime equals the timespan start" in {
         g.update(1f)
-        ts.progress should be (0f)
+        ts.progress mustEqual 0f
       }
       
-      it("should report the correct progress if the gametime lies in the timespan") {
+      "report the correct progress if the gametime lies in the timespan" in {
         g.update(1f)
         for (x <- 0f to 1f step .1f) {
-          ts.progress should be (x plusOrMinus DELTA)
+          ts.progress must beCloseTo(x, DELTA)
           g.update(.1f)
         }
       }
       
-      it("should report 100% progress if the gametime equals the timespan end") {
+      "report 100% progress if the gametime equals the timespan end" in {
         g.update(2f)
-        ts.progress should be (1f)
+        ts.progress mustEqual 1f
       }
       
-      it("should report 100% progress if the gametime is after the timespan end") {
+      "report 100% progress if the gametime is after the timespan end" in {
         g.update(4f)
-        ts.progress should be (1f)
+        ts.progress mustEqual 1f
       }
     }
   }

@@ -34,35 +34,37 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class BoardSpec extends TestBase {
+class BoardSpec extends SpecBase {
   private val width = 5
   private val depth = 3
-  private var b : Board = _
   
-  override def beforeEach() = {
-    b = new Board(width, depth)
-  }
-  
-  describe("A %d x %d board".format(width, depth)) {
-    "asd %d".format(1)
+  "The game board" should {
     
-    it("should return its tiles in the right order") {
+    val b = new Board(width, depth)
+    val center = b(2, 1)
+    
+    "return its tiles in the right order" in {
       val iter = b.tiles
       
       for (x <- 0 until width; y <- 0 until depth) {
-        iter.hasNext should be (true)
-        iter.next should be(b(x, y))
+        iter.hasNext must be (true)
+        iter.next mustEqual b(x, y)
       }
       
-      iter.hasNext should be (false)
+      iter.hasNext must be (false)
     }
     
-    List( (Direction.UP,    (2, 2)),
-          (Direction.DOWN,  (2, 0)),
-          (Direction.LEFT,  (1, 1)),  
-          (Direction.RIGHT, (3, 1)) ).foreach((tc) =>
-      it("should return the correct position after moving %s from the center".format(tc._1.toString)) {
-        b.positionInDir(b(2, 1), tc._1) should be(tc._2)
-    })
+    "predict the correct position that results from a move from its center" in {
+      
+      "direction of move" | "result position" |>
+      Direction.UP        ! (2, 2)            |
+      Direction.DOWN      ! (2, 0)            |
+      Direction.LEFT      ! (1, 1)            |  
+      Direction.RIGHT     ! (3, 1)            | { 
+        
+      (dir, result) =>
+        b.positionInDir(center, dir) mustEqual(result)
+      }
+    }
   }
 }
