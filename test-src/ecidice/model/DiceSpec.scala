@@ -29,82 +29,72 @@
 
 package ecidice.model
 
-import org.scalatest._
-import org.scalatest.matchers._
-
 /**
  * Spec-based tests of the dice model.
  * 
  * @author Andreas Flierl
  */
-class DiceOld extends Spec with Assertions with ShouldMatchers 
-    with BeforeAndAfter {
-  
-  private var d : Dice = _
-  
-  override def beforeEach() = {
-    d = new Dice
-  }
-  
-  def checkDice(top: Int, right: Int, front: Int) = {
-    d.top should be (top)
-    d.right should be (right)
-    d.front should be (front)
-    d.bottom should be (7 - top)
-    d.left should be (7 - right)
-    d.back should be (7 - front)
-  }
-  
-  describe("A dice") {
+class DiceSpec extends SpecBase {
+  "A dice" should {
+    val d = new Dice
     
-    it("should initially be t6 r5 f4") {
-      d.top should be (6)
-      d.right should be (5)
-      d.front should be (4)
+    def checkDice(top: Int, right: Int, front: Int) = {
+      d.top mustEqual top
+      d.right mustEqual right
+      d.front mustEqual front
+      d.bottom mustEqual (7 - top)
+      d.left mustEqual (7 - right)
+      d.back mustEqual (7 - front)
     }
     
-    it("should initially be consistent") {
-      d.top should equal (7 - d.bottom)
-      d.left should equal (7 - d.right)
-      d.front should equal (7 - d.back)
+    "initially look like this: top = 6, right = 5, front = 4" in {
+      d.top mustEqual 6
+      d.right mustEqual 5
+      d.front mustEqual 4
+    }
+    
+    "initially be consistent" in {
+      d.top mustEqual (7 - d.bottom)
+      d.left mustEqual (7 - d.right)
+      d.front mustEqual (7 - d.back)
     }
 
-    it("should correctly rotate upwards (towards the back)") {
+    "correctly rotate upwards (towards the back)" in {
       d.change(Transform.ROTATE_UP)
       checkDice(4, 5, 1)
     }
     
-    it("should correctly rotate downwards (towards the front)") {
+    "correctly rotate downwards (towards the front)" in {
       d.change(Transform.ROTATE_DOWN)
       checkDice(3, 5, 6)
     }
     
-    it("should correctly rotate to the right") {
+    "correctly rotate to the right" in {
       d.change(Transform.ROTATE_RIGHT)
       checkDice(2, 6, 4)
     }
     
-    it("should correctly rotate to the left") {
+    "correctly rotate to the left" in {
       d.change(Transform.ROTATE_LEFT)
       checkDice(5, 1, 4)
     }
     
-    it("should correctly spin clockwise") {
+    "correctly spin clockwise" in {
       d.change(Transform.SPIN_CLOCKWISE)
       checkDice(6, 3, 5)
     }
     
-    it("should correctly spin counter-clockwise") {
+    "correctly spin counter-clockwise" in {
       d.change(Transform.SPIN_COUNTERCLOCKWISE)
       checkDice(6, 4, 2)
     }
     
-    it("should correctly flip up/down") {
+    "correctly flip up/down" in {
       d.change(Transform.FLIP_UP_OR_DOWN)
       checkDice(1, 5, 3)
     }
     
-    it("should correctly flip left or right") {
+    "correctly flip left or right" in {
       d.change(Transform.FLIP_LEFT_OR_RIGHT)
       checkDice(1, 2, 4)
     }

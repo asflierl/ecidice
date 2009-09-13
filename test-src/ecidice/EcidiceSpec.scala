@@ -6,6 +6,7 @@ import org.specs.runner._
 class EcidiceSpec extends SpecificationWithJUnit {
   "ecidice".isSpecifiedBy(
     new model.BoardSpec,
+    new model.DiceSpec,
     new model.TimespanSpec
   )
 }
