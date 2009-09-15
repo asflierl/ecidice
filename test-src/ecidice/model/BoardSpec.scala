@@ -47,11 +47,11 @@ class BoardSpec extends SpecBase {
       val iter = b.tiles
       
       for (x <- 0 until width; y <- 0 until depth) {
-        iter.hasNext must be (true)
+        iter.hasNext must beTrue
         iter.next mustEqual b(x, y)
       }
       
-      iter.hasNext must be (false)
+      iter.hasNext must beFalse
     }
     
     "predict the correct position that results from a move from its center" in {

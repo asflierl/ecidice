@@ -46,7 +46,7 @@ class TimespanSpec extends SpecBase {
     
     "initially" >> { 
       "return the correct end time" in {
-        ts.end must_== 2f
+        ts.end mustEqual 2f
       }
       
       "display 0% progress directly after initialisation" in {

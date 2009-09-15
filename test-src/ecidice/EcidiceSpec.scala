@@ -7,6 +7,7 @@ class EcidiceSpec extends SpecificationWithJUnit {
   "ecidice".isSpecifiedBy(
     new model.BoardSpec,
     new model.DiceSpec,
+    new model.GameSpec,
     new model.TimespanSpec
   )
 }
