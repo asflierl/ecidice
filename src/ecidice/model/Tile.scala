@@ -41,6 +41,11 @@ case class Tile(val x: Int, val y: Int) {
   lazy val raised = new Space(this, Empty)
   
   def pos = (x, y)
+  
+  private[model] def requestControl(p: Player) = {
+    if (raised.content == Empty) floor.requestControl(p)
+    else raised.requestControl(p) 
+  }
 }
 object Tile {
   object Visibility extends Enumeration {

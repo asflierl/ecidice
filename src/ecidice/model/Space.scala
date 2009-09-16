@@ -48,4 +48,11 @@ class Space(val tile: Tile, var content: Content) {
    * dice). 
    */
   def isRaised = (this == tile.raised)
+  
+  private[model] def requestControl(p: Player) = {
+    content match {
+      case Occupied(d) => d.requestControl(this, p)
+      case _ => None
+    }
+  }
 }

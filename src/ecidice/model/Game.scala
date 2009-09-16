@@ -179,56 +179,6 @@ class Game(numPlayers: Int, board: Board) {
   }
   
   /**
-   * Requests for player <code>p</code> to gain control over the dice below her.
-   * <p>
-   * If the player is already controlling a dice, control is retained on that
-   * dice.
-   * <p>
-   * If there's two dice at the player's location and the upper dice is solid
-   * and not under the control of another player, control will be granted on
-   * that upper dice.
-   * <p>
-   * If there's only one dice at the player's location (which must be on the
-   * floor level) that is solid and not under the control of any player,
-   * control will be granted on that dice.
-   * <p>
-   * In all other cases, the control request will be rejected.
-   * <p>
-   * On a successful request, this method sets all necessary model state to
-   * represent the new situation.
-   * 
-   * @param p the player requesting control over a dice
-   * @return the dice that is under the control of the player or 
-   *         <code>None</code>
-   */
-  def requestControl(p: Player) : Option[Dice] = p.state match {
-    case Player.Standing(t) => t.raised.content match {
-      case Occupied(d) => requestControl(t.raised, p)
-      case _ => requestControl(t.floor, p)
-    }
-    case Player.Controlling(d) => Some(d)
-    case _ => None
-  }
-  
-  /**
-   * Helper method for requestControl(Player)
-   */
-  private def requestControl(where: Space, p: Player) = where.content match {
-    case Occupied(d) => d.state match {
-      case Dice.Solid(s, c) => 
-        if (c.isEmpty) {
-          d.state = Dice.Solid(s, Some(p))
-          p.state = Player.Controlling(d)
-          Some(d) 
-        } else {
-          None
-        }
-      case _ => None
-    }
-    case _ => None
-  }
-  
-  /**
    * Requests for player <code>p</code> to move in direction <code>dir</code>.
    * <p>
    * If the player is not controlling a dice and the position after the move

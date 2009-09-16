@@ -40,7 +40,7 @@ class GameSpec extends SpecBase {
   var p1 : Player = _
   var p2 : Player= _
   
-  def reset = {
+  def reset() = {
     b = new Board(3, 3)
     g = new Game(2, b)
     p1 = g.players(0)
@@ -48,7 +48,7 @@ class GameSpec extends SpecBase {
   }
   
   "A game of ecidice (on a 3 x 3 board)" should {
-    doBefore { reset }
+    doBefore { reset() }
     
     def placePlayer(p: Player, pos: (Int, Int)) : Unit =
       p.state = Player.Standing(b(pos))
@@ -79,11 +79,11 @@ class GameSpec extends SpecBase {
     "when the board is empty" >> {
       "not grant control on any tile" in {
         for (x <- 0 to 2; y <- 0 to 2) {
-          reset
+          reset()
           placePlayer(p1, (x, y))
           
           val request = "control request on (%d, %d)".format(x, y)
-          g.requestControl(p1) aka request must be (None)
+          p1.requestControl() aka request must be (None)
           
           p1.state mustEqual Player.Standing(b(x, y))
         }
@@ -93,7 +93,7 @@ class GameSpec extends SpecBase {
     "with or without dice on it" >> {  
       "allow a player in the center to move in all directions" in {
         Direction.elements.foreach((dir) => {
-          reset
+          reset()
           placePlayer(p1, (1, 1))
           
           val request = "movement request: " + dir
@@ -113,7 +113,7 @@ class GameSpec extends SpecBase {
         (2, 2)            ! (Direction.DOWN, Direction.LEFT)  | {
           
         (corner, allowed) =>
-          reset
+          reset()
           for (dir <- Direction.elements) {
             placePlayer(p1, corner)
             g.requestMove(p1, dir) must be (dir == allowed._1 || dir == allowed._2)
@@ -130,7 +130,7 @@ class GameSpec extends SpecBase {
         (2, 1)          ! Direction.RIGHT                 | {
           
         (pos, disallowed) =>
-          reset
+          reset()
           for (dir <- Direction.elements) {
             placePlayer(p1, pos)
             val correct = (dir != disallowed)
@@ -146,7 +146,7 @@ class GameSpec extends SpecBase {
         placePlayer(p1, (1, 1))
         val d = placeDice(1, 1)
         
-        g.requestControl(p1) mustEqual Some(d)
+        p1.requestControl() mustEqual Some(d)
         d.state mustEqual Dice.Solid(b(1,1).floor, Some(p1))
         p1.state mustEqual Player.Controlling(d)
       }
@@ -156,7 +156,7 @@ class GameSpec extends SpecBase {
         val d1 = placeDice(1, 1)
         val d2 = placeDice(1, 1)
         
-        g.requestControl(p1) mustEqual Some(d2)
+        p1.requestControl() mustEqual Some(d2)
         d2.state mustEqual Dice.Solid(b(1,1).raised, Some(p1))
         d1.state mustEqual Dice.Solid(b(1,1).floor, None)
         p1.state mustEqual Player.Controlling(d2)
@@ -164,23 +164,23 @@ class GameSpec extends SpecBase {
       
       "allow a player to move in any direction with a floor dice from the center" in {
         for (somewhere <- Direction.elements) {
-          reset
+          reset()
           placePlayer(p1, (1, 1))
           val d1 = placeDice(1, 1)
           
-          g.requestControl(p1) aka "control request" mustEqual Some(d1)
+          p1.requestControl() aka "control request" mustEqual Some(d1)
           g.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
         }
       }
       
       "allow a player to move in any direction with an upper dice from the center" in {
         for (somewhere <- Direction.elements) {
-          reset
+          reset()
           placePlayer(p1, (1, 1))
           placeDice(1, 1)
           val d1 = placeDice(1, 1)
           
-          g.requestControl(p1) aka "control request" mustEqual Some(d1)
+          p1.requestControl() aka "control request" mustEqual Some(d1)
           g.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
         }
       }
@@ -190,7 +190,7 @@ class GameSpec extends SpecBase {
         val d1 = placeDice(1, 1)
         val d2 = placeDice(1, 2)
         
-        g.requestControl(p1) mustEqual Some(d1)
+        p1.requestControl() mustEqual Some(d1)
         g.requestMove(p1, Direction.UP) must beTrue
         
         val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
@@ -207,7 +207,7 @@ class GameSpec extends SpecBase {
         val d1 = placeDice(1, 1)
         val d2 = placeDice(0, 1)
         
-        g.requestControl(p1) aka "control request" mustEqual Some(d1)
+        p1.requestControl() aka "control request" mustEqual Some(d1)
         g.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
         
         val m = Movement(d1, b(1,1).raised, b(0,1).raised, 
@@ -223,7 +223,7 @@ class GameSpec extends SpecBase {
         placeDice(1, 1)
         val d1 = placeDice(1, 1)
         
-        g.requestControl(p1) aka "control request" mustEqual Some(d1)
+        p1.requestControl() aka "control request" mustEqual Some(d1)
         g.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
         
         val m = Movement(d1, b(1,1).raised, b(2,1).floor, 
@@ -237,7 +237,7 @@ class GameSpec extends SpecBase {
       "not grant control over an appearing dice" in {
         placePlayer(p1, (1, 1))
         g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
-        g.requestControl(p1) aka "control request" must beNone
+        p1.requestControl() aka "control request" must beNone
       }
       
       "not allow a player to move onto an appearing dice" in {
@@ -246,7 +246,7 @@ class GameSpec extends SpecBase {
         
         g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
         
-        g.requestControl(p1) mustEqual Some(d1)
+        p1.requestControl() mustEqual Some(d1)
         g.requestMove(p1, Direction.LEFT) must beFalse
       }
       
@@ -294,8 +294,8 @@ class GameSpec extends SpecBase {
         placePlayer(p2, (1, 1))
         val d1 = placeDice(1, 1)
         
-        g.requestControl(p1) mustEqual Some(d1)
-        g.requestControl(p2) must beNone
+        p1.requestControl() mustEqual Some(d1)
+        p2.requestControl() must beNone
       }
       
       "not grant a player control over a dice at the raised level " +
@@ -305,8 +305,8 @@ class GameSpec extends SpecBase {
         placeDice(1, 1)
         val d1 = placeDice(1, 1)
         
-        g.requestControl(p1) mustEqual Some(d1)
-        g.requestControl(p2) must beNone
+        p1.requestControl() mustEqual Some(d1)
+        p2.requestControl() must beNone
       }
       
       "not let a player move with a dice from the floor onto a " +
@@ -317,8 +317,8 @@ class GameSpec extends SpecBase {
         val d1 = placeDice(1, 1)
         val d2 = placeDice(2, 1)
         
-        g.requestControl(p1) mustEqual Some(d1)
-        g.requestControl(p2) mustEqual Some(d2)
+        p1.requestControl() mustEqual Some(d1)
+        p2.requestControl() mustEqual Some(d2)
         
         g.requestMove(p2, Direction.LEFT) must beFalse
       }
@@ -332,8 +332,8 @@ class GameSpec extends SpecBase {
         placeDice(2, 1)
         val d2 = placeDice(2, 1)
         
-        g.requestControl(p1) mustEqual Some(d1)
-        g.requestControl(p2) mustEqual Some(d2)
+        p1.requestControl() mustEqual Some(d1)
+        p2.requestControl() mustEqual Some(d2)
         
         g.requestMove(p2, Direction.LEFT) must beFalse
       }
@@ -346,8 +346,8 @@ class GameSpec extends SpecBase {
         val d1 = placeDice(0, 2)
         val d2 = placeDice(1, 1)
         
-        g.requestControl(p1) mustEqual Some(d1)
-        g.requestControl(p2) mustEqual Some(d2)
+        p1.requestControl() mustEqual Some(d1)
+        p2.requestControl() mustEqual Some(d2)
         
         g.requestMove(p1, Direction.RIGHT) must beTrue
         g.requestMove(p2, Direction.UP) must beFalse
@@ -363,8 +363,8 @@ class GameSpec extends SpecBase {
         
         placeDice(0, 1)
         
-        g.requestControl(p1) mustEqual Some(d1)
-        g.requestControl(p2) mustEqual Some(d2)
+        p1.requestControl() mustEqual Some(d1)
+        p2.requestControl() mustEqual Some(d2)
         
         g.requestMove(p1, Direction.UP) must beTrue
         g.requestMove(p2, Direction.LEFT) must beFalse

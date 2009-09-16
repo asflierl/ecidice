@@ -120,6 +120,15 @@ class Dice {
   
   override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, 
                                                       right, front)
+  
+  private[model] def requestControl(where: Space, p: Player) = state match {
+    case Dice.Solid(s, c) => 
+      if (c.isEmpty) {
+        state = Dice.Solid(s, Some(p))
+        Some(this) 
+      } else None
+    case _ => None
+  }
 }
 object Dice {
   private var serial = 0

@@ -31,6 +31,40 @@ package ecidice.model
 
 class Player(game: Game, spawnPoint: Tile) {
   var state : Player.State = Player.Standing(spawnPoint)
+  
+  /**
+   * Requests for this player to gain control over the dice below her.
+   * <p>
+   * If the player is already controlling a dice, control is retained on that
+   * dice.
+   * <p>
+   * If there's two dice at the player's location and the upper dice is solid
+   * and not under the control of another player, control will be granted on
+   * that upper dice.
+   * <p>
+   * If there's only one dice at the player's location (which must be on the
+   * floor level) that is solid and not under the control of any player,
+   * control will be granted on that dice.
+   * <p>
+   * In all other cases, the control request will be rejected.
+   * <p>
+   * On a successful request, this method sets all necessary model state to
+   * represent the new situation.
+   * 
+   * @param p the player requesting control over a dice
+   * @return the dice that is under the control of the player or 
+   *         <code>None</code>
+   */
+  def requestControl() : Option[Dice] = state match {
+    case Player.Standing(t) => {
+      t.requestControl(this).map { dice =>
+        state = Player.Controlling(dice)
+        dice
+      }
+    }
+    case Player.Controlling(d) => Some(d)
+    case _ => None
+  }
 }
 object Player {
   sealed abstract class State
