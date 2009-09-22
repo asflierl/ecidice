@@ -27,14 +27,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.util
 
-import org.specs._
-import org.specs.util._
-
-trait SpecBase extends Specification with DataTables {
-  val FLOAT_DELTA = 1e-5f
-  val DOUBLE_DELTA = 1e-10d
-  
-  detailedDiffs
+/**
+ * Decorates a floating point number, providing useful non-primitive operations.
+ * 
+ * @author Andreas Flierl
+ */
+class EvenRicherDouble(d: Double) {
+  /**
+   * Enables the syntax <code>2d to 4d step .1d</code> to generate a stream 
+   * "range" for doubles. The lower and upper bounds are always included.
+   * 
+   * @param max the upper bound for the returned stream range
+   * @return a "continuous" stream from <code>d</code> to <code>max</code>; its 
+   *         <code>step</code> method needs to be called to turn it into a 
+   *         discrete stream (as known from the std. library)
+   */
+  def to(max: Double) = {
+    object ContinuousStream {
+      def step(by: Double) = {
+        def seq(now: Double) : Stream[Double] = 
+          if (now > max) Stream.cons(max, Stream.empty) 
+          else Stream.cons(now, seq(now + by))
+        
+        seq(d)
+      }
+    }
+    ContinuousStream
+  }
 }

@@ -37,4 +37,5 @@ package ecidice.util
  */
 object Preamble {
   implicit def floatToEvenRicherFloat(f: Float) = new EvenRicherFloat(f)
+  implicit def doubleToEvenRicherDouble(d: Double) = new EvenRicherDouble(d)
 }

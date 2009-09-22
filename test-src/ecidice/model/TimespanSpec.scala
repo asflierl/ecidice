@@ -42,11 +42,11 @@ class TimespanSpec extends SpecBase {
   "A timespan" should {
     
     var g : Game = new Game(1, new Board(3, 3))
-    var ts : Timespan = new Timespan(g, g.now + 1f, 1f)
+    var ts : Timespan = new Timespan(g.clock, g.clock.now + 1d, 1d)
     
     "initially" >> { 
       "return the correct end time" in {
-        ts.end mustEqual 2f
+        ts.end mustEqual 2d
       }
       
       "display 0% progress directly after initialisation" in {
@@ -54,9 +54,9 @@ class TimespanSpec extends SpecBase {
       }
       
       "ignore negative values passed to 'lengthen'" in {
-        ts lengthen(-2f)
-        ts.end must_== 2f
-        ts.progress mustEqual 0f
+        ts lengthen(-2d)
+        ts.end mustEqual 2d
+        ts.progress mustEqual 0d
       }
     }
   
@@ -74,7 +74,7 @@ class TimespanSpec extends SpecBase {
       "report the correct progress if the gametime lies in the timespan" in {
         g.update(1f)
         for (x <- 0f to 1f step .1f) {
-          ts.progress must beCloseTo(x, DELTA)
+          ts.progress must beCloseTo(x, FLOAT_DELTA)
           g.update(.1f)
         }
       }

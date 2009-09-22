@@ -49,6 +49,8 @@ class Space(val tile: Tile, var content: Content) {
    */
   def isRaised = (this == tile.raised)
   
+  def isEmpty = (content == Empty)
+  
   private[model] def requestControl(p: Player) = {
     content match {
       case Occupied(d) => d.requestControl(this, p)

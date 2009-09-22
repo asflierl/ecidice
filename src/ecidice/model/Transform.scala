@@ -58,4 +58,16 @@ object Transform extends Enumeration {
   
   /** Flips a dice 180&deg; left (or right, doesn't matter). */
   val FLIP_LEFT_OR_RIGHT = Value("flip left or right")
+  
+  def apply(from: Space, to: Space, dir: Direction.Value) : Transform.Value = {
+    if (from.isFloor == to.isFloor) dir match {
+      case Direction.UP => Transform.ROTATE_UP
+      case Direction.DOWN => Transform.ROTATE_DOWN
+      case Direction.RIGHT => Transform.ROTATE_RIGHT
+      case Direction.LEFT => Transform.ROTATE_LEFT
+    } else dir match {
+      case Direction.UP | Direction.DOWN => Transform.FLIP_UP_OR_DOWN
+      case Direction.LEFT | Direction.RIGHT => Transform.FLIP_LEFT_OR_RIGHT
+    }
+  }
 }

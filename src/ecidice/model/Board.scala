@@ -40,7 +40,7 @@ package ecidice.model
 class Board(val width: Int, val depth: Int) {
   private val tileArr = new Array[Array[Tile]](width, depth)
   for (x <- Stream.range(0, width); y <- Stream.range(0, depth)) {
-    tileArr(x)(y) = new Tile(x, y)
+    tileArr(x)(y) = new Tile(x, y, this)
   }
   
   /**

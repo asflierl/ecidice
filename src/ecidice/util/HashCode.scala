@@ -35,5 +35,5 @@ package ecidice.util
  * @author Andreas Flierl
  */
 object HashCode {
-  def apply(l: Int*) : Int = (1 /: l)(_ * 41 + _)
+  def apply(l: Any*) : Int = (1 /: l)(_ * 41 + _.hashCode)
 }

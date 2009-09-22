@@ -35,7 +35,7 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-case class Tile(val x: Int, val y: Int) {
+case class Tile(val x: Int, val y: Int, val board: Board) {
   var visibility = Tile.Visibility.VISIBLE
   lazy val floor = new Space(this, Empty)
   lazy val raised = new Space(this, Empty)
@@ -43,7 +43,7 @@ case class Tile(val x: Int, val y: Int) {
   def pos = (x, y)
   
   private[model] def requestControl(p: Player) = {
-    if (raised.content == Empty) floor.requestControl(p)
+    if (raised.isEmpty) floor.requestControl(p)
     else raised.requestControl(p) 
   }
 }

@@ -34,6 +34,6 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-trait Timed {
+trait Timed {//TODO rename to Activity
   def when : Timespan
 }

@@ -97,7 +97,7 @@ class GameSpec extends SpecBase {
           placePlayer(p1, (1, 1))
           
           val request = "movement request: " + dir
-          g.requestMove(p1, dir) aka request must beTrue
+          p1.requestMove(dir) aka request must beTrue
           
           p1.state must haveClass[Player.Moving]
         })
@@ -116,7 +116,7 @@ class GameSpec extends SpecBase {
           reset()
           for (dir <- Direction.elements) {
             placePlayer(p1, corner)
-            g.requestMove(p1, dir) must be (dir == allowed._1 || dir == allowed._2)
+            p1.requestMove(dir) must be (dir == allowed._1 || dir == allowed._2)
           }
         }
       }
@@ -134,7 +134,7 @@ class GameSpec extends SpecBase {
           for (dir <- Direction.elements) {
             placePlayer(p1, pos)
             val correct = (dir != disallowed)
-            g.requestMove(p1, dir) must be (correct)
+            p1.requestMove(dir) must be (correct)
           }
         }
         
@@ -169,7 +169,7 @@ class GameSpec extends SpecBase {
           val d1 = placeDice(1, 1)
           
           p1.requestControl() aka "control request" mustEqual Some(d1)
-          g.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+          p1.requestMove(somewhere) aka "move " + somewhere must beTrue
         }
       }
       
@@ -181,7 +181,7 @@ class GameSpec extends SpecBase {
           val d1 = placeDice(1, 1)
           
           p1.requestControl() aka "control request" mustEqual Some(d1)
-          g.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+          p1.requestMove(somewhere) aka "move " + somewhere must beTrue
         }
       }
       
@@ -191,10 +191,10 @@ class GameSpec extends SpecBase {
         val d2 = placeDice(1, 2)
         
         p1.requestControl() mustEqual Some(d1)
-        g.requestMove(p1, Direction.UP) must beTrue
+        p1.requestMove(Direction.UP) must beTrue
         
         val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
-                         g.nowFor(g.MOVE_DURATION), Transform.FLIP_UP_OR_DOWN)
+                         g.clock.createTimespanWithLength(Game.MOVE_DURATION), Transform.FLIP_UP_OR_DOWN)
         
         d1.state mustEqual Dice.Moving(m, p1) 
         b(1,1).floor.content mustEqual m
@@ -208,10 +208,10 @@ class GameSpec extends SpecBase {
         val d2 = placeDice(0, 1)
         
         p1.requestControl() aka "control request" mustEqual Some(d1)
-        g.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
+        p1.requestMove(Direction.LEFT) aka "movement request" must beTrue
         
         val m = Movement(d1, b(1,1).raised, b(0,1).raised, 
-                         g.nowFor(g.MOVE_DURATION), Transform.ROTATE_LEFT)
+                         g.clock.createTimespanWithLength(Game.MOVE_DURATION), Transform.ROTATE_LEFT)
         
         d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
         b(1,1).raised.content aka "start content" mustEqual m
@@ -224,10 +224,11 @@ class GameSpec extends SpecBase {
         val d1 = placeDice(1, 1)
         
         p1.requestControl() aka "control request" mustEqual Some(d1)
-        g.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
+        p1.requestMove(Direction.RIGHT) aka "movement request" must beTrue
         
         val m = Movement(d1, b(1,1).raised, b(2,1).floor, 
-                         g.nowFor(g.MOVE_DURATION), Transform.FLIP_LEFT_OR_RIGHT)
+                         g.clock.createTimespanWithLength(Game.MOVE_DURATION),
+                         Transform.FLIP_LEFT_OR_RIGHT)
         
         d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
         b(1,1).raised.content aka "start content" mustEqual m
@@ -247,7 +248,7 @@ class GameSpec extends SpecBase {
         g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
         
         p1.requestControl() mustEqual Some(d1)
-        g.requestMove(p1, Direction.LEFT) must beFalse
+        p1.requestMove(Direction.LEFT) must beFalse
       }
       
       "correctly find a group of matching dice" in {
@@ -320,7 +321,7 @@ class GameSpec extends SpecBase {
         p1.requestControl() mustEqual Some(d1)
         p2.requestControl() mustEqual Some(d2)
         
-        g.requestMove(p2, Direction.LEFT) must beFalse
+        p2.requestMove(Direction.LEFT) must beFalse
       }
       
       "not let a player move with a dice from the raised level " +
@@ -335,7 +336,7 @@ class GameSpec extends SpecBase {
         p1.requestControl() mustEqual Some(d1)
         p2.requestControl() mustEqual Some(d2)
         
-        g.requestMove(p2, Direction.LEFT) must beFalse
+        p2.requestMove(Direction.LEFT) must beFalse
       }
       
       "not let 2 players move onto the same floor space" in {
@@ -349,8 +350,8 @@ class GameSpec extends SpecBase {
         p1.requestControl() mustEqual Some(d1)
         p2.requestControl() mustEqual Some(d2)
         
-        g.requestMove(p1, Direction.RIGHT) must beTrue
-        g.requestMove(p2, Direction.UP) must beFalse
+        p1.requestMove(Direction.RIGHT) must beTrue
+        p2.requestMove(Direction.UP) must beFalse
       }
       
       "not let 2 players move onto the same raised space" in {
@@ -366,8 +367,8 @@ class GameSpec extends SpecBase {
         p1.requestControl() mustEqual Some(d1)
         p2.requestControl() mustEqual Some(d2)
         
-        g.requestMove(p1, Direction.UP) must beTrue
-        g.requestMove(p2, Direction.LEFT) must beFalse
+        p1.requestMove(Direction.UP) must beTrue
+        p2.requestMove(Direction.LEFT) must beFalse
       }
 
     }

@@ -36,17 +36,17 @@ import ecidice.util.HashCode
  * 
  * @author Andreas Flierl
  * 
- * @param game the game whose time this timespan is relative to
+ * @param clock the clock whose time this timespan is relative to
  * @param start the instant this timespan starts
  * @param ttl the initial time-to-live (aka duration)
  */
-class Timespan(game: Game, val start: Float, private val ttl: Float) {
+class Timespan(clock: Clock, val start: Double, private val ttl: Double) {
   private var to = start + ttl
   
   def end = to
 
-  def lengthen(amount: Float) {
-    if (amount > 0f) {
+  def lengthen(amount: Double) {
+    if (amount > 0d) {
       to += amount
     }
   }
@@ -58,9 +58,9 @@ class Timespan(game: Game, val start: Float, private val ttl: Float) {
    * the interval [0, 1].
    */
   def progress =
-    if (game.now <= start) 0f
-    else if (game.now >= to) 1f
-    else (game.now - start) / (to - start)
+    if (clock.now <= start) 0f
+    else if (clock.now >= to) 1f
+    else ((clock.now - start) / (to - start)).floatValue
   
   /**
    * Note that this definition of equality uses the initialization parameters
@@ -76,5 +76,5 @@ class Timespan(game: Game, val start: Float, private val ttl: Float) {
    * initialization parameters not current (mutable) state to compute the hash
    * code.
    */
-  override def hashCode = HashCode(start.hashCode, ttl.hashCode)
+  override def hashCode = HashCode(start, ttl)
 }

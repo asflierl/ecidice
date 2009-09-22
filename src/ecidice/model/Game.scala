@@ -42,16 +42,16 @@ import scala.collection.immutable._
 //TODO falling dice must be modeled (probably linked to burst time?)
 //TODO relinquish control must be modeled
 //TODO some kind of scoring system 
-class Game(numPlayers: Int, board: Board) {
-  val MOVE_DURATION = 0.25f
-  val APPEAR_DURATION = 5f
-  val CHARGE_DURATION = 10f
-  val BURST_DURATION = 1f
-  
+class Game(numPlayers: Int, val board: Board) {
   lazy val players = createPlayers(0)
   
-  private var currentTime = 0f
-  private var timedStuff : List[Timed] = Nil
+  val clock = new Clock() {
+    def update(elapsedTime: Double) = addToCurrentTime(elapsedTime)
+  }
+  
+  val tracker = new ActivityTracker
+  
+  val diceMovementResolver = new DiceMovementResolver(board, clock, tracker)
   
   /**
    * Creates <code>num</code> players in this game, starting at the board's 
@@ -61,23 +61,19 @@ class Game(numPlayers: Int, board: Board) {
     if (num == numPlayers) Nil
     else new Player(this, board.spawnPoints(num)) :: createPlayers(num + 1)
   
-  def now = currentTime
-  
-  def nowFor(someTime: Float) = new Timespan(this, now, someTime)
-  
   /**
    * Updates this game after the specified amount of time has elapsed.
    * 
    * @param elapsed the elapsed time (in seconds as float)
    */
   def update(elapsed: Float) {
-    currentTime += elapsed
+    clock.update(elapsed)
     
     var stuffToRemove : List[Timed] = Nil
     var moves : List[Movement] = Nil
     
     // process timed stuff that is over
-    timedStuff.foreach((x) => if (x.when.isOver) {
+    tracker.activities.foreach((x) => if (x.when.isOver) {
       stuffToRemove = x :: stuffToRemove
       
       x match {
@@ -122,7 +118,7 @@ class Game(numPlayers: Int, board: Board) {
     bg.state match {
       case BurstGroup.Charging => {
         bg.state = BurstGroup.Bursting
-        bg.when.lengthen(BURST_DURATION)
+        bg.when.lengthen(Game.BURST_DURATION)
       } 
       case BurstGroup.Bursting => {
         bg.dice.foreach((d) => {
@@ -179,128 +175,6 @@ class Game(numPlayers: Int, board: Board) {
   }
   
   /**
-   * Requests for player <code>p</code> to move in direction <code>dir</code>.
-   * <p>
-   * If the player is not controlling a dice and the position after the move
-   * would be still on the game board, the request is granted.
-   * <p>
-   * If the player is controlling a dice, the dice is "solid", the destination
-   * is within board bounds and the destination tile has an empty space on top,
-   * the request is granted.
-   * <p>
-   * If the player is already moving to the same position (with or without 
-   * dice), the request is granted.
-   * <p>
-   * In all other cases, the movement request will be rejected.
-   * <p>
-   * On a successful request, this method sets all necessary model state to
-   * represent the new situation.
-   * 
-   * @param p the player requesting to move
-   * @param dir the direction the player wants to move in
-   * @return whether the move was allowed (and started)
-   */
-  def requestMove(p: Player, dir: Direction.Value) : Boolean = p.state match {
-    /* This is the easy case: the player controls no dice and just wants to move
-     * around.
-     */
-    case Player.Standing(t @ Tile(x, y)) => {
-      val pos = board.positionInDir(t, dir)
-      
-      if (board.isWithinBounds(pos)) {
-        val mov = Player.Moving(p, t, board(pos), nowFor(MOVE_DURATION))
-        p.state = mov
-        timedStuff = mov :: timedStuff
-        true
-      } else false // destination out of board bounds
-    }
-    
-    /* Somewhat tricky: the player controls a dice and wants to move along with
-     * it. This is only granted if the target position is wihin bounds and the
-     * tile at that position is free to be moved to.
-     */
-    case Player.Controlling(d) => d.state match {
-      case Dice.Solid(s, Some(c)) if (p == c) => {
-        val pos = board.positionInDir(s.tile, dir)
-        
-        if (board.isWithinBounds(pos)) {
-          val t = board(pos)
-          t.floor.content match {
-            case Empty => {
-              startDiceMovement(d, p, s, t.floor, dir)
-              true // floor is free to be moved to
-            }
-            case _ : Movement => false // destination floor involved in movement
-            case Occupied(fd) => fd.state match {
-              
-              // floor level occupied -> further analysis
-              
-              case Dice.Solid(_, c) => 
-                if (c != None) false // floor dice controlled by another player
-                else t.raised.content match {
-                  case Empty => {
-                    startDiceMovement(d, p, s, t.raised, dir)                
-                    true // raised is free to be moved to
-                  }
-                  case _ => false // destination floor + raised non-empty
-                }
-              case _ => false // can only move onto solid dice
-              
-            } 
-          }
-        } else false // destination out of board bounds 
-      }
-      
-      /* Player wants to move the dice she's already moving to the same place
-       * it's already moving to: leave things as they are and return 
-       * <code>true</code>.
-       */
-      case Dice.Moving(m @ Movement(_, a, b, _, _), c) 
-        if (p == c && b.tile.pos == board.positionInDir(a.tile, dir)) => true
-      
-      case _ => false // dice appearing, bursting or moving in another direction
-    }
-    
-    /* Player wants to move to the same place she's already moving to: 
-     * leave things as they are and return <code>true</code>.
-     */
-    case Player.Moving(_, a, b, _) if (b.pos == board.positionInDir(a, dir)) 
-      => true
-    
-    case _ => false
-  }
-  
-  /**
-   * Helper method for <code>requestMove</code> that updates the game model
-   * state to actually represent the movement of a dice.
-   * 
-   * @param d the dice that moves
-   * @param p the player controlling the dice
-   * @param from the starting position
-   * @param to the destination position
-   * @param dir the movement direction
-   */
-  private def startDiceMovement(d: Dice, p: Player, from: Space, to: Space, 
-                            dir: Direction.Value) : Unit = {
-    val transform = if (from.isFloor == to.isFloor) dir match {
-      case Direction.UP => Transform.ROTATE_UP
-      case Direction.DOWN => Transform.ROTATE_DOWN
-      case Direction.RIGHT => Transform.ROTATE_RIGHT
-      case Direction.LEFT => Transform.ROTATE_LEFT
-    } else dir match {
-      case Direction.UP | Direction.DOWN => Transform.FLIP_UP_OR_DOWN
-      case Direction.LEFT | Direction.RIGHT => Transform.FLIP_LEFT_OR_RIGHT
-    }
-      
-    val m = Movement(d, from, to, nowFor(MOVE_DURATION), transform)
-    
-    from.content = m
-    to.content = m
-    d.state = Dice.Moving(m, p)
-    timedStuff = m :: timedStuff
-  }
-  
-  /**
    * Spawns a dice at the specified position on the board and updates the
    * state in the participating components accordingly.
    * 
@@ -310,13 +184,20 @@ class Game(numPlayers: Int, board: Board) {
    */
   def spawnDice(x: Int, y: Int) = board(x, y).floor.content match {
     case Empty => {
-      val d = new Dice()
+      val d = new Dice
       board(x, y).floor.content = Occupied(d)
-      val app = Dice.Appearing(board(x, y).floor, nowFor(APPEAR_DURATION))
+      val app = Dice.Appearing(board(x, y).floor, 
+                               clock.createTimespanWithLength(Game.APPEAR_DURATION))
       d.state = app
-      timedStuff = app :: timedStuff
+      tracker.track(app)
       Some(d)
     }
     case _ => None
   }
+}
+object Game {
+  val MOVE_DURATION = 0.25f
+  val APPEAR_DURATION = 5f
+  val CHARGE_DURATION = 10f
+  val BURST_DURATION = 1f  
 }
