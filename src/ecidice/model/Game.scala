@@ -51,7 +51,7 @@ class Game(numPlayers: Int, val board: Board) {
   
   val tracker = new ActivityTracker
   
-  val diceMovementResolver = new DiceMovementResolver(board, clock, tracker)
+  val movementReferee = new MovementReferee(board, clock, tracker)
   
   /**
    * Creates <code>num</code> players in this game, starting at the board's 
@@ -69,7 +69,7 @@ class Game(numPlayers: Int, val board: Board) {
   def update(elapsed: Float) {
     clock.update(elapsed)
     
-    var stuffToRemove : List[Timed] = Nil
+    var stuffToRemove : List[Activity] = Nil
     var moves : List[Movement] = Nil
     
     // process timed stuff that is over

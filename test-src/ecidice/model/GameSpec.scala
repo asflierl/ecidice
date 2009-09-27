@@ -34,47 +34,9 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class GameSpec extends SpecBase {
-  var b : Board = _
-  var g : Game = _
-  var p1 : Player = _
-  var p2 : Player= _
-  
-  def reset() = {
-    b = new Board(3, 3)
-    g = new Game(2, b)
-    p1 = g.players(0)
-    p2 = g.players(1)
-  }
-  
+class GameSpec extends SpecBase with GameSetupHelper {
   "A game of ecidice (on a 3 x 3 board)" should {
     doBefore { reset() }
-    
-    def placePlayer(p: Player, pos: (Int, Int)) : Unit =
-      p.state = Player.Standing(b(pos))
-    
-    /**
-     * Helper method that creates a new dice and places it at the topmost 
-     * available space at the specified position or throws an exception if this
-     * fails.
-     * 
-     * @param x the horizontal component of the position to place the dice
-     * @param y the depth component of the position to place the dice
-     * @return the newly created and placed dice
-     */
-    def placeDice(pos: (Int, Int)) : Dice = {
-      val t = b(pos)
-      val s = t.floor.content match {
-        case Empty => t.floor
-        case Occupied(_) => t.raised
-        case _ => throw new IllegalStateException("tile not in a state for a"
-                                                  + " dice to be placed")
-      }
-      val d = new Dice
-      s.content = Occupied(d)
-      d.state = Dice.Solid(s, None)
-      d
-    }
         
     "when the board is empty" >> {
       "not grant control on any tile" in {
@@ -87,57 +49,6 @@ class GameSpec extends SpecBase {
           
           p1.state mustEqual Player.Standing(b(x, y))
         }
-      }
-    }
-    
-    "with or without dice on it" >> {  
-      "allow a player in the center to move in all directions" in {
-        Direction.elements.foreach((dir) => {
-          reset()
-          placePlayer(p1, (1, 1))
-          
-          val request = "movement request: " + dir
-          p1.requestMove(dir) aka request must beTrue
-          
-          p1.state must haveClass[Player.Moving]
-        })
-      }
-      
-      
-      "correctly handle player movement in the corners" in {
-        
-        "corner position" | "allowed movement directions"     |>
-        (0, 0)            ! (Direction.UP, Direction.RIGHT)   |
-        (2, 0)            ! (Direction.UP, Direction.LEFT)    |
-        (0, 2)            ! (Direction.DOWN, Direction.RIGHT) |
-        (2, 2)            ! (Direction.DOWN, Direction.LEFT)  | {
-          
-        (corner, allowed) =>
-          reset()
-          for (dir <- Direction.elements) {
-            placePlayer(p1, corner)
-            p1.requestMove(dir) must be (dir == allowed._1 || dir == allowed._2)
-          }
-        }
-      }
-      
-      "correctly handle player movement at the board edge" in {
-        
-        "edge position" | "disallowed movement direction" |>
-        (1, 0)          ! Direction.DOWN                  |
-        (0, 1)          ! Direction.LEFT                  |
-        (1, 2)          ! Direction.UP                    |
-        (2, 1)          ! Direction.RIGHT                 | {
-          
-        (pos, disallowed) =>
-          reset()
-          for (dir <- Direction.elements) {
-            placePlayer(p1, pos)
-            val correct = (dir != disallowed)
-            p1.requestMove(dir) must be (correct)
-          }
-        }
-        
       }
     }
     
@@ -162,93 +73,11 @@ class GameSpec extends SpecBase {
         p1.state mustEqual Player.Controlling(d2)
       }
       
-      "allow a player to move in any direction with a floor dice from the center" in {
-        for (somewhere <- Direction.elements) {
-          reset()
-          placePlayer(p1, (1, 1))
-          val d1 = placeDice(1, 1)
-          
-          p1.requestControl() aka "control request" mustEqual Some(d1)
-          p1.requestMove(somewhere) aka "move " + somewhere must beTrue
-        }
-      }
-      
-      "allow a player to move in any direction with an upper dice from the center" in {
-        for (somewhere <- Direction.elements) {
-          reset()
-          placePlayer(p1, (1, 1))
-          placeDice(1, 1)
-          val d1 = placeDice(1, 1)
-          
-          p1.requestControl() aka "control request" mustEqual Some(d1)
-          p1.requestMove(somewhere) aka "move " + somewhere must beTrue
-        }
-      }
-      
-      "allow a player to move with a dice from the floor onto another dice" in {
-        placePlayer(p1, (1, 1))
-        val d1 = placeDice(1, 1)
-        val d2 = placeDice(1, 2)
-        
-        p1.requestControl() mustEqual Some(d1)
-        p1.requestMove(Direction.UP) must beTrue
-        
-        val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
-                         g.clock.createTimespanWithLength(Game.MOVE_DURATION), Transform.FLIP_UP_OR_DOWN)
-        
-        d1.state mustEqual Dice.Moving(m, p1) 
-        b(1,1).floor.content mustEqual m
-        b(1,2).raised.content mustEqual m
-      }
-      
-      "allow a player to grab the upper of 2 dice and move onto another dice" in {
-        placePlayer(p1, (1, 1))
-        placeDice(1, 1)
-        val d1 = placeDice(1, 1)
-        val d2 = placeDice(0, 1)
-        
-        p1.requestControl() aka "control request" mustEqual Some(d1)
-        p1.requestMove(Direction.LEFT) aka "movement request" must beTrue
-        
-        val m = Movement(d1, b(1,1).raised, b(0,1).raised, 
-                         g.clock.createTimespanWithLength(Game.MOVE_DURATION), Transform.ROTATE_LEFT)
-        
-        d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
-        b(1,1).raised.content aka "start content" mustEqual m
-        b(0,1).raised.content aka "destination content" mustEqual m
-      }
-      
-      "allow a player to grab the upper of 2 dice and move to an empty tile" in {
-        placePlayer(p1, (1, 1))
-        placeDice(1, 1)
-        val d1 = placeDice(1, 1)
-        
-        p1.requestControl() aka "control request" mustEqual Some(d1)
-        p1.requestMove(Direction.RIGHT) aka "movement request" must beTrue
-        
-        val m = Movement(d1, b(1,1).raised, b(2,1).floor, 
-                         g.clock.createTimespanWithLength(Game.MOVE_DURATION),
-                         Transform.FLIP_LEFT_OR_RIGHT)
-        
-        d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
-        b(1,1).raised.content aka "start content" mustEqual m
-        b(2,1).floor.content aka "destination content" mustEqual m
-      }
       
       "not grant control over an appearing dice" in {
         placePlayer(p1, (1, 1))
         g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
         p1.requestControl() aka "control request" must beNone
-      }
-      
-      "not allow a player to move onto an appearing dice" in {
-        placePlayer(p1, (2, 1))
-        val d1 = placeDice(2, 1)
-        
-        g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
-        
-        p1.requestControl() mustEqual Some(d1)
-        p1.requestMove(Direction.LEFT) must beFalse
       }
       
       "correctly find a group of matching dice" in {
@@ -310,66 +139,7 @@ class GameSpec extends SpecBase {
         p2.requestControl() must beNone
       }
       
-      "not let a player move with a dice from the floor onto a " +
-      "dice that is controlled by another player" in {
-        placePlayer(p1, (1, 1))
-        placePlayer(p2, (2, 1))
-        
-        val d1 = placeDice(1, 1)
-        val d2 = placeDice(2, 1)
-        
-        p1.requestControl() mustEqual Some(d1)
-        p2.requestControl() mustEqual Some(d2)
-        
-        p2.requestMove(Direction.LEFT) must beFalse
-      }
       
-      "not let a player move with a dice from the raised level " +
-      "onto a dice that is controlled by another player" in {
-        placePlayer(p1, (1, 1))
-        placePlayer(p2, (2, 1))
-        
-        val d1 = placeDice(1, 1)
-        placeDice(2, 1)
-        val d2 = placeDice(2, 1)
-        
-        p1.requestControl() mustEqual Some(d1)
-        p2.requestControl() mustEqual Some(d2)
-        
-        p2.requestMove(Direction.LEFT) must beFalse
-      }
-      
-      "not let 2 players move onto the same floor space" in {
-        placePlayer(p1, (0, 2))
-        placePlayer(p2, (1, 1))
-        
-        placeDice(0, 2)
-        val d1 = placeDice(0, 2)
-        val d2 = placeDice(1, 1)
-        
-        p1.requestControl() mustEqual Some(d1)
-        p2.requestControl() mustEqual Some(d2)
-        
-        p1.requestMove(Direction.RIGHT) must beTrue
-        p2.requestMove(Direction.UP) must beFalse
-      }
-      
-      "not let 2 players move onto the same raised space" in {
-        placePlayer(p1, (0, 0))
-        placePlayer(p2, (1, 1))
-        
-        val d1 = placeDice(0, 0)
-        placeDice(1, 1)
-        val d2 = placeDice(1, 1)
-        
-        placeDice(0, 1)
-        
-        p1.requestControl() mustEqual Some(d1)
-        p2.requestControl() mustEqual Some(d2)
-        
-        p1.requestMove(Direction.UP) must beTrue
-        p2.requestMove(Direction.LEFT) must beFalse
-      }
 
     }
   }

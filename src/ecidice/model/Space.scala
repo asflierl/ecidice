@@ -57,4 +57,7 @@ class Space(val tile: Tile, var content: Content) {
       case _ => None
     }
   }
+  
+  override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
+    (if (isRaised) "raised" else "floor"))
 }

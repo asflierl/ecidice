@@ -31,7 +31,7 @@ package ecidice.model
 
 import scala.collection.immutable._
 
-class BurstGroup(val when: Timespan) extends Timed {
+class BurstGroup(val when: Timespan) extends Activity {
   private var diceSet : Set[Dice] = new HashSet[Dice]
   
   var state : BurstGroup.State = _

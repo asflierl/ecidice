@@ -8,6 +8,7 @@ class EcidiceSpec extends SpecificationWithJUnit {
     new model.BoardSpec,
     new model.DiceSpec,
     new model.GameSpec,
+    new model.MovementRefereeSpec,
     new model.TimespanSpec
   )
 }

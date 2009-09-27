@@ -142,7 +142,7 @@ object Dice {
    * The dice is appearing. It can not be controlled nor moved. It occupies 
    * some space.
    */
-  case class Appearing(where: Space, when: Timespan) extends State with Timed
+  case class Appearing(where: Space, when: Timespan) extends State with Activity
   
   /**
    * The dice is solid now. It can be controlled by a player. It occupies

@@ -32,11 +32,6 @@ package ecidice.model
 class Player(game: Game, spawnPoint: Tile) {
   var state : Player.State = Player.Standing(spawnPoint)
   
-  def controlledDice = state match {
-    case Player.Controlling(d) => Some(d)
-    case _ => None
-  }
-  
   /**
    * Requests for this player to gain control over the dice below her.
    * <p>
@@ -70,60 +65,6 @@ class Player(game: Game, spawnPoint: Tile) {
     case Player.Controlling(d) => Some(d)
     case _ => None
   }
-  
-  /**
-   * Requests for player <code>p</code> to move in direction <code>dir</code>.
-   * <p>
-   * If the player is not controlling a dice and the position after the move
-   * would be still on the game board, the request is granted.
-   * <p>
-   * If the player is controlling a dice, the dice is "solid", the destination
-   * is within board bounds and the destination tile has an empty space on top,
-   * the request is granted.
-   * <p>
-   * If the player is already moving to the same position (with or without 
-   * dice), the request is granted.
-   * <p>
-   * In all other cases, the movement request will be rejected.
-   * <p>
-   * On a successful request, this method sets all necessary model state to
-   * represent the new situation.
-   * 
-   * @param p the player requesting to move
-   * @param dir the direction the player wants to move in
-   * @return whether the move was allowed (and started)
-   */
-  def requestMove(dir: Direction.Value) : Boolean = state match {
-    /* This is the easy case: the player controls no dice and just wants to move
-     * around.
-     */
-    case Player.Standing(t @ Tile(x, y, _)) => {
-      val pos = t.board.positionInDir(t, dir)
-      
-      if (t.board.isWithinBounds(pos)) {
-        val mov = Player.Moving(this, t, t.board(pos), 
-                                game.clock.createTimespanWithLength(Game.MOVE_DURATION))
-        state = mov
-        game.tracker.track(mov)
-        true
-      } else false // destination out of board bounds
-    }
-    
-    /* Somewhat tricky: the player controls a dice and wants to move along with
-     * it. This is only granted if the target position is wihin bounds and the
-     * tile at that position is free to be moved to.
-     */
-    case Player.Controlling(d) => game.diceMovementResolver.requestMove(this, dir)
-    
-    /* Player wants to move to the same place she's already moving to: 
-     * leave things as they are and return <code>true</code>.
-     */
-    case Player.Moving(_, from, to, _) 
-      if (from.pos == to.board.positionInDir(from, dir)) 
-      => true
-    
-    case _ => false
-  }
 }
 object Player {
   sealed abstract class State
@@ -133,5 +74,5 @@ object Player {
   case class Controlling(dice: Dice) extends State
   
   case class Moving(player: Player, from: Tile, to: Tile, when: Timespan)
-    extends State with Timed
+    extends State with Activity
 }
