@@ -29,61 +29,57 @@
 
 package ecidice.model
 
-import org.specs._
-
-import ecidice.util.Preamble._
-
 /**
- * Spec-based tests of the timespan model.
+ * Informally specifies the clock model.
  * 
  * @author Andreas Flierl
  */
-class TimespanSpec extends SpecBase {  
-  "A timespan" should {
-    
+class ClockSpec extends SpecBase {
+  "A clock" should {
     val clock = new Clock
-    val ts = Timespan(clock, clock.now + 1d, 1d)
     
-    "return the correct end time" in {
-      ts.end mustEqual 2d
+    "initially be set to 0" in {
+      clock.now mustEqual 0d
     }
     
-    "display 0% progress right after initialisation" in {
-      ts.progress mustEqual 0f
+    "correctly tick forward" in {
+      clock.tick(DOUBLE_DELTA)
+      clock.now must beCloseTo(DOUBLE_DELTA, DOUBLE_DELTA)
     }
     
-    "ignore negative values passed to 'lengthen'" in {
-      ts lengthen(-2d)
-      ts.end mustEqual 2d
-      ts.progress mustEqual 0d
-    }
-  
-    "report 0% progress if the current time is before the timespan start" in {
-      clock.tick(.5f)
-      ts.progress mustEqual 0f
+    "not tick zero seconds" in {
+      clock.tick(0d) must throwAn[IllegalArgumentException]
     }
     
-    "report 0% progress if the current time equals the timespan start" in {
-      clock.tick(1f)
-      ts.progress mustEqual 0f
+    "not tick negatively" in {
+      clock.tick(-DOUBLE_DELTA) must throwAn[IllegalArgumentException]
     }
     
-    "report the correct progress if the current time lies in the timespan" in {
-      clock.tick(1f)
-      for (x <- 0f to 1f step .1f) {
-        ts.progress must beCloseTo(x, FLOAT_DELTA)
-        clock.tick(.1f)
-      }
+    "call reactions when ticking" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(1d)
+      
+      reaction() was called
     }
     
-    "report 100% progress if the current time equals the timespan end" in {
-      clock.tick(2f)
-      ts.progress mustEqual 1f
+    "not call reactions when ticking zero seconds" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(0d) must throwAn[IllegalArgumentException]
+      
+      reaction() wasnt called
     }
     
-    "report 100% progress if the current time is after the timespan end" in {
-      clock.tick(4f)
-      ts.progress mustEqual 1f
+    "not call any reactions when ticking negatively" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(-1d) must throwAn[IllegalArgumentException]
+      
+      reaction() wasnt called
     }
   }
 }

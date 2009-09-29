@@ -44,13 +44,8 @@ import scala.collection.immutable._
 //TODO some kind of scoring system 
 class Game(numPlayers: Int, val board: Board) {
   lazy val players = createPlayers(0)
-  
-  val clock = new Clock() {
-    def update(elapsedTime: Double) = addToCurrentTime(elapsedTime)
-  }
-  
+  val clock = new Clock
   val tracker = new ActivityTracker
-  
   val movementReferee = new MovementReferee(board, clock, tracker)
   
   /**
@@ -67,7 +62,7 @@ class Game(numPlayers: Int, val board: Board) {
    * @param elapsed the elapsed time (in seconds as float)
    */
   def update(elapsed: Float) {
-    clock.update(elapsed)
+    clock.tick(elapsed)
     
     var stuffToRemove : List[Activity] = Nil
     var moves : List[Movement] = Nil
@@ -187,7 +182,7 @@ class Game(numPlayers: Int, val board: Board) {
       val d = new Dice
       board(x, y).floor.content = Occupied(d)
       val app = Dice.Appearing(board(x, y).floor, 
-                               clock.createTimespanWithLength(Game.APPEAR_DURATION))
+                               Timespan(clock, Game.APPEAR_DURATION))
       d.state = app
       tracker.track(app)
       Some(d)

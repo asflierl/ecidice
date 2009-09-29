@@ -120,7 +120,7 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       referee.requestMove(p1, Direction.UP) must beTrue
       
       val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
-                       g.clock.createTimespanWithLength(Game.MOVE_DURATION), 
+                       Timespan(g.clock, Game.MOVE_DURATION), 
                        Transform.FLIP_UP_OR_DOWN)
       
       d1.state mustEqual Dice.Moving(m, p1) 
@@ -138,7 +138,7 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       referee.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
       
       val m = Movement(d1, b(1,1).raised, b(0,1).raised, 
-                       g.clock.createTimespanWithLength(Game.MOVE_DURATION),
+                       Timespan(g.clock, Game.MOVE_DURATION),
                        Transform.ROTATE_LEFT)
       
       d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
@@ -155,7 +155,7 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       referee.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
       
       val m = Movement(d1, b(1,1).raised, b(2,1).floor, 
-                       g.clock.createTimespanWithLength(Game.MOVE_DURATION),
+                       Timespan(g.clock, Game.MOVE_DURATION),
                        Transform.FLIP_LEFT_OR_RIGHT)
 
       d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 

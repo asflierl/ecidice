@@ -40,7 +40,13 @@ import ecidice.util.HashCode
  * @param start the instant this timespan starts
  * @param ttl the initial time-to-live (aka duration)
  */
-class Timespan(clock: Clock, val start: Double, private val ttl: Double) {
+class Timespan private (clock: Clock, val start: Double, private val ttl: Double) {
+  if (start < clock.now) throw new IllegalArgumentException(
+    "a timespan may not start in the past")
+  
+  if (ttl < 0d) throw new IllegalArgumentException(
+    "a timespan may not point backwards in time")
+  
   private var to = start + ttl
   
   def end = to
@@ -77,4 +83,10 @@ class Timespan(clock: Clock, val start: Double, private val ttl: Double) {
    * code.
    */
   override def hashCode = HashCode(start, ttl)
+}
+object Timespan {
+  def apply(clock: Clock, start: Double, ttl: Double) =
+    new Timespan(clock, start, ttl)
+  
+  def apply(clock: Clock, ttl: Double) = new Timespan(clock, clock.now, ttl)
 }

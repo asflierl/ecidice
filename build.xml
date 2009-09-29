@@ -59,6 +59,7 @@
 		<fileset dir="${lib.dir}/specs" includes="*.jar" />
 		<fileset dir="${lib.dir}/scalacheck" includes="*.jar" />
 		<fileset dir="${lib.dir}/junit" includes="*.jar" />
+		<fileset dir="${lib.dir}/mockito" includes="*.jar" />
     <pathelement location="${test.build.dir}" />
   </path>
 	

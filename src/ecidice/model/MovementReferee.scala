@@ -57,7 +57,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
     if (! board.isWithinBounds(destination)) return false 
 
     val mov = Player.Moving(player, start, board(destination), 
-                            clock.createTimespanWithLength(Game.MOVE_DURATION))
+                            Timespan(clock, Game.MOVE_DURATION))
     player.state = mov
     tracker.track(mov)
     true
@@ -98,7 +98,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
     (to.tile.pos == board.positionInDir(from.tile, direction))
   
   private def startDiceMovement(from: Space, to: Space) = {
-    val when = clock.createTimespanWithLength(Game.MOVE_DURATION)
+    val when = Timespan(clock, Game.MOVE_DURATION)
     val transform = Transform(from, to, direction)
     val move = Movement(dice, from, to, when, transform)
     
