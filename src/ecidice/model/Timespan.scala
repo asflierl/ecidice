@@ -57,7 +57,7 @@ class Timespan private (clock: Clock, val start: Double, private val ttl: Double
     }
   }
   
-  def isOver = (progress == 1f)
+  def isOver = (progress == 1d)
   
   /**
    * Returns where in this timespan the associated game is now as a number in
