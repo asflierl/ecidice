@@ -51,13 +51,6 @@ class Space(val tile: Tile, var content: Content) {
   
   def isEmpty = (content == Empty)
   
-  private[model] def requestControl(p: Player) = {
-    content match {
-      case Occupied(d) => d.requestControl(this, p)
-      case _ => None
-    }
-  }
-  
   override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
     (if (isRaised) "raised" else "floor"))
 }

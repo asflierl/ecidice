@@ -64,9 +64,9 @@ class Timespan private (clock: Clock, val start: Double, private val ttl: Double
    * the interval [0, 1].
    */
   def progress =
-    if (clock.now <= start) 0f
-    else if (clock.now >= to) 1f
-    else ((clock.now - start) / (to - start)).floatValue
+    if (clock.now <= start) 0d
+    else if (clock.now >= to) 1d
+    else (clock.now - start) / (to - start)
   
   /**
    * Note that this definition of equality uses the initialization parameters
@@ -76,12 +76,7 @@ class Timespan private (clock: Clock, val start: Double, private val ttl: Double
     case x : Timespan => (x.start == start) && (x.ttl == ttl)
     case _ => false
   }
-  
-  /**
-   * Along the same lines as <code>equals</code>, this method uses the 
-   * initialization parameters not current (mutable) state to compute the hash
-   * code.
-   */
+
   override def hashCode = HashCode(start, ttl)
 }
 object Timespan {

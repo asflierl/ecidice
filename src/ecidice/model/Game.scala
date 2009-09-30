@@ -42,11 +42,13 @@ import scala.collection.immutable._
 //TODO falling dice must be modeled (probably linked to burst time?)
 //TODO relinquish control must be modeled
 //TODO some kind of scoring system 
+//TODO when do new dice spawn?
 class Game(numPlayers: Int, val board: Board) {
   lazy val players = createPlayers(0)
   val clock = new Clock
   val tracker = new ActivityTracker
   val movementReferee = new MovementReferee(board, clock, tracker)
+  val controlReferee = new ControlReferee
   
   /**
    * Creates <code>num</code> players in this game, starting at the board's 
@@ -54,7 +56,7 @@ class Game(numPlayers: Int, val board: Board) {
    */
   private def createPlayers(num: Int) : List[Player] =
     if (num == numPlayers) Nil
-    else new Player(this, board.spawnPoints(num)) :: createPlayers(num + 1)
+    else new Player(board.spawnPoints(num)) :: createPlayers(num + 1)
   
   /**
    * Updates this game after the specified amount of time has elapsed.

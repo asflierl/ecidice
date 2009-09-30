@@ -40,7 +40,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
        * leave things as they are and return <code>true</code>.
        */
       case Player.Moving(_, from, to, _) 
-        if (from.pos == to.board.positionInDir(from, direction)) 
+        if (from.pos == board.positionInDir(from, direction)) 
         => true
       
       case _ => false

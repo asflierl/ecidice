@@ -44,12 +44,25 @@ class TimespanSpec extends SpecBase {
     val clock = new Clock
     val ts = Timespan(clock, clock.now + 1d, 1d)
     
+    "not start in the past, initially" in {
+      Timespan(clock, clock.now - DOUBLE_DELTA, 1d) must throwAn[IllegalArgumentException]
+    }
+    
+    "not point backwards in time" in {
+      Timespan(clock, clock.now, -DOUBLE_DELTA) must throwAn[IllegalArgumentException]
+    }
+    
+    "be able to represent a zero-second duration" in {
+      val span = Timespan(clock, clock.now, 0)
+      span.end mustEqual clock.now
+    }
+    
     "return the correct end time" in {
       ts.end mustEqual 2d
     }
     
     "display 0% progress right after initialisation" in {
-      ts.progress mustEqual 0f
+      ts.progress mustEqual 0d
     }
     
     "ignore negative values passed to 'lengthen'" in {
@@ -64,26 +77,26 @@ class TimespanSpec extends SpecBase {
     }
     
     "report 0% progress if the current time equals the timespan start" in {
-      clock.tick(1f)
-      ts.progress mustEqual 0f
+      clock.tick(1d)
+      ts.progress mustEqual 0d
     }
     
     "report the correct progress if the current time lies in the timespan" in {
-      clock.tick(1f)
-      for (x <- 0f to 1f step .1f) {
-        ts.progress must beCloseTo(x, FLOAT_DELTA)
-        clock.tick(.1f)
+      clock.tick(1d)
+      for (x <- 0d to 1d step .1d) {
+        ts.progress must beCloseTo(x, DOUBLE_DELTA)
+        clock.tick(.1d)
       }
     }
     
     "report 100% progress if the current time equals the timespan end" in {
-      clock.tick(2f)
-      ts.progress mustEqual 1f
+      clock.tick(2d)
+      ts.progress mustEqual 1d
     }
     
     "report 100% progress if the current time is after the timespan end" in {
-      clock.tick(4f)
-      ts.progress mustEqual 1f
+      clock.tick(4d)
+      ts.progress mustEqual 1d
     }
   }
 }

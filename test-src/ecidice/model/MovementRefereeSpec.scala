@@ -36,9 +36,9 @@ package ecidice.model
  */
 class MovementRefereeSpec extends SpecBase with GameSetupHelper {
   "The movement referee " should {
-    def referee = g.movementReferee
+    reset.before
     
-    doBefore { reset() }
+    def referee = g.movementReferee
  
     "allow a player in the center to move in all directions" in {
       Direction.elements.foreach((dir) => {
@@ -46,7 +46,7 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
         placePlayer(p1, (1, 1))
         
         val request = "movement request: " + dir
-        referee.requestMove(p1, dir) aka request must beTrue
+        g.movementReferee.requestMove(p1, dir) aka request must beTrue
         
         p1.state must haveClass[Player.Moving]
       })
@@ -64,7 +64,7 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
         reset()
         for (dir <- Direction.elements) {
           placePlayer(p1, corner)
-          referee.requestMove(p1, dir) must be (dir == allowed._1 || dir == allowed._2)
+          g.movementReferee.requestMove(p1, dir) must be (dir == allowed._1 || dir == allowed._2)
         }
       }
     }
@@ -82,7 +82,7 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
         for (dir <- Direction.elements) {
           placePlayer(p1, pos)
           val correct = (dir != disallowed)
-          referee.requestMove(p1, dir) must be (correct)
+          g.movementReferee.requestMove(p1, dir) must be (correct)
         }
       }
       
@@ -94,8 +94,8 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
         placePlayer(p1, (1, 1))
         val d1 = placeDice(1, 1)
         
-        p1.requestControl() aka "control request" mustEqual Some(d1)
-        referee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+        g.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+        g.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
       }
     }
     
@@ -106,8 +106,8 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
         placeDice(1, 1)
         val d1 = placeDice(1, 1)
         
-        p1.requestControl() aka "control request" mustEqual Some(d1)
-        referee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+        g.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+        g.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
       }
     }
     
@@ -116,8 +116,8 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       val d1 = placeDice(1, 1)
       val d2 = placeDice(1, 2)
       
-      p1.requestControl() mustEqual Some(d1)
-      referee.requestMove(p1, Direction.UP) must beTrue
+      g.controlReferee.requestControl(p1) mustEqual Some(d1)
+      g.movementReferee.requestMove(p1, Direction.UP) must beTrue
       
       val m = Movement(d1, b(1,1).floor, b(1,2).raised, 
                        Timespan(g.clock, Game.MOVE_DURATION), 
@@ -134,8 +134,8 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       val d1 = placeDice(1, 1)
       val d2 = placeDice(0, 1)
       
-      p1.requestControl() aka "control request" mustEqual Some(d1)
-      referee.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
+      g.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+      g.movementReferee.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
       
       val m = Movement(d1, b(1,1).raised, b(0,1).raised, 
                        Timespan(g.clock, Game.MOVE_DURATION),
@@ -151,8 +151,8 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       placeDice(1, 1)
       val d1 = placeDice(1, 1)
       
-      p1.requestControl() aka "control request" mustEqual Some(d1)
-      referee.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
+      g.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+      g.movementReferee.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
       
       val m = Movement(d1, b(1,1).raised, b(2,1).floor, 
                        Timespan(g.clock, Game.MOVE_DURATION),
@@ -169,8 +169,8 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       
       g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
       
-      p1.requestControl() mustEqual Some(d1)
-      referee.requestMove(p1, Direction.LEFT) must beFalse
+      g.controlReferee.requestControl(p1) mustEqual Some(d1)
+      g.movementReferee.requestMove(p1, Direction.LEFT) must beFalse
     }
     
     "not let a player move with a dice from the floor onto a " +
@@ -181,10 +181,10 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       val d1 = placeDice(1, 1)
       val d2 = placeDice(2, 1)
       
-      p1.requestControl() mustEqual Some(d1)
-      p2.requestControl() mustEqual Some(d2)
+      g.controlReferee.requestControl(p1) mustEqual Some(d1)
+      g.controlReferee.requestControl(p2) mustEqual Some(d2)
       
-      referee.requestMove(p2, Direction.LEFT) must beFalse
+      g.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
     }
     
     "not let a player move with a dice from the raised level " +
@@ -196,10 +196,10 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       placeDice(2, 1)
       val d2 = placeDice(2, 1)
       
-      p1.requestControl() mustEqual Some(d1)
-      p2.requestControl() mustEqual Some(d2)
+      g.controlReferee.requestControl(p1) mustEqual Some(d1)
+      g.controlReferee.requestControl(p2) mustEqual Some(d2)
       
-      referee.requestMove(p2, Direction.LEFT) must beFalse
+      g.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
     }
     
     "not let 2 players move onto the same floor space" in {
@@ -210,11 +210,11 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       val d1 = placeDice(0, 2)
       val d2 = placeDice(1, 1)
       
-      p1.requestControl() mustEqual Some(d1)
-      p2.requestControl() mustEqual Some(d2)
+      g.controlReferee.requestControl(p1) mustEqual Some(d1)
+      g.controlReferee.requestControl(p2) mustEqual Some(d2)
       
-      referee.requestMove(p1, Direction.RIGHT) must beTrue
-      referee.requestMove(p2, Direction.UP) must beFalse
+      g.movementReferee.requestMove(p1, Direction.RIGHT) must beTrue
+      g.movementReferee.requestMove(p2, Direction.UP) must beFalse
     }
     
     "not let 2 players move onto the same raised space" in {
@@ -227,11 +227,11 @@ class MovementRefereeSpec extends SpecBase with GameSetupHelper {
       
       placeDice(0, 1)
       
-      p1.requestControl() mustEqual Some(d1)
-      p2.requestControl() mustEqual Some(d2)
+      g.controlReferee.requestControl(p1) mustEqual Some(d1)
+      g.controlReferee.requestControl(p2) mustEqual Some(d2)
       
-      referee.requestMove(p1, Direction.UP) must beTrue
-      referee.requestMove(p2, Direction.LEFT) must beFalse
+      g.movementReferee.requestMove(p1, Direction.UP) must beTrue
+      g.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
     }
   }
 }

@@ -1,9 +1,11 @@
 package ecidice.model
 
 class Clock {
-  private var currentTime = 0d
-  private var reactions = Set.empty[() => Any]
+  type Reaction = () => Any
   
+  private var currentTime = 0d
+  private var reactions = Set.empty[Reaction]
+    
   def now = currentTime
     
   def tick(elapsedTime: Double) = {
@@ -14,9 +16,9 @@ class Clock {
     reactions.foreach(_())
   }
   
-  def addReaction(r: () => Any) = 
+  def addReaction(r: Reaction) = 
     reactions += r
   
-  def removeReaction(r: () => Any) =
+  def removeReaction(r: Reaction) =
     reactions -= r
 }

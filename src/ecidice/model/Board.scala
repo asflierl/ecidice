@@ -38,8 +38,8 @@ package ecidice.model
  * @param depth the number of tiles from front to back
  */
 class Board(val width: Int, val depth: Int) {
-  private lazy val tileArr = Array.fromFunction(
-    (x, y) => new Tile(x, y, this))(width, depth) 
+  private val tileArr = Array.fromFunction(
+    (x, y) => new Tile(x, y))(width, depth) 
   
   /**
    * Returns an iterator that traverses over all tiles of this board. The tiles
