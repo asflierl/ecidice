@@ -81,5 +81,15 @@ class ClockSpec extends SpecBase {
       
       reaction() wasnt called
     }
+    
+    "still provide microsecond accuracy after 100 years" in {
+      clock.tick(100d * 365d * 24d * 60d * 60d)
+      val before = clock.now
+      
+      clock.tick(1E-6)
+      val after = clock.now
+      
+      (after - before) must beLessThanOrEqualTo(1E-6)
+    } 
   }
 }

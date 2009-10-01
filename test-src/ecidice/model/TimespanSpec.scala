@@ -42,7 +42,7 @@ class TimespanSpec extends SpecBase {
   "A timespan" should {
     
     val clock = new Clock
-    val ts = Timespan(clock, clock.now + 1d, 1d)
+    var ts = Timespan(clock, clock.now + 1d, 1d)
     
     "not start in the past, initially" in {
       Timespan(clock, clock.now - DOUBLE_DELTA, 1d) must throwAn[IllegalArgumentException]
@@ -83,20 +83,29 @@ class TimespanSpec extends SpecBase {
     
     "report the correct progress if the current time lies in the timespan" in {
       clock.tick(1d)
-      for (x <- 0d to 1d step .1d) {
+      for (x <- 0d to 1d step .001d) {
         ts.progress must beCloseTo(x, DOUBLE_DELTA)
-        clock.tick(.1d)
+        clock.tick(.001d)
       }
     }
     
     "report 100% progress if the current time equals the timespan end" in {
       clock.tick(2d)
       ts.progress mustEqual 1d
+      
     }
     
     "report 100% progress if the current time is after the timespan end" in {
       clock.tick(4d)
       ts.progress mustEqual 1d
+    }
+    
+    "report an accurate progress with large clock times" in {
+      clock.tick(100d * 365d * 24d * 60d * 60d)
+      ts = Timespan(clock, 4E-6d)
+      clock.tick(3E-6d)
+
+      ts.progress must beCloseTo(.75, DOUBLE_DELTA)
     }
   }
 }

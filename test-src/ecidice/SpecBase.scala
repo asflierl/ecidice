@@ -34,7 +34,7 @@ import org.specs.util._
 import org.specs.mock.Mockito
 
 trait SpecBase extends Specification with DataTables with Mockito {
-  val DOUBLE_DELTA = 1E-16
+  val DOUBLE_DELTA = 1E-12
   
   detailedDiffs
 }
