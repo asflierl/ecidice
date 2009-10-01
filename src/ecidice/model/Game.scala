@@ -43,6 +43,7 @@ import scala.collection.immutable._
 //TODO relinquish control must be modeled
 //TODO some kind of scoring system 
 //TODO when do new dice spawn?
+//TODO take tile visibility into account
 class Game(numPlayers: Int, val board: Board) {
   lazy val players = createPlayers(0)
   val clock = new Clock
@@ -57,119 +58,6 @@ class Game(numPlayers: Int, val board: Board) {
   private def createPlayers(num: Int) : List[Player] =
     if (num == numPlayers) Nil
     else new Player(board.spawnPoints(num)) :: createPlayers(num + 1)
-  
-  /**
-   * Updates this game after the specified amount of time has elapsed.
-   * 
-   * @param elapsed the elapsed time (in seconds as float)
-   */
-  def update(elapsed: Float) {
-    clock.tick(elapsed)
-    
-    var stuffToRemove : List[Activity] = Nil
-    var moves : List[Movement] = Nil
-    
-    // process timed stuff that is over
-    tracker.activities.foreach((x) => if (x.when.isOver) {
-      stuffToRemove = x :: stuffToRemove
-      
-      x match {
-        case da : Dice.Appearing => diceAppeared(da)
-        case m : Movement => moves = m :: moves // process those later
-        case pm : Player.Moving => playerMovementEnded(pm) 
-        case bg : BurstGroup => burstGroupTimedOut(bg)
-      }
-    })
-    
-    moves.foreach((m) => {
-      
-    })
-  }
-  
-  private def diceAppeared(da : Dice.Appearing) = {
-    val s = da.where
-    //TODO is the board full now?
-    s.content match { 
-      case Occupied(d) => d.state = Dice.Solid(s, None) 
-      case _ => throw new IllegalStateException("space unoccupied")
-    }
-  }
-  
-  private def diceMovementEnded(m : Movement) = {
-    m.dice.change(m.transform)
-      
-    if (m.dice.top == 1) {
-      board.tiles filter (_.floor.content.isInstanceOf[Occupied])
-    }
-        
-    val group = find(m.dice, m.to.tile)    
-    
-    Nil //TODO
-  }
-  
-  private def playerMovementEnded(pm : Player.Moving) = {
-    pm.player.state = Player.Standing(pm.to)
-  }
-  
-  private def burstGroupTimedOut(bg : BurstGroup) = {
-    bg.state match {
-      case BurstGroup.Charging => {
-        bg.state = BurstGroup.Bursting
-        bg.when.lengthen(Game.BURST_DURATION)
-      } 
-      case BurstGroup.Bursting => {
-        bg.dice.foreach((d) => {
-          //TODO give the initiator some points
-          d.state match {
-            case Dice.Locked(_, g, s) if (bg == g) => s.content = Empty
-            case _ => throw new IllegalStateException("dice not locked")
-          }
-          d.state = Dice.Burst
-        })
-      }
-    }
-  }
-  
-  /**
-   * Finds and returns all dice (including <code>src</code>) that show the same 
-   * top face as <code>src</code> and that are reachable from <code>src</code>
-   * via other such dice (by only moving up, down, left or right once or 
-   * several times). The <code>src</code> dice is expected to be in the state
-   * <code>Dice.Moving</code> and already have the transform associated with
-   * the move applied to it. Other than that, only solid dice that are 
-   * uncontrolled are considered.
-   * <p>
-   * As an example consider the following 3 x 3 board:
-   * <pre>
-   *     X Y Z
-   *   ---------
-   * A | 6 4 6 |
-   * B | 6 3 6 |
-   * C | 6 6 3 |
-   *   ---------
-   * </pre>
-   * 
-   * Starting from CX, this method would return AX, BX, CX and CY. Starting from
-   * BY, it would only return BY. Starting from BZ, it would return AZ and BZ.
-   */
-  private[model] def find(src: Dice, start: Tile) : Set[Dice] = {
-    def findFromDice(d: Dice, g: Set[Dice]) : Set[Dice] = 
-      if (d.top != src.top || g.contains(d)) g
-      else d.state match {
-        case Dice.Solid(s, c) if (c == None) => findFromTile(s.tile, g + d)
-        case _ => g
-      }
-    
-    def findFromTile(t: Tile, g: Set[Dice]) = {
-      var res = g
-      Direction.elements.foreach(
-        board.diceInDir(t, _, Tile.Level.FLOOR).foreach( 
-          (next) => res = findFromDice(next, res)))
-      res
-    }
-    
-    findFromTile(start, Set(src))
-  }
   
   /**
    * Spawns a dice at the specified position on the board and updates the

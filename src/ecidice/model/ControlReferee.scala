@@ -62,11 +62,10 @@ class ControlReferee {
    */
   def requestControl(player: Player) : Option[Dice] = {
     this.player = player
+    
     player.state match {
-      case Player.Standing(tile) => requestControlOnTile(tile)
-        
+      case Player.Standing(tile) => requestControlOnTile(tile)    
       case Player.Controlling(dice) => Some(dice)
-      
       case _ => None
     }
   }

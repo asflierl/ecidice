@@ -43,10 +43,7 @@ class Space(val tile: Tile, var content: Content) {
   /** Returns whether this space is on the floor level. */
   def isFloor = (this == tile.floor)
   
-  /** 
-   * Returns whether this space is on the raised level (i.e. on top of a 
-   * dice). 
-   */
+  /** Returns whether this space is on the raised level. */
   def isRaised = (this == tile.raised)
   
   def isEmpty = (content == Empty)

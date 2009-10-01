@@ -99,19 +99,6 @@ class Board(val width: Int, val depth: Int) {
     case Direction.LEFT => (t.x - 1, t.y)
   }
   
-  def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) 
-      : Option[Dice] = {
-    val pos = positionInDir(t, dir)
-    if (isWithinBounds(pos)) {
-      val tgt = this(pos).floor
-      
-      tgt.content match {
-        case Occupied(d) => Some(d)
-        case _ => None
-      }
-    } else None
-  }
-  
   /**
    * Returns whether the specified coordinates are within this board's bounds.
    * 

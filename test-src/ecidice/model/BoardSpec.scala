@@ -66,5 +66,24 @@ class BoardSpec extends SpecBase {
         b.positionInDir(center, dir) mustEqual(result)
       }
     }
+    
+    "correctly indicate board bounds" in {
+      
+      "position" | "within bounds" |>
+      (0, 0)     ! true            |
+      (4, 2)     ! true            |
+      (1, 2)     ! true            |
+      (4, 1)     ! true            |
+      (5, 0)     ! false           |
+      (0, 3)     ! false           |
+      (-1, 1)    ! false           |
+      (2, -1)    ! false           |
+      (-1, -1)   ! false           |
+      (5, 3)     ! false           | { 
+        
+      (pos, result) =>
+        b.isWithinBounds(pos) mustEqual(result)
+      }
+    }
   }
 }
