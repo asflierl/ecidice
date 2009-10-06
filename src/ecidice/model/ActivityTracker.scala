@@ -30,9 +30,11 @@
 package ecidice.model
 
 class ActivityTracker {
-  private var trackedActivities : List[Activity] = Nil
+  private var trackedActivities = Set.empty[Activity]
   
   def activities = trackedActivities
   
-  def track(some: Activity) = (trackedActivities = some :: trackedActivities)
+  def track(some: Activity) = (trackedActivities += some)
+  
+  def forget(some: Activity) = (trackedActivities -= some)
 }

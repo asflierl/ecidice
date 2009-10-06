@@ -27,21 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.model
 
-import org.specs._
-import org.specs.runner._
- 
-class EcidiceSpec extends SpecificationWithJUnit {
-  "ecidice".isSpecifiedBy(
-    new model.BoardSpec,
-    new model.ClockSpec,
-    new model.ControlRefereeSpec,
-    new model.DiceSpec,
-    new model.DiceMatcherSpec,
-    new model.GameSpec,
-    new model.MovementRefereeSpec,
-    new model.TimespanSpec,
-    new model.UpdateMechanicsSpec
-  )
+/**
+ * Spec-based tests of the game's update mechanics.
+ * 
+ * @author Andreas Flierl
+ */
+class UpdateMechanicsSpec extends SpecBase {
+  "The update mechanics" should {
+    
+  }
 }

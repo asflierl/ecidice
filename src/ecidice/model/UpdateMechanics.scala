@@ -32,25 +32,22 @@ package ecidice.model
 class UpdateMechanics(tracker: ActivityTracker, board: Board) {
   private val diceMatcher = new DiceMatcher(board)
   
-  def update {    
-    var stuffToRemove : List[Activity] = Nil
-    var moves : List[Movement] = Nil
+  def update {
+    val finishedActivities = tracker.activities.filter(_.when.isOver)
+    var diceMoves : List[Movement] = Nil
     
-    // process timed stuff that is over
-    tracker.activities.foreach((x) => if (x.when.isOver) {
-      stuffToRemove = x :: stuffToRemove
-      
-      x match {
-        case da : Dice.Appearing => diceAppeared(da)
-        case m : Movement => moves = m :: moves // process those later
-        case pm : Player.Moving => playerMovementEnded(pm) 
-        case bg : BurstGroup => burstGroupTimedOut(bg)
-      }
+    finishedActivities.foreach(_ match {
+      case da : Dice.Appearing => diceAppeared(da)
+      case pm : Player.Moving => playerMovementEnded(pm) 
+      case bg : BurstGroup => burstGroupTimedOut(bg)
+      case m : Movement => diceMoves = m :: diceMoves
     })
     
-    moves.foreach((m) => {
+    diceMoves.foreach((m) => {
       
     })
+    
+    finishedActivities.foreach(tracker.forget(_))
   }
   
   private def diceAppeared(da : Dice.Appearing) = {
