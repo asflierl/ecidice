@@ -46,8 +46,7 @@ class Board(val width: Int, val depth: Int) {
    * are returned from front to back, from left to right.
    */
   def tiles = new Iterator[Tile] {
-    var x = 0
-    var y = 0
+    var x, y = 0
     
     override def hasNext = x < width
     

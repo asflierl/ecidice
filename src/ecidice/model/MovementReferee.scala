@@ -31,10 +31,6 @@ package ecidice.model
 
 /**
  * Defines the rules for when and where a player is allowed to move.
- * <p>
- * A movement request (by a player) is granted (only) if the player controls a 
- * dice, the destination position would be on the game board, the destination is
- * either a free floor space or a free space upon an uncontrolled, solid dice.
  * 
  * @author Andreas Flierl
  */

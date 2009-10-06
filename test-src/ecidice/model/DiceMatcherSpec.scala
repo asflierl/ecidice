@@ -70,5 +70,15 @@ class DiceMatcherSpec extends SpecBase with GameSetupHelper {
       
       dice foreach (s must contain(_))
     }
+    
+    "correctly find no matches of an isolated dice" in {
+      List((1, 0), (0, 1), (2, 1), (1, 2)).foreach(placeDice(_))
+      val d = placeDice(1, 1)
+      d.change(Transform.ROTATE_DOWN)
+      
+      val matches = matcher.find(d, b(1, 1))
+      
+      matches mustEqual Set(d)
+    }
   }
 }

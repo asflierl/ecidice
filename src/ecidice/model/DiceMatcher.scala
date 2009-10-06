@@ -33,10 +33,7 @@ package ecidice.model
  * Finds and returns all dice (including <code>src</code>) that show the same 
  * top face as <code>src</code> and that are reachable from <code>src</code>
  * via other such dice (by only moving up, down, left or right once or 
- * several times). The <code>src</code> dice is expected to be in the state
- * <code>Dice.Moving</code> and already have the transform associated with
- * the move applied to it. Other than that, only solid dice that are 
- * uncontrolled are considered.
+ * several times). Only solid dice that are uncontrolled are considered.
  * <p>
  * As an example consider the following 3 x 3 board:
  * <pre>
@@ -60,13 +57,6 @@ class DiceMatcher(board: Board) {
     findFromTile(start, Set(src))
   }
   
-  private def findFromDice(d: Dice, g: Set[Dice]) : Set[Dice] = 
-    if (d.top != src.top || g.contains(d)) g
-    else d.state match {
-      case Dice.Solid(s, c) if (c == None) => findFromTile(s.tile, g + d)
-      case _ => g
-    }
-  
   private def findFromTile(t: Tile, g: Set[Dice]) = {
     var res = g
     Direction.elements.foreach(
@@ -74,6 +64,13 @@ class DiceMatcher(board: Board) {
         (next) => res = findFromDice(next, res)))
     res
   }
+  
+  private def findFromDice(d: Dice, g: Set[Dice]) : Set[Dice] = 
+    if (d.top != src.top || g.contains(d)) g
+    else d.state match {
+      case Dice.Solid(s, c) if (c == None) => findFromTile(s.tile, g + d)
+      case _ => g
+    }
   
   private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) 
       : Option[Dice] = {
