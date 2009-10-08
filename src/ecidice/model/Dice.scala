@@ -61,22 +61,11 @@ class Dice {
    */
   var state : Dice.State = _
   
-  /** Returns the number of eyes on the top face. */
-  def top = topFace
-  
-  /** Returns the number of eyes on the bottom face. */
+  def top = topFace  
   def bottom = opposite(topFace)
-  
-  /** Returns the number of eyes on the right face. */
   def right = rightFace
-  
-  /** Returns the number of eyes on the left face. */
   def left = opposite(rightFace)
-  
-  /** Returns the number of eyes on the front face. */
   def front = frontFace
-  
-  /** Returns the number of eyes on the back face. */
   def back = opposite(frontFace)
   
   /**
@@ -96,7 +85,7 @@ class Dice {
    * @param r the new right face
    * @param f the new front face
    */
-  private def set(t: Int, r: Int, f: Int) {
+  private def set(t: Int, r: Int, f: Int) = {
     topFace = t
     rightFace = r
     frontFace = f
