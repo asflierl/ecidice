@@ -29,8 +29,10 @@
 
 package ecidice.model
 
-class UpdateMechanics(tracker: ActivityTracker, board: Board) {
+class UpdateMechanics(tracker: ActivityTracker, board: Board, clock: Clock) {
   private val diceMatcher = new DiceMatcher(board)
+  
+  clock.addReaction(update _)
   
   def update {
     val finishedActivities = tracker.activities.filter(_.when.isOver)
@@ -39,7 +41,7 @@ class UpdateMechanics(tracker: ActivityTracker, board: Board) {
     finishedActivities.foreach(_ match {
       case da : Dice.Appearing => diceAppeared(da)
       case pm : Player.Moving => playerMovementEnded(pm) 
-      case bg : BurstGroup => burstGroupTimedOut(bg)
+      case dg : DiceGroup => diceGroupTimedOut(dg)
       case m : Movement => diceMoves = m :: diceMoves
     })
     
@@ -51,10 +53,12 @@ class UpdateMechanics(tracker: ActivityTracker, board: Board) {
   }
   
   private def diceAppeared(da : Dice.Appearing) = {
-    val s = da.where
+    val where = da.where
+    
     //TODO is the board full now?
-    s.content match { 
-      case Occupied(d) => d.state = Dice.Solid(s, None) 
+    
+    where.content match { 
+      case Occupied(d) => d.state = Dice.Solid(where, None)
       case _ => throw new IllegalStateException("space unoccupied")
     }
   }
@@ -75,17 +79,16 @@ class UpdateMechanics(tracker: ActivityTracker, board: Board) {
     pm.player.state = Player.Standing(pm.to)
   }
   
-  private def burstGroupTimedOut(bg : BurstGroup) = {
-    bg.state match {
-      case BurstGroup.Charging => {
-        bg.state = BurstGroup.Bursting
-        bg.when.lengthen(Game.BURST_DURATION)
+  private def diceGroupTimedOut(dg : DiceGroup) = {
+    dg.state match {
+      case DiceGroup.Charging => {
+        tracker.track(dg.cloneAsBursting)
       } 
-      case BurstGroup.Bursting => {
-        bg.dice.foreach((d) => {
+      case DiceGroup.Bursting => {
+        dg.dice.foreach((d) => {
           //TODO give the initiator some points
           d.state match {
-            case Dice.Locked(_, g, s) if (bg == g) => s.content = Empty
+            case Dice.Locked(_, g, s) if (dg == g) => s.content = Empty
             case _ => throw new IllegalStateException("dice not locked")
           }
           d.state = Dice.Burst

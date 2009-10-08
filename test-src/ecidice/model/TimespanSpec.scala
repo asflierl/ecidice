@@ -64,12 +64,6 @@ class TimespanSpec extends SpecBase {
     "display 0% progress right after initialisation" in {
       ts.progress mustEqual 0d
     }
-    
-    "ignore negative values passed to 'lengthen'" in {
-      ts lengthen(-2d)
-      ts.end mustEqual 2d
-      ts.progress mustEqual 0d
-    }
   
     "report 0% progress if the current time is before the timespan start" in {
       clock.tick(.5f)

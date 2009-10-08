@@ -27,22 +27,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.model
 
-import org.specs._
-import org.specs.runner._
- 
-class EcidiceSpec extends SpecificationWithJUnit {
-  "ecidice".isSpecifiedBy(
-    new model.BoardSpec,
-    new model.ClockSpec,
-    new model.ControlRefereeSpec,
-    new model.DiceGroupSpec,
-    new model.DiceSpec,
-    new model.DiceMatcherSpec,
-    new model.GameSpec,
-    new model.MovementRefereeSpec,
-    new model.TimespanSpec,
-    new model.UpdateMechanicsSpec
-  )
+class DiceGroup(clock: Clock, val state : DiceGroup.State) extends Activity {
+  val when = Timespan(clock, state.duration)
+  private var diceSet : Set[Dice] = Set.empty[Dice]
+    
+  def cloneAsBursting = {
+    val newGroup = new DiceGroup(clock, DiceGroup.Bursting)
+    newGroup.diceSet = diceSet
+    newGroup
+  }
+  
+  def +=(d: Dice) = (diceSet += d)
+  
+  def ++(otherGroup: DiceGroup) = (diceSet ++ otherGroup.dice)
+  
+  def dice = diceSet
+  
+  def contains(d: Dice) = diceSet.contains(d)
+}
+object DiceGroup {
+  abstract sealed class State {
+    def duration : Double
+  }
+  
+  case object Charging extends State {
+    def duration = Game.CHARGE_DURATION
+  }
+  
+  case object Bursting extends State {
+    def duration = Game.BURST_DURATION
+  }
 }

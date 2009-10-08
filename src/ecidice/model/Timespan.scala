@@ -47,16 +47,8 @@ class Timespan private (clock: Clock, val start: Double, private val ttl: Double
   if (ttl < 0d) throw new IllegalArgumentException(
     "a timespan may not point backwards in time")
   
-  private var to = start + ttl
-  
-  def end = to
+  val end = start + ttl
 
-  def lengthen(amount: Double) {
-    if (amount > 0d) {
-      to += amount
-    }
-  }
-  
   def isOver = (progress == 1d)
   
   /**
@@ -65,13 +57,9 @@ class Timespan private (clock: Clock, val start: Double, private val ttl: Double
    */
   def progress =
     if (clock.now <= start) 0d
-    else if (clock.now >= to) 1d
-    else (clock.now - start) / (to - start)
+    else if (clock.now >= end) 1d
+    else (clock.now - start) / (end - start)
   
-  /**
-   * Note that this definition of equality uses the initialization parameters
-   * not current (mutable) state.
-   */
   override def equals(obj: Any) = obj match {
     case x : Timespan => (x.start == start) && (x.ttl == ttl)
     case _ => false

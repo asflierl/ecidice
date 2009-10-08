@@ -148,12 +148,12 @@ object Dice {
   case class Moving(move: Movement, controller: Player) extends State
     
   /**
-   * The dice has been locked and is part of a burst group, i.e. it is either
+   * The dice has been locked and is part of a dice group, i.e. it is either
    * charging or bursting. This state is always initiated by a player. The dice
    * occupies some space.
    */
-  case class Locked(val initiator: Player, group: BurstGroup, where: Space)
+  case class Locked(val initiator: Player, group: DiceGroup, where: Space)
     extends State
-    
+  
   case object Burst extends State
 }
