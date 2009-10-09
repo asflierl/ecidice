@@ -29,26 +29,26 @@
 
 package ecidice.model
 
+import org.specs.ScalaCheck
+
 /**
  * Informal specification of the control request referee.
  * 
  * @author Andreas Flierl
  */
-class ControlRefereeSpec extends SpecBase with GameSetupHelper {
-  "A control referee" should {
-    reset.before
-    
-    def referee = g.controlReferee
+class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
+  def referee = game.controlReferee
+  
+  "A control referee" ->-(simpleGame) should {  
     
     "not grant control on any tile when the board is empty" in {
       for (x <- 0 to 2; y <- 0 to 2) {
-        reset()
         placePlayer(p1, (x, y))
         
         val request = "control request on (%d, %d)".format(x, y)
         referee.requestControl(p1) aka request must be (None)
         
-        p1.state mustEqual Player.Standing(b(x, y))
+        p1.state mustEqual Player.Standing(board(x, y))
       }
     }
     
@@ -57,7 +57,7 @@ class ControlRefereeSpec extends SpecBase with GameSetupHelper {
       val d = placeDice(1, 1)
       
       referee.requestControl(p1) mustEqual Some(d)
-      d.state mustEqual Dice.Solid(b(1,1).floor, Some(p1))
+      d.state mustEqual Dice.Solid(board(1,1).floor, Some(p1))
       p1.state mustEqual Player.Controlling(d)
     }
     
@@ -67,14 +67,14 @@ class ControlRefereeSpec extends SpecBase with GameSetupHelper {
       val d2 = placeDice(1, 1)
       
       referee.requestControl(p1) mustEqual Some(d2)
-      d2.state mustEqual Dice.Solid(b(1,1).raised, Some(p1))
-      d1.state mustEqual Dice.Solid(b(1,1).floor, None)
+      d2.state mustEqual Dice.Solid(board(1,1).raised, Some(p1))
+      d1.state mustEqual Dice.Solid(board(1,1).floor, None)
       p1.state mustEqual Player.Controlling(d2)
     }
     
     "not grant control over an appearing dice" in {
       placePlayer(p1, (1, 1))
-      g.spawnDice(1, 1) aka "spawning" must beSome[Dice]
+      game.spawnDice(1, 1) aka "spawning" must beSome[Dice]
       referee.requestControl(p1) aka "control request" must beNone
     }
     

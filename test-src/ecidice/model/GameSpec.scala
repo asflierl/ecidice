@@ -34,6 +34,6 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class GameSpec extends SpecBase with GameSetupHelper {
+class GameSpec extends SpecBase with GameContexts {
   // TODO
 }

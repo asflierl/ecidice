@@ -29,12 +29,11 @@
 
 package ecidice.model
 
-class DiceMatcherSpec extends SpecBase with GameSetupHelper {
-  "A dice matcher" should {
-    reset.before
+class DiceMatcherSpec extends SpecBase with GameContexts {
+  def matcher = new DiceMatcher(board)
+  
+  "A dice matcher" ->-(simpleGame) should {
     
-    def matcher = new DiceMatcher(b)
-      
     "correctly find a group of matching dice" in {
       val d = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
       d(8).change(Transform.ROTATE_UP)
@@ -43,7 +42,7 @@ class DiceMatcherSpec extends SpecBase with GameSetupHelper {
       val inc = d.filter(_.top == 6)
       val exc = d.filter(_.top != 6)
       
-      val searchResult = matcher.find(d(0), b(0, 0))
+      val searchResult = matcher.find(d(0), board(0, 0))
       
       inc.foreach(searchResult must contain(_))
       exc.foreach(searchResult must not contain(_))
@@ -57,7 +56,7 @@ class DiceMatcherSpec extends SpecBase with GameSetupHelper {
       val d11 = placeDice(1, 1)
       d11.change(Transform.ROTATE_LEFT)
       
-      val s = matcher.find(d12, b(1, 2))
+      val s = matcher.find(d12, board(1, 2))
       
       List(d02, d12) foreach (s must contain(_))
       List(d00, d10, d11) foreach (s must not contain(_))
@@ -66,7 +65,7 @@ class DiceMatcherSpec extends SpecBase with GameSetupHelper {
     "correctly find a board full of matching dice" in {
       val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
       
-      val s = matcher.find(dice(4), b(1, 1))
+      val s = matcher.find(dice(4), board(1, 1))
       
       dice foreach (s must contain(_))
     }
@@ -76,7 +75,7 @@ class DiceMatcherSpec extends SpecBase with GameSetupHelper {
       val d = placeDice(1, 1)
       d.change(Transform.ROTATE_DOWN)
       
-      val matches = matcher.find(d, b(1, 1))
+      val matches = matcher.find(d, board(1, 1))
       
       matches mustEqual Set(d)
     }

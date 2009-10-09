@@ -29,20 +29,29 @@
 
 package ecidice.model
 
-trait GameSetupHelper {
-  var b : Board = _
-  var g : Game = _
-    
-  def reset() = {
-    b = new Board(3, 3)
-    g = new Game(2, b)
+import org.specs.Specification
+import org.specs.specification.Context
+
+trait GameContexts extends Specification {
+  var board : Board = _
+  var game : Game = _
+  
+  val simpleGame = beforeContext {
+    board = new Board(3, 3)
+    game = new Game(2, board)
   }
   
-  def p1 = g.players(0)
-  def p2 = g.players(1)
+  def p1 = game.players(0)
+  def p2 = game.players(1)
   
-  def placePlayer(p: Player, pos: (Int, Int)) : Unit =
-      p.state = Player.Standing(b(pos))
+  def placePlayer(player: Player, pos: (Int, Int)) : Unit =
+      player.state = Player.Standing(board(pos))
+  
+  def within(ctx: Context)(action: => Any) = {
+    ctx.beforeActions()
+    action
+    ctx.afterActions()
+  }
   
   /**
    * Helper method that creates a new dice and places it at the topmost 
@@ -54,7 +63,7 @@ trait GameSetupHelper {
    * @return the newly created and placed dice
    */
   def placeDice(pos: (Int, Int)) : Dice = {
-    val destinationTile = b(pos)
+    val destinationTile = board(pos)
     val destinationSpace = destinationTile.floor.content match {
       case Empty => destinationTile.floor
       case Occupied(_) => destinationTile.raised
