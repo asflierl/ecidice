@@ -57,8 +57,8 @@ class BoardSpec extends SpecBase {
     "predict the correct position that results from a move from its center" in {
       
       "direction of move" | "result position" |>
-      Direction.UP        ! (2, 2)            |
-      Direction.DOWN      ! (2, 0)            |
+      Direction.BACKWARD  ! (2, 2)            |
+      Direction.FORWARD   ! (2, 0)            |
       Direction.LEFT      ! (1, 1)            |  
       Direction.RIGHT     ! (3, 1)            | { 
         

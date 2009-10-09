@@ -97,8 +97,8 @@ class Dice {
    * @param how the transform to apply
    */
   def change(how: Transform.Value) = how match {
-    case Transform.ROTATE_UP => set(front, right, bottom)
-    case Transform.ROTATE_DOWN => set(back, right, top)
+    case Transform.ROTATE_BACKWARD => set(front, right, bottom)
+    case Transform.ROTATE_FORWARD => set(back, right, top)
     case Transform.ROTATE_RIGHT => set(left, top, front)
     case Transform.ROTATE_LEFT => set(right, bottom, front)
     case Transform.SPIN_CLOCKWISE => set(top, back, right)
@@ -141,7 +141,7 @@ object Dice {
    * charging or bursting. This state is always initiated by a player. The dice
    * occupies some space.
    */
-  case class Locked(val initiator: Player, group: DiceGroup, where: Space)
+  case class Locked(initiator: Player, group: DiceGroup, where: Space)
     extends State
   
   case object Burst extends State

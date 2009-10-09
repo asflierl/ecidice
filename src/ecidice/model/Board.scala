@@ -92,8 +92,8 @@ class Board(val width: Int, val depth: Int) {
    * @return the position resulting from the movement
    */
   def positionInDir(t: Tile, dir: Direction.Value) = dir match {
-    case Direction.UP => (t.x, t.y + 1)
-    case Direction.DOWN => (t.x, t.y - 1)
+    case Direction.BACKWARD => (t.x, t.y + 1)
+    case Direction.FORWARD => (t.x, t.y - 1)
     case Direction.RIGHT => (t.x + 1, t.y)
     case Direction.LEFT => (t.x - 1, t.y)
   }

@@ -36,8 +36,8 @@ class DiceMatcherSpec extends SpecBase with GameContexts {
     
     "correctly find a group of matching dice" in {
       val d = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
-      d(8).change(Transform.ROTATE_UP)
-      d(4).change(Transform.ROTATE_UP)
+      d(8).change(Transform.ROTATE_FORWARD)
+      d(4).change(Transform.ROTATE_FORWARD)
       
       val inc = d.filter(_.top == 6)
       val exc = d.filter(_.top != 6)
@@ -73,7 +73,7 @@ class DiceMatcherSpec extends SpecBase with GameContexts {
     "correctly find no matches of an isolated dice" in {
       List((1, 0), (0, 1), (2, 1), (1, 2)).foreach(placeDice(_))
       val d = placeDice(1, 1)
-      d.change(Transform.ROTATE_DOWN)
+      d.change(Transform.ROTATE_FORWARD)
       
       val matches = matcher.find(d, board(1, 1))
       

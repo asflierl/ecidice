@@ -30,8 +30,8 @@
 package ecidice.model
 
 object Direction extends Enumeration {
-  val UP = Value("up")
-  val DOWN = Value("down")
+  val BACKWARD = Value("backward")
+  val FORWARD = Value("forward")
   val LEFT = Value("left")
   val RIGHT = Value("right")
 }

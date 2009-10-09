@@ -35,7 +35,7 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-case class Tile(val x: Int, val y: Int) {
+case class Tile(x: Int, y: Int) {
   var visibility = Tile.Visibility.VISIBLE
   lazy val floor = new Space(this, Empty)
   lazy val raised = new Space(this, Empty)

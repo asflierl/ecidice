@@ -59,13 +59,13 @@ class DiceSpec extends SpecBase {
       d.front mustEqual (7 - d.back)
     }
 
-    "correctly rotate upwards (towards the back)" in {
-      d.change(Transform.ROTATE_UP)
+    "correctly rotate backward" in {
+      d.change(Transform.ROTATE_BACKWARD)
       checkDice(4, 5, 1)
     }
     
-    "correctly rotate downwards (towards the front)" in {
-      d.change(Transform.ROTATE_DOWN)
+    "correctly rotate forward" in {
+      d.change(Transform.ROTATE_FORWARD)
       checkDice(3, 5, 6)
     }
     

@@ -48,15 +48,7 @@ class DiceGroup(clock: Clock, val state : DiceGroup.State) extends Activity {
   def contains(d: Dice) = diceSet.contains(d)
 }
 object DiceGroup {
-  abstract sealed class State {
-    def duration : Double
-  }
-  
-  case object Charging extends State {
-    def duration = Game.CHARGE_DURATION
-  }
-  
-  case object Bursting extends State {
-    def duration = Game.BURST_DURATION
-  }
+  abstract sealed class State(val duration: Double)
+  case object Charging extends State(Game.CHARGE_DURATION)
+  case object Bursting extends State(Game.BURST_DURATION)
 }

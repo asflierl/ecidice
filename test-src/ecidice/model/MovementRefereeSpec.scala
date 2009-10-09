@@ -52,11 +52,11 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
     
     "correctly handle player movement in the corners" in {
       
-      "corner position" | "allowed movement directions"     |>
-      (0, 0)            ! (Direction.UP, Direction.RIGHT)   |
-      (2, 0)            ! (Direction.UP, Direction.LEFT)    |
-      (0, 2)            ! (Direction.DOWN, Direction.RIGHT) |
-      (2, 2)            ! (Direction.DOWN, Direction.LEFT)  | {  
+      "corner position" | "allowed movement directions"           |>
+      (0, 0)            ! (Direction.BACKWARD, Direction.RIGHT)   |
+      (2, 0)            ! (Direction.BACKWARD, Direction.LEFT)    |
+      (0, 2)            ! (Direction.FORWARD, Direction.RIGHT)    |
+      (2, 2)            ! (Direction.FORWARD, Direction.LEFT)     | {  
         
       (corner, allowed) =>
         for (dir <- Direction.elements) {
@@ -69,9 +69,9 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
     "correctly handle player movement at the board edge" in {
       
       "edge position" | "disallowed movement direction" |>
-      (1, 0)          ! Direction.DOWN                  |
+      (1, 0)          ! Direction.FORWARD               |
       (0, 1)          ! Direction.LEFT                  |
-      (1, 2)          ! Direction.UP                    |
+      (1, 2)          ! Direction.BACKWARD              |
       (2, 1)          ! Direction.RIGHT                 | {
         
       (pos, disallowed) =>
@@ -111,7 +111,7 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
       val d2 = placeDice(1, 2)
       
       game.controlReferee.requestControl(p1) mustEqual Some(d1)
-      game.movementReferee.requestMove(p1, Direction.UP) must beTrue
+      game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
       
       val m = Movement(d1, board(1,1).floor, board(1,2).raised, 
                        Timespan(game.clock, Game.MOVE_DURATION), 
@@ -208,7 +208,7 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
       game.controlReferee.requestControl(p2) mustEqual Some(d2)
       
       game.movementReferee.requestMove(p1, Direction.RIGHT) must beTrue
-      game.movementReferee.requestMove(p2, Direction.UP) must beFalse
+      game.movementReferee.requestMove(p2, Direction.BACKWARD) must beFalse
     }
     
     "not let 2 players move onto the same raised space" in {
@@ -224,7 +224,7 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
       game.controlReferee.requestControl(p1) mustEqual Some(d1)
       game.controlReferee.requestControl(p2) mustEqual Some(d2)
       
-      game.movementReferee.requestMove(p1, Direction.UP) must beTrue
+      game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
       game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
     }
   }
