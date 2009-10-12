@@ -27,15 +27,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.util
 
-import org.specs._
-import org.specs.util._
-import org.specs.mock.Mockito
-
-trait SpecBase extends Specification with DataTables with Mockito {
-  val FLOAT_DELTA = 1E-6f
-  val DOUBLE_DELTA = 1E-12d
-  
-  detailedDiffs
+class FloatDecoratorSpec extends SpecBase {
+  "A float decorator" should {
+    val deco = new FloatDecorator(0f)
+    
+    "produce a correct upwards stream" in {
+      val stream = deco to 1f step .5f
+      
+      stream.toList mustEqual List(0f, .5f, 1f)
+    }
+    
+    "produce a correct downwards stream" in {
+      val stream = deco to -.4f step -.1f
+      
+      stream.toList mustEqual List(0f, -.1f, -.2f, -.3f, -.4f)
+    }
+    
+    "produce an empty stream if target is unreachable" in {
+      (deco to 1f step -.1f) aka "0 to 1 step -0.1" must beEmpty
+      (deco to -1f step .1f) aka "0 to -1 step 0.1" must beEmpty
+    }
+    
+    "produce a single-element stream if start equals target" in {
+      (deco to 0f step 1f).toList aka "0 to 0 step 1" mustEqual List(0f)
+      (deco to 0f step 0f).toList aka "0 to 0 step 0" mustEqual List(0f)
+      (deco to 0f step -1f).toList aka "0 to 0 step -1" mustEqual List(0f)
+    }
+  }
 }

@@ -33,7 +33,7 @@ import org.specs._
 import org.specs.runner._
  
 class EcidiceSpec extends SpecificationWithJUnit {
-  "ecidice".isSpecifiedBy(
+  "ecidice" isSpecifiedBy (
     new model.BoardSpec,
     new model.ClockSpec,
     new model.ControlRefereeSpec,
@@ -43,6 +43,9 @@ class EcidiceSpec extends SpecificationWithJUnit {
     new model.GameSpec,
     new model.MovementRefereeSpec,
     new model.TimespanSpec,
-    new model.UpdateMechanicsSpec
+    new model.UpdateMechanicsSpec,
+    
+    new util.DoubleDecoratorSpec,
+    new util.FloatDecoratorSpec
   )
 }

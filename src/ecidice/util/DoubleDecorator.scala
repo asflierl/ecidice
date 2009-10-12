@@ -34,24 +34,26 @@ package ecidice.util
  * 
  * @author Andreas Flierl
  */
-class EvenRicherFloat(f: Float) {
+class DoubleDecorator(d: Double) {
   /**
-   * Enables the syntax <code>2f to 4f step .1f</code> to generate a stream 
-   * "range" for floats. The lower and upper bounds are always included.
+   * Enables the syntax <code>2d to 4d step .1d</code> to generate a stream 
+   * "range" for doubles. The lower and upper bounds are always included.
    * 
    * @param max the upper bound for the returned stream range
-   * @return a "continuous" stream from <code>f</code> to <code>max</code>; its 
+   * @return a "continuous" stream from <code>d</code> to <code>max</code>; its 
    *         <code>step</code> method needs to be called to turn it into a 
    *         discrete stream (as known from the std. library)
    */
-  def to(max: Float) = {
+  def to(max: Double) = {
     object ContinuousStream {
-      def step(by: Float) = {
-        def seq(now: Float) : Stream[Float] = 
-          if (now > max) Stream.cons(max, Stream.empty) 
+      def step(by: Double) = {
+        def seq(now: Double) : Stream[Double] = 
+          if (Math.abs(now) >= Math.abs(max)) Stream.cons(max, Stream.empty) 
           else Stream.cons(now, seq(now + by))
         
-        seq(f)
+        if (max == d) Stream.cons(d, Stream.empty)
+        else if ((max > d && by <= 0d) || (max < d && by >= 0d)) Stream.empty
+        else seq(d)
       }
     }
     ContinuousStream

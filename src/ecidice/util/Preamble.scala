@@ -36,6 +36,6 @@ package ecidice.util
  * scope.
  */
 object Preamble {
-  implicit def floatToEvenRicherFloat(f: Float) = new EvenRicherFloat(f)
-  implicit def doubleToEvenRicherDouble(d: Double) = new EvenRicherDouble(d)
+  implicit def decorateFloat(f: Float) = new FloatDecorator(f)
+  implicit def decorateDouble(d: Double) = new DoubleDecorator(d)
 }
