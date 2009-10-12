@@ -29,14 +29,18 @@
 
 package ecidice.util
 
-/**
- * Aims to help with the generation of hash codes (Any#hashCode).
- * 
- * @author Andreas Flierl
- */
-object HashCode {
-  def apply(l: Any*) : Int =
-    if (l.isEmpty) 42
-    else if (l.length == 1) 17 + l(0).hashCode
-    else ((17 + l(0).hashCode) /: l.drop(1))(_ * 41 + _.hashCode)
+class HashCodeSpec extends SpecBase {
+  "The hash code object" should {
+    "return a default value if no parameters are given" in {
+      HashCode() mustEqual 42
+    }
+    
+    "calculate a good hash code for a single given parameter" in {
+      HashCode(25) mustEqual 42
+    }
+    
+    "calculate a good hash code for several given parameters" in {
+      HashCode(1, 2L, " ") mustEqual (((17 + 1) * 41 + 2) * 41 + 32)
+    }
+  }
 }

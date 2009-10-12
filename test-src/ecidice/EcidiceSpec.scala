@@ -46,6 +46,7 @@ class EcidiceSpec extends SpecificationWithJUnit {
     new model.UpdateMechanicsSpec,
     
     new util.DoubleDecoratorSpec,
-    new util.FloatDecoratorSpec
+    new util.FloatDecoratorSpec,
+    new util.HashCodeSpec
   )
 }
