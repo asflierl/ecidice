@@ -76,5 +76,6 @@
 	<classpathentry kind="lib" path="lib/specs/specs-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit/junit4.7.jar"/>
 	<classpathentry kind="lib" path="lib/mockito/mockito-all-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest/hamcrest-all-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
