@@ -34,8 +34,23 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class UpdateMechanicsSpec extends SpecBase {
-  "The update mechanics" should {
+class UpdateMechanicsSpec extends SpecBase with GameContexts {
+  "The update mechanics" ->-(simpleGame) should {
     
+    def updater = game.updateMechanics
+    
+    "make the activity tracker forget finished activities" in {
+      val s = board(0, 0)
+      val finished = Player.Moving(p1, s, s, Timespan(game.clock, 0))      
+      val pending = Player.Moving(p1, s, s, Timespan(game.clock, 10))
+
+      game.tracker.track(finished)
+      game.tracker.track(pending)
+      
+      updater.update
+      
+      game.tracker.activities must contain(pending)
+      game.tracker.activities must notContain(finished)
+    }
   }
 }

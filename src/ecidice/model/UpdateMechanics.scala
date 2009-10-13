@@ -29,7 +29,7 @@
 
 package ecidice.model
 
-class UpdateMechanics(tracker: ActivityTracker, board: Board, clock: Clock) {
+class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   private val diceMatcher = new DiceMatcher(board)
   
   clock.addReaction(update _)
@@ -75,18 +75,16 @@ class UpdateMechanics(tracker: ActivityTracker, board: Board, clock: Clock) {
     Nil //TODO
   }
   
-  private def playerMovementEnded(pm : Player.Moving) = {
+  private def playerMovementEnded(pm : Player.Moving) =
     pm.player.state = Player.Standing(pm.to)
-  }
   
   private def diceGroupTimedOut(dg : DiceGroup) = {
     dg.state match {
-      case DiceGroup.Charging => {
-        tracker.track(dg.cloneAsBursting)
-      } 
+      case DiceGroup.Charging => tracker.track(dg.cloneAsBursting)
+      
       case DiceGroup.Bursting => {
         dg.dice.foreach((d) => {
-          //TODO give the initiator some points
+          //TODO give the initiator(s) some points
           d.state match {
             case Dice.Locked(_, g, s) if (dg == g) => s.content = Empty
             case _ => throw new IllegalStateException("dice not locked")

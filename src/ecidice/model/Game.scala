@@ -48,6 +48,7 @@ class Game(numPlayers: Int, val board: Board) {
   lazy val players = createPlayers(0)
   val clock = new Clock
   val tracker = new ActivityTracker
+  val updateMechanics = new UpdateMechanics(board, clock, tracker)
   val movementReferee = new MovementReferee(board, clock, tracker)
   val controlReferee = new ControlReferee
   
