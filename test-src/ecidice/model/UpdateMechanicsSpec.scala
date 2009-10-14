@@ -52,5 +52,40 @@ class UpdateMechanicsSpec extends SpecBase with GameContexts {
       game.tracker.activities must contain(pending)
       game.tracker.activities must notContain(finished)
     }
+    
+    "make a dice solid that's finished appearing" in {
+      val dice = game.spawnDice(1, 1).get
+      game.clock.tick(Game.APPEAR_DURATION)
+      
+      updater.update
+      
+      dice.state mustEqual Dice.Solid(board(1, 1).floor, None)
+      board(1, 1).floor.content mustEqual Occupied(dice)
+    }
+    
+    "update a player's state after she finished moving" in {
+      placePlayer(p1, (0, 1))
+      game.movementReferee.requestMove(p1, Direction.BACKWARD)
+      game.clock.tick(Game.MOVE_DURATION)
+      
+      updater.update
+      
+      p1.state mustEqual Player.Standing(board(0, 2))
+    }
+    
+    "make a group of dice burst when they're finished charging" in {
+      val group = buildDiceGroup(DiceGroup.Charging, Set((0, 0), (1, 0)))
+      game.clock.tick(Game.CHARGE_DURATION)
+      
+      updater.update
+
+      group.dice.foreach(d => d.state match {
+        case Dice.Locked(_, dg, _) => {
+          dg.dice mustContain d
+          dg.state must be (DiceGroup.Bursting)
+        }
+        case _ => fail
+      })
+    }
   }
 }

@@ -59,7 +59,7 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
     
     where.content match { 
       case Occupied(d) => d.state = Dice.Solid(where, None)
-      case _ => throw new IllegalStateException("space unoccupied")
+      case _ => throw new AssertionError("space not occupied")
     }
   }
   
@@ -75,23 +75,36 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
     Nil //TODO
   }
   
-  private def playerMovementEnded(pm : Player.Moving) =
+  private def playerMovementEnded(pm: Player.Moving) =
     pm.player.state = Player.Standing(pm.to)
   
   private def diceGroupTimedOut(dg : DiceGroup) = {
     dg.state match {
-      case DiceGroup.Charging => tracker.track(dg.cloneAsBursting)
-      
-      case DiceGroup.Bursting => {
-        dg.dice.foreach((d) => {
-          //TODO give the initiator(s) some points
-          d.state match {
-            case Dice.Locked(_, g, s) if (dg == g) => s.content = Empty
-            case _ => throw new IllegalStateException("dice not locked")
-          }
-          d.state = Dice.Burst
-        })
-      }
+      case DiceGroup.Charging => diceGroupCharged(dg)
+      case DiceGroup.Bursting => diceGroupBurst(dg)      
     }
+  }
+  
+  private def diceGroupCharged(dg: DiceGroup) = {
+    val burstGroup = dg.cloneAsBursting
+        
+    dg.dice.foreach(dice => dice.state match {
+      case Dice.Locked(initiator, _, space) => dice.state = 
+        Dice.Locked(initiator, burstGroup, space)
+      case _ => throw new AssertionError("dice not locked")
+    })
+    
+    tracker.track(burstGroup)
+  }
+  
+  private def diceGroupBurst(dg: DiceGroup) = {
+    dg.dice.foreach((d) => {
+      //TODO give the initiator(s) some points
+      d.state match {
+        case Dice.Locked(_, _, space) => space.content = Empty
+        case _ => throw new AssertionError("dice not locked")
+      }
+      d.state = Dice.Burst
+    })
   }
 }

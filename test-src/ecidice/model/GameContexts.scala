@@ -76,4 +76,25 @@ trait GameContexts extends Specification {
     dice.state = Dice.Solid(destinationSpace, None)
     dice
   }
+  
+  /**
+   * Builds a dice group with the specified dice that contains newly placed
+   * dice at the specified set of positions.
+   * 
+   * @param state the state of the new dice group
+   * @param positions the positions where dice should be placed and then added
+   *        to the new dice group
+   * @return the newly created dice group
+   */
+  def buildDiceGroup(state: DiceGroup.State, positions: Set[(Int, Int)]) = {
+    val dice = positions.map(placeDice(_))
+    dice.foreach(_.change(Transform.ROTATE_RIGHT))
+    val group = new DiceGroup(game.clock, state, dice)
+    dice.foreach(d => d.state match {
+      case Dice.Solid(space, _) => d.state = Dice.Locked(p1, group, space)
+      case _ => throw new AssertionError("dice not solid")
+    })
+    game.tracker.track(group)
+    group
+  }
 }

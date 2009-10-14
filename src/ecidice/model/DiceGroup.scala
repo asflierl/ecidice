@@ -32,7 +32,12 @@ package ecidice.model
 class DiceGroup(clock: Clock, val state : DiceGroup.State) extends Activity {
   val when = Timespan(clock, state.duration)
   private var diceSet : Set[Dice] = Set.empty[Dice]
-    
+  
+  def this(clock: Clock, state: DiceGroup.State, dice: Set[Dice]) = {
+    this(clock, state)
+    diceSet ++= dice
+  }
+  
   def cloneAsBursting = {
     val newGroup = new DiceGroup(clock, DiceGroup.Bursting)
     newGroup.diceSet = diceSet
