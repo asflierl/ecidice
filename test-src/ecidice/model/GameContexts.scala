@@ -90,7 +90,7 @@ trait GameContexts extends Specification {
     
     val group = DiceGroup.createCharging(dice)
     val activity = Activity.on(game.clock).diceLock(group)
-    dice.foreach(_.lock(activity))
+    dice.foreach(_.lock(activity, p1))
     game.tracker.track(activity)
     group
   }

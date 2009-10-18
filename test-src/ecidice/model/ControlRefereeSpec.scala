@@ -61,7 +61,7 @@ class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
       
       d.isSolid must beTrue
       d.location must be (board(1, 1).floor)
-      d.controller mustEqual Some(p1)
+      d.controller must be (p1)
     }
     
     "grant control over the upper of 2 stacked dice" in {
@@ -72,7 +72,7 @@ class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
       referee.requestControl(p1) mustEqual Some(d2)
       d2.isSolid must beTrue
       d2.location must be (board(1, 1).raised)
-      d2.controller mustEqual Some(p1)
+      d2.controller must be (p1)
       d1.isSolid must beTrue
       d1.location must be (board(1, 1).floor)
       d1.isControlled must beFalse

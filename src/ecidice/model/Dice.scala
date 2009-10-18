@@ -170,8 +170,8 @@ class Dice {
   
   def move(activity: DiceMovement) = (state = Moving(activity))
 
-  def lock(activity: DiceLock) =
-    state = Locked(controller, activity, location)
+  def lock(activity: DiceLock, initiator: Player) =
+    state = Locked(initiator, activity, location)
 
   def burst() = (state = Burst)
   

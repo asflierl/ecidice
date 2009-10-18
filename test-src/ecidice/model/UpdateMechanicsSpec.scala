@@ -61,7 +61,8 @@ class UpdateMechanicsSpec extends SpecBase with GameContexts {
       
       dice.isSolid must beTrue
       dice.location must be (board(1, 1).floor)
-      dice.controller must be (None)
+      dice.isControlled must beFalse
+      dice.controller must throwAn[IllegalStateException]
       
       board(1, 1).floor.isOccupied must beTrue
       board(1, 1).floor.dice mustEqual dice
@@ -86,8 +87,8 @@ class UpdateMechanicsSpec extends SpecBase with GameContexts {
 
       group.dice.foreach(dice => {
         dice.isLocked must beTrue
-        dice.isCharging must beTrue
-        dice.group must contain (dice)
+        dice.isBursting must beTrue
+        dice.group.dice must contain (dice)
       })
     }
   }

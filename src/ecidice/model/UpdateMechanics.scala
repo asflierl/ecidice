@@ -78,7 +78,7 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   
   private def diceCharged(affected: DiceLock) = {
     val burst = Activity.on(clock).diceLock(affected.group.cloneAsBursting)
-    burst.group.dice.foreach(_.lock(burst))
+    burst.group.dice.foreach(dice => dice.lock(burst, dice.initiator))
     tracker.track(burst)
   }
   
