@@ -39,15 +39,49 @@ package ecidice.model
  * @param tile the tile that provides this space
  * @param content what's in this space
  */
-class Space(val tile: Tile, var content: Content) {
-  /** Returns whether this space is on the floor level. */
-  def isFloor = (this == tile.floor)
+class Space(val tile: Tile) {
+  private var state : State = Empty
   
-  /** Returns whether this space is on the raised level. */
+  def isFloor = (this == tile.floor)  
   def isRaised = (this == tile.raised)
+  def isEmpty = (state == Empty)
+  def isOccupied = state.isInstanceOf[Occupied]
+  def isBusy = state.isInstanceOf[Busy]
   
-  def isEmpty = (content == Empty)
+  def dice = state match {
+    case Occupied(dice) => dice
+    case _ => throw new IllegalStateException("space not occupied")
+  }
+  
+  def movement = state match {
+    case Busy(movement) => movement
+    case _ => throw new IllegalStateException("space not busy")
+  }
+  
+  def empty() = (state = Empty)
+  def occupy(dice: Dice) = (state = Occupied(dice))
+  def involve(move: DiceMovement) = (state = Busy(move))
   
   override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
     (if (isRaised) "raised" else "floor"))
+  
+  sealed abstract class State
+
+  /**
+   * Denotes that a space is empty. A dice can move or appear here (if this is
+   * on the floor level).
+   */
+  case object Empty extends State
+  
+  /**
+   * This marks a space as occupied (by a dice). Other dice can not move or
+   * appear here.
+   */
+  case class Occupied(dice: Dice) extends State
+  
+  /**
+   * An instance of this class is present on the "from" and "to" spaces that are
+   * involved in a dice's movement during the movement.
+   */
+  case class Busy(activity: DiceMovement) extends State
 }

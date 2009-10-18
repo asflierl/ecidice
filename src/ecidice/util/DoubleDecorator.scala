@@ -34,15 +34,15 @@ package ecidice.util
  * 
  * @author Andreas Flierl
  */
-class DoubleDecorator(d: Double) {
+class DoubleDecorator(wrapped: Double) {
   /**
    * Enables the syntax <code>2d to 4d step .1d</code> to generate a stream 
    * "range" for doubles. The lower and upper bounds are always included.
    * 
    * @param max the upper bound for the returned stream range
-   * @return a "continuous" stream from <code>d</code> to <code>max</code>; its 
-   *         <code>step</code> method needs to be called to turn it into a 
-   *         discrete stream (as known from the std. library)
+   * @return a "continuous" stream from <code>wrapped</code> to
+   *         <code>max</code>; its <code>step</code> method needs to be called
+   *         to turn it into a discrete stream (as known from the std. library)
    */
   def to(max: Double) = {
     object ContinuousStream {
@@ -51,9 +51,10 @@ class DoubleDecorator(d: Double) {
           if (Math.abs(now) >= Math.abs(max)) Stream.cons(max, Stream.empty) 
           else Stream.cons(now, seq(now + by))
         
-        if (max == d) Stream.cons(d, Stream.empty)
-        else if ((max > d && by <= 0d) || (max < d && by >= 0d)) Stream.empty
-        else seq(d)
+        if (max == wrapped) Stream.cons(wrapped, Stream.empty)
+        else if ((max > wrapped && by <= 0d) || (max < wrapped && by >= 0d))
+          Stream.empty
+        else seq(wrapped)
       }
     }
     ContinuousStream

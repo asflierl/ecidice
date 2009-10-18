@@ -68,22 +68,16 @@ class Game(numPlayers: Int, val board: Board) {
    * @param y the depth position on the board
    * @return optionally the new dice
    */
-  def spawnDice(x: Int, y: Int) = board(x, y).floor.content match {
-    case Empty => {
-      val d = new Dice
-      board(x, y).floor.content = Occupied(d)
-      val app = Dice.Appearing(board(x, y).floor, 
-                               Timespan(clock, Game.APPEAR_DURATION))
-      d.state = app
-      tracker.track(app)
-      Some(d)
-    }
-    case _ => None
+  def spawnDice(x: Int, y: Int) = {
+    val space = board(x, y).floor
+    
+    if (space.isEmpty) {
+      val dice = new Dice
+      space.occupy(dice)
+      val activity = Activity.on(clock).diceAppearing(dice, space)
+      dice.appear(activity)
+      tracker.track(activity)
+      Some(dice)
+    } else None
   }
-}
-object Game {
-  val MOVE_DURATION = 0.25f
-  val APPEAR_DURATION = 5f
-  val CHARGE_DURATION = 10f
-  val BURST_DURATION = 1f  
 }

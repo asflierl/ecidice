@@ -48,7 +48,8 @@ class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
         val request = "control request on (%d, %d)".format(x, y)
         referee.requestControl(p1) aka request must be (None)
         
-        p1.state mustEqual Player.Standing(board(x, y))
+        p1.isStanding must beTrue
+        p1.location must be (board(x, y))
       }
     }
     
@@ -57,8 +58,10 @@ class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
       val d = placeDice(1, 1)
       
       referee.requestControl(p1) mustEqual Some(d)
-      d.state mustEqual Dice.Solid(board(1,1).floor, Some(p1))
-      p1.state mustEqual Player.Controlling(d)
+      
+      d.isSolid must beTrue
+      d.location must be (board(1, 1).floor)
+      d.controller mustEqual Some(p1)
     }
     
     "grant control over the upper of 2 stacked dice" in {
@@ -67,9 +70,15 @@ class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
       val d2 = placeDice(1, 1)
       
       referee.requestControl(p1) mustEqual Some(d2)
-      d2.state mustEqual Dice.Solid(board(1,1).raised, Some(p1))
-      d1.state mustEqual Dice.Solid(board(1,1).floor, None)
-      p1.state mustEqual Player.Controlling(d2)
+      d2.isSolid must beTrue
+      d2.location must be (board(1, 1).raised)
+      d2.controller mustEqual Some(p1)
+      d1.isSolid must beTrue
+      d1.location must be (board(1, 1).floor)
+      d1.isControlled must beFalse
+      d1.controller must throwAn[IllegalStateException]
+      p1.isController must beTrue
+      p1.dice must be (d2)
     }
     
     "not grant control over an appearing dice" in {

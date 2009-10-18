@@ -32,7 +32,7 @@ package ecidice.model
 class DiceGroupSpec extends SpecBase {
   "A dice group" should {
     val clock = new Clock
-    val group = new DiceGroup(clock, DiceGroup.Charging)
+    val group = DiceGroup.createCharging(Set.empty)
     
     "contain the dice previously added to it" in {
       val d1 = new Dice
@@ -51,7 +51,7 @@ class DiceGroupSpec extends SpecBase {
       val cloned = group.cloneAsBursting
       
       cloned.dice mustEqual group.dice
-      cloned.state mustBe DiceGroup.Bursting
+      cloned.isBursting must beTrue
     }
   }
 }

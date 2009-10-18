@@ -63,11 +63,9 @@ class ControlReferee {
   def requestControl(player: Player) : Option[Dice] = {
     this.player = player
     
-    player.state match {
-      case Player.Standing(tile) => requestControlOnTile(tile)    
-      case Player.Controlling(dice) => Some(dice)
-      case _ => None
-    }
+    if (player.isStanding) requestControlOnTile(player.location)
+    else if (player.isController) Some(player.dice)
+    else None
   }
     
   private def requestControlOnTile(tile: Tile) = {
@@ -75,20 +73,15 @@ class ControlReferee {
     else requestControlInSpace(tile.raised) 
   }
   
-  private def requestControlInSpace(space: Space) = {
-    space.content match {
-      case Occupied(dice) => requestControlOverDice(dice)
-      case _ => None
-    }
-  }
+  private def requestControlInSpace(space: Space) =
+    if (space.isOccupied) requestControlOverDice(space.dice)
+    else None
   
-  private def requestControlOverDice(dice: Dice) = dice.state match {
-    case Dice.Solid(space, controller) => 
-      if (controller.isEmpty) {
-        dice.state = Dice.Solid(space, Some(player))
-        player.state = Player.Controlling(dice)
-        Some(dice) 
-      } else None
-    case _ => None
-  }
+  private def requestControlOverDice(dice: Dice) = 
+    if (! dice.isSolid || dice.isControlled) None
+    else {
+      dice.submitTo(player)
+      player.control(dice)
+      Some(dice)
+    }
 }

@@ -41,8 +41,8 @@ class UpdateMechanicsSpec extends SpecBase with GameContexts {
     
     "make the activity tracker forget finished activities" in {
       val s = board(0, 0)
-      val finished = Player.Moving(p1, s, s, Timespan(game.clock, 0))      
-      val pending = Player.Moving(p1, s, s, Timespan(game.clock, 10))
+      val finished = PlayerMovement(p1, s, s, Timespan(game.clock, 0))      
+      val pending = PlayerMovement(p1, s, s, Timespan(game.clock, 10))
 
       game.tracker.track(finished)
       game.tracker.track(pending)
@@ -55,36 +55,39 @@ class UpdateMechanicsSpec extends SpecBase with GameContexts {
     
     "make a dice solid that's finished appearing" in {
       val dice = game.spawnDice(1, 1).get
-      game.clock.tick(Game.APPEAR_DURATION)
+      game.clock.tick(Activity.APPEAR_DURATION)
       
       updater.update
       
-      dice.state mustEqual Dice.Solid(board(1, 1).floor, None)
-      board(1, 1).floor.content mustEqual Occupied(dice)
+      dice.isSolid must beTrue
+      dice.location must be (board(1, 1).floor)
+      dice.controller must be (None)
+      
+      board(1, 1).floor.isOccupied must beTrue
+      board(1, 1).floor.dice mustEqual dice
     }
     
     "update a player's state after she finished moving" in {
       placePlayer(p1, (0, 1))
       game.movementReferee.requestMove(p1, Direction.BACKWARD)
-      game.clock.tick(Game.MOVE_DURATION)
+      game.clock.tick(Activity.MOVE_DURATION)
       
       updater.update
       
-      p1.state mustEqual Player.Standing(board(0, 2))
+      p1.isStanding must beTrue
+      p1.location must be (board(0, 2))
     }
     
     "make a group of dice burst when they're finished charging" in {
-      val group = buildDiceGroup(DiceGroup.Charging, Set((0, 0), (1, 0)))
-      game.clock.tick(Game.CHARGE_DURATION)
+      val group = buildDiceGroup(Set((0, 0), (1, 0)))
+      game.clock.tick(Activity.CHARGE_DURATION)
       
       updater.update
 
-      group.dice.foreach(d => d.state match {
-        case Dice.Locked(_, dg, _) => {
-          dg.dice mustContain d
-          dg.state must be (DiceGroup.Bursting)
-        }
-        case _ => fail
+      group.dice.foreach(dice => {
+        dice.isLocked must beTrue
+        dice.isCharging must beTrue
+        dice.group must contain (dice)
       })
     }
   }

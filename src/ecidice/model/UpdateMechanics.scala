@@ -29,20 +29,22 @@
 
 package ecidice.model
 
+import ecidice.util.NotYetImplementedException
+
 class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   private val diceMatcher = new DiceMatcher(board)
   
   clock.addReaction(update _)
   
   def update {
-    val finishedActivities = tracker.activities.filter(_.when.isOver)
-    var diceMoves : List[Movement] = Nil
+    val finishedActivities = tracker.activities.filter(_.time.isOver)
+    var diceMoves : List[DiceMovement] = Nil
     
     finishedActivities.foreach(_ match {
-      case da : Dice.Appearing => diceAppeared(da)
-      case pm : Player.Moving => playerMovementEnded(pm) 
-      case dg : DiceGroup => diceGroupTimedOut(dg)
-      case m : Movement => diceMoves = m :: diceMoves
+      case da : DiceAppearing => diceAppeared(da)
+      case pm : PlayerMovement => playerMovementEnded(pm) 
+      case dl : DiceLock => diceLocked(dl)
+      case m : DiceMovement => diceMoves = m :: diceMoves
     })
     
     diceMoves.foreach((m) => {
@@ -52,59 +54,38 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
     finishedActivities.foreach(tracker.forget(_))
   }
   
-  private def diceAppeared(da : Dice.Appearing) = {
-    val where = da.where
-    
-    //TODO is the board full now?
-    
-    where.content match { 
-      case Occupied(d) => d.state = Dice.Solid(where, None)
-      case _ => throw new AssertionError("space not occupied")
-    }
-  }
+  private def diceAppeared(affected: DiceAppearing) =
+    affected.dice.solidify(affected.location, None)
   
-  private def diceMovementEnded(m : Movement) = {
-    m.dice.change(m.transform)
+  private def diceMovementEnded(move: DiceMovement) = {
+    move.dice.change(move.transform)
       
-    if (m.dice.top == 1) {
-      board.tiles filter (_.floor.content.isInstanceOf[Occupied])
+    if (move.dice.top == 1) {
+      board.tiles filter (_.floor.isOccupied)
     }
         
-    val group = diceMatcher.find(m.dice, m.to.tile)    
+    val group = diceMatcher.find(move.dice, move.destination.tile)    
     
-    Nil //TODO
+    throw new NotYetImplementedException
   }
   
-  private def playerMovementEnded(pm: Player.Moving) =
-    pm.player.state = Player.Standing(pm.to)
+  private def playerMovementEnded(affected: PlayerMovement) =
+    affected.player.stand(affected.destination)
   
-  private def diceGroupTimedOut(dg : DiceGroup) = {
-    dg.state match {
-      case DiceGroup.Charging => diceGroupCharged(dg)
-      case DiceGroup.Bursting => diceGroupBurst(dg)      
-    }
+  private def diceLocked(affected: DiceLock) =
+    if (affected.group.isCharging) diceCharged(affected)
+    else diceBurst(affected)
+  
+  private def diceCharged(affected: DiceLock) = {
+    val burst = Activity.on(clock).diceLock(affected.group.cloneAsBursting)
+    burst.group.dice.foreach(_.lock(burst))
+    tracker.track(burst)
   }
   
-  private def diceGroupCharged(dg: DiceGroup) = {
-    val burstGroup = dg.cloneAsBursting
-        
-    dg.dice.foreach(dice => dice.state match {
-      case Dice.Locked(initiator, _, space) => dice.state = 
-        Dice.Locked(initiator, burstGroup, space)
-      case _ => throw new AssertionError("dice not locked")
-    })
-    
-    tracker.track(burstGroup)
-  }
-  
-  private def diceGroupBurst(dg: DiceGroup) = {
-    dg.dice.foreach((d) => {
-      //TODO give the initiator(s) some points
-      d.state match {
-        case Dice.Locked(_, _, space) => space.content = Empty
-        case _ => throw new AssertionError("dice not locked")
-      }
-      d.state = Dice.Burst
+  private def diceBurst(affected: DiceLock) = {
+    affected.group.dice.foreach(dice => {
+      dice.location.empty()
+      dice.burst()
     })
   }
 }

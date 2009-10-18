@@ -34,6 +34,45 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-trait Activity {
-  def when : Timespan
+sealed abstract class Activity {
+  def time : Timespan
 }
+
+object Activity {
+  val MOVE_DURATION = 0.25f
+  val APPEAR_DURATION = 5f
+  val CHARGE_DURATION = 10f
+  val BURST_DURATION = 1f 
+  
+  def on(clock: Clock) = {
+    object Factory {
+      def diceAppearing(dice: Dice, location: Space) =
+        DiceAppearing(dice, location, Timespan(clock, APPEAR_DURATION))
+      
+      def diceMovement(dice: Dice, origin: Space, destination: Space, 
+          transform: Transform.Value, controller: Player) =
+        DiceMovement(dice, origin, destination, transform, controller,
+                     Timespan(clock, MOVE_DURATION))
+      
+      def diceLock(group: DiceGroup) =
+        DiceLock(group, Timespan(clock, CHARGE_DURATION))
+      
+      def playerMovement(player: Player, origin: Tile, destination: Tile) =
+        PlayerMovement(player, origin, destination, 
+                       Timespan(clock, MOVE_DURATION))
+    }
+    Factory
+  }
+}
+
+case class DiceAppearing(dice: Dice, location: Space, time: Timespan)
+  extends Activity
+  
+case class DiceMovement(dice: Dice, origin: Space, destination: Space, 
+                        transform: Transform.Value, controller: Player,
+                        time: Timespan) extends Activity
+                        
+case class DiceLock(group: DiceGroup, time: Timespan) extends Activity
+
+case class PlayerMovement(player: Player, origin: Tile, destination: Tile,
+                          time: Timespan) extends Activity

@@ -34,13 +34,13 @@ package ecidice.util
  * 
  * @author Andreas Flierl
  */
-class FloatDecorator(f: Float) {
+class FloatDecorator(wrapped: Float) {
   /**
    * Enables the syntax <code>2f to 4f step .1f</code> to generate a stream 
    * "range" for floats. The lower and upper bounds are always included.
    * 
    * @param max the upper bound for the returned stream range
-   * @return a "continuous" stream from <code>f</code> to <code>max</code>; its 
+   * @return a "continuous" stream from <code>wrapped</code> to <code>max</code>; its
    *         <code>step</code> method needs to be called to turn it into a 
    *         discrete stream (as known from the std. library)
    */
@@ -51,9 +51,9 @@ class FloatDecorator(f: Float) {
           if (Math.abs(now) >= Math.abs(max)) Stream.cons(max, Stream.empty) 
           else Stream.cons(now, seq(now + by))
         
-        if (max == f) Stream.cons(f, Stream.empty)
-        else if ((max > f && by <= 0f) || (max < f && by >= 0f)) Stream.empty
-        else seq(f)
+        if (max == wrapped) Stream.cons(wrapped, Stream.empty)
+        else if ((max > wrapped && by <= 0f) || (max < wrapped && by >= 0f)) Stream.empty
+        else seq(wrapped)
       }
     }
     ContinuousStream

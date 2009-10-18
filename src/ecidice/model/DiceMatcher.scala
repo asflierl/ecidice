@@ -65,23 +65,16 @@ class DiceMatcher(board: Board) {
     res
   }
   
-  private def findFromDice(d: Dice, g: Set[Dice]) : Set[Dice] = 
-    if (d.top != src.top || g.contains(d)) g
-    else d.state match {
-      case Dice.Solid(s, c) if (c == None) => findFromTile(s.tile, g + d)
-      case _ => g
-    }
+  private def findFromDice(dice: Dice, group: Set[Dice]) : Set[Dice] =
+    if (dice.top != src.top || group.contains(dice)) group
+    else if (dice.isSolid && !dice.isControlled)
+      findFromTile(dice.location.tile, group + dice)
+    else group
   
-  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) 
-      : Option[Dice] = {
+  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
     val pos = board.positionInDir(t, dir)
-    if (board.isWithinBounds(pos)) {
-      val tgt = board(pos).floor
-      
-      tgt.content match {
-        case Occupied(d) => Some(d)
-        case _ => None
-      }
-    } else None
+    if (board.isWithinBounds(pos) && board(pos).floor.isOccupied)
+      Some(board(pos).floor.dice)
+    else None
   }
 }

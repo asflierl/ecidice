@@ -37,8 +37,8 @@ package ecidice.model
  */
 case class Tile(x: Int, y: Int) {
   var visibility = Tile.Visibility.VISIBLE
-  lazy val floor = new Space(this, Empty)
-  lazy val raised = new Space(this, Empty)
+  lazy val floor = new Space(this)
+  lazy val raised = new Space(this)
   
   def pos = (x, y)
 }

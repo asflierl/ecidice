@@ -46,7 +46,7 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
         val request = "movement request: " + dir
         game.movementReferee.requestMove(p1, dir) aka request must beTrue
         
-        p1.state must haveClass[Player.Moving]
+        p1.isMoving must beTrue
       })
     }
     
@@ -113,13 +113,13 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
       game.controlReferee.requestControl(p1) mustEqual Some(d1)
       game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
       
-      val m = Movement(d1, board(1,1).floor, board(1,2).raised, 
-                       Timespan(game.clock, Game.MOVE_DURATION), 
-                       Transform.FLIP_UP_OR_DOWN)
+      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).floor,
+        board(1, 2).raised, Transform.FLIP_UP_OR_DOWN, p1)
       
-      d1.state mustEqual Dice.Moving(m, p1) 
-      board(1,1).floor.content mustEqual m
-      board(1,2).raised.content mustEqual m
+      d1.isMoving must beTrue
+      d1.movement mustEqual m
+      board(1, 1).floor.movement mustEqual m
+      board(1, 2).raised.movement mustEqual m
     }
     
     "allow a player to grab the upper of 2 dice and move onto another dice" in {
@@ -131,13 +131,13 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
       game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
       game.movementReferee.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
       
-      val m = Movement(d1, board(1,1).raised, board(0,1).raised, 
-                       Timespan(game.clock, Game.MOVE_DURATION),
-                       Transform.ROTATE_LEFT)
-      
-      d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
-      board(1,1).raised.content aka "start content" mustEqual m
-      board(0,1).raised.content aka "destination content" mustEqual m
+      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).raised,
+        board(0, 1).raised, Transform.ROTATE_LEFT, p1)
+
+      d1.isMoving must beTrue
+      d1.movement mustEqual m
+      board(1, 1).raised.movement mustEqual m
+      board(0, 1).raised.movement mustEqual m
     }
     
     "allow a player to grab the upper of 2 dice and move to an empty tile" in {
@@ -148,13 +148,12 @@ class MovementRefereeSpec extends SpecBase with GameContexts {
       game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
       game.movementReferee.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
       
-      val m = Movement(d1, board(1,1).raised, board(2,1).floor, 
-                       Timespan(game.clock, Game.MOVE_DURATION),
-                       Transform.FLIP_LEFT_OR_RIGHT)
+      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).raised,
+        board(2, 1).floor, Transform.FLIP_LEFT_OR_RIGHT, p1)
 
-      d1.state aka "dice state" mustEqual Dice.Moving(m, p1) 
-      board(1,1).raised.content aka "start content" mustEqual m
-      board(2,1).floor.content aka "destination content" mustEqual m
+      d1.movement mustEqual m
+      board(1, 1).raised.movement mustEqual m
+      board(2, 1).floor.movement mustEqual m
     }
     
     "not allow a player to move onto an appearing dice" in {

@@ -49,8 +49,7 @@ package ecidice.model
  * @author Andreas Flierl
  */
 class Dice {
-  private val serial = Dice.serial
-  Dice.serial += 1
+  private val serial = Dice.nextSerial
   
   private var topFace = 6
   private var rightFace = 5
@@ -59,7 +58,7 @@ class Dice {
   /**
    * Holds the state of this dice in respect to the game rules.
    */
-  var state : Dice.State = _
+  private var state : State = _
   
   def top = topFace  
   def bottom = opposite(topFace)
@@ -77,18 +76,10 @@ class Dice {
    */
   private def opposite(eyes: Int) = 7 - eyes
   
-  /**
-   * Assigns this dice's top, right and front faces. No consistency checking is
-   * done by this method.
-   * 
-   * @param t the new top face
-   * @param r the new right face
-   * @param f the new front face
-   */
-  private def set(t: Int, r: Int, f: Int) = {
-    topFace = t
-    rightFace = r
-    frontFace = f
+  private def set(top: Int, right: Int, front: Int) = {
+    topFace = top
+    rightFace = right
+    frontFace = front
   }
   
   /**
@@ -109,10 +100,81 @@ class Dice {
   
   override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, 
                                                       right, front)
-}
-object Dice {
-  private var serial = 0
-    
+ 
+  def isAppearing = state.isInstanceOf[Appearing]
+  def isSolid = state.isInstanceOf[Solid]
+  def isMoving = state.isInstanceOf[Moving]
+  def isLocked = state.isInstanceOf[Locked]
+  def isCharging = isLocked && group.isCharging
+  def isBursting = isLocked && group.isBursting
+  def isBurst = state == Burst
+  
+  def isControlled = state match {
+    case Solid(_, controller) if (controller != None) => true
+    case _ : Moving => true
+    case _ => false
+  }
+  
+  def location = state match {
+    case Appearing(activity) => activity.location
+    case Solid(somewhere, _) => somewhere
+    case Locked(_, _, somewhere) => somewhere
+    case _ => throw new IllegalStateException("dice location undetermined")
+  }
+  
+  def appearing = state match {
+    case Appearing(activity) => activity
+    case _ => throw new IllegalStateException("dice not appearing")
+  }
+  
+  def movement = state match {
+    case Moving(activity) => activity
+    case _ => throw new IllegalStateException("dice not moving")
+  }
+  
+  def controller = state match {
+    case Solid(_, controller) if (controller != None) => controller.get
+    case Moving(DiceMovement(_, _, _, _, controller, _)) => controller
+    case _ => throw new IllegalStateException("dice is uncontrolled")
+  }
+  
+  def initiator = state match {
+    case Locked(initiator, _, _) => initiator
+    case _ => throw new IllegalStateException("dice has no initiator")
+  }
+  
+  def group = state match {
+    case Locked(_, activity, _) => activity.group
+    case _ => throw new IllegalStateException("dice is grouped")
+  }
+  
+  def charging = state match {
+    case Locked(_, activity, _) if (activity.group.isCharging) => activity
+    case _ => throw new IllegalStateException("dice is not charging")
+  }
+  
+  def bursting = state match {
+    case Locked(_, activity, _) if (activity.group.isBursting) => activity
+    case _ => throw new IllegalStateException("dice is not bursting")
+  }
+  
+  def appear(activity: DiceAppearing) = (state = Appearing(activity))
+  
+  def solidify(location: Space, controller: Option[Player]) =
+    state = Solid(location, controller)
+  
+  def submitTo(controller: Player) = state match {
+    case Solid(location, _) => state = Solid(location, Some(controller))
+    case _ => throw new IllegalStateException("dice is not solid")
+  }
+  
+  def move(activity: DiceMovement) = (state = Moving(activity))
+
+  def lock(activity: DiceLock) =
+    state = Locked(controller, activity, location)
+
+  def burst() = (state = Burst)
+  
   /**
    * Supertype of a dice's possible states.
    */
@@ -122,7 +184,7 @@ object Dice {
    * The dice is appearing. It can not be controlled nor moved. It occupies 
    * some space.
    */
-  case class Appearing(where: Space, when: Timespan) extends State with Activity
+  case class Appearing(activity: DiceAppearing) extends State
   
   /**
    * The dice is solid now. It can be controlled by a player. It occupies
@@ -134,15 +196,25 @@ object Dice {
    * The dice is moving. During movement, it is always controlled by a player.
    * The movement object defines the space occupied while moving.
    */
-  case class Moving(move: Movement, controller: Player) extends State
+  case class Moving(activity: DiceMovement) extends State
     
   /**
    * The dice has been locked and is part of a dice group, i.e. it is either
    * charging or bursting. This state is always initiated by a player. The dice
    * occupies some space.
    */
-  case class Locked(initiator: Player, group: DiceGroup, where: Space)
+  case class Locked(initiator: Player, activity: DiceLock, where: Space)
     extends State
   
   case object Burst extends State
+}
+
+object Dice {
+  private var serial = 0
+
+  def nextSerial = {
+    val before = serial
+    serial += 1
+    before
+  }
 }

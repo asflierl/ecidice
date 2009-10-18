@@ -29,31 +29,32 @@
 
 package ecidice.model
 
-class DiceGroup(clock: Clock, val state : DiceGroup.State) extends Activity {
-  val when = Timespan(clock, state.duration)
+final class DiceGroup private {
+  private var state : DiceGroup.State = _
   private var diceSet : Set[Dice] = Set.empty[Dice]
   
-  def this(clock: Clock, state: DiceGroup.State, dice: Set[Dice]) = {
-    this(clock, state)
+  private def init(state: DiceGroup.State, dice: Set[Dice]) = {
+    this.state = state
     diceSet ++= dice
+    this
   }
   
-  def cloneAsBursting = {
-    val newGroup = new DiceGroup(clock, DiceGroup.Bursting)
-    newGroup.diceSet = diceSet
-    newGroup
-  }
+  def isCharging = (state == DiceGroup.Charging)
+  def isBursting = (state == DiceGroup.Bursting)
+  def cloneAsBursting = new DiceGroup().init(DiceGroup.Bursting, diceSet)
   
   def +=(d: Dice) = (diceSet += d)
-  
   def ++(otherGroup: DiceGroup) = (diceSet ++ otherGroup.dice)
-  
   def dice = diceSet
-  
   def contains(d: Dice) = diceSet.contains(d)
+  
+  
 }
 object DiceGroup {
-  abstract sealed class State(val duration: Double)
-  case object Charging extends State(Game.CHARGE_DURATION)
-  case object Bursting extends State(Game.BURST_DURATION)
+  def createCharging(dice: Set[Dice]) = new DiceGroup().init(Charging, dice)
+  def createBursting(dice: Set[Dice]) = new DiceGroup().init(Bursting, dice)
+  
+  private sealed abstract class State
+  private object Charging extends State
+  private object Bursting extends State
 }

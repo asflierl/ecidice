@@ -30,16 +30,34 @@
 package ecidice.model
 
 class Player(spawnPoint: Tile) {
-  var state : Player.State = Player.Standing(spawnPoint)
-}
-
-object Player {
+  private var state : State = Standing(spawnPoint)
+  
+  def isStanding = state.isInstanceOf[Standing]
+  def isController = state.isInstanceOf[Controlling]
+  def isMoving = state.isInstanceOf[Moving]
+  
+  def location = state match {
+    case Standing(somewhere) => somewhere
+    case Controlling(dice) => dice.location.tile
+    case _ => throw new IllegalStateException("player location undetermined")
+  }
+  
+  def dice = state match {
+    case Controlling(dice) => dice
+    case _ => throw new IllegalStateException("player not controlling a dice")
+  }
+  
+  def movement = state match {
+    case Moving(activity) => activity
+    case _ => throw new IllegalStateException("player not moving")
+  }
+  
+  def stand(location: Tile) = (state = Standing(location))
+  def control(dice: Dice) = (state = Controlling(dice))
+  def move(move: PlayerMovement) = (state = Moving(move))
+  
   sealed abstract class State
-  
   case class Standing(where: Tile) extends State
-  
   case class Controlling(dice: Dice) extends State
-  
-  case class Moving(player: Player, from: Tile, to: Tile, when: Timespan)
-    extends State with Activity
+  case class Moving(activity: PlayerMovement) extends State
 }

@@ -45,7 +45,7 @@ trait GameContexts extends Specification {
   def p2 = game.players(1)
   
   def placePlayer(player: Player, pos: (Int, Int)) : Unit =
-      player.state = Player.Standing(board(pos))
+    player.stand(board(pos))
   
   def within(ctx: Context)(action: => Any) = {
     ctx.beforeActions()
@@ -63,19 +63,17 @@ trait GameContexts extends Specification {
    * @return the newly created and placed dice
    */
   def placeDice(pos: (Int, Int)) : Dice = {
-    val destinationTile = board(pos)
-    val destinationSpace = destinationTile.floor.content match {
-      case Empty => destinationTile.floor
-      case Occupied(_) => destinationTile.raised
-      case _ => throw new IllegalStateException("tile not in a state for a"
-                                                + " dice to be placed")
-    }
-    
     val dice = new Dice
-    destinationSpace.content = Occupied(dice)
-    dice.state = Dice.Solid(destinationSpace, None)
+    val destinationSpace = findDestinationSpace(board(pos))
+      
+    destinationSpace.occupy(dice)
+    dice.solidify(destinationSpace, None)
     dice
   }
+  
+  private def findDestinationSpace(destinationTile: Tile) =
+    if (destinationTile.floor.isEmpty) destinationTile.floor
+    else destinationTile.raised
   
   /**
    * Builds a dice group with the specified dice that contains newly placed
@@ -86,15 +84,14 @@ trait GameContexts extends Specification {
    *        to the new dice group
    * @return the newly created dice group
    */
-  def buildDiceGroup(state: DiceGroup.State, positions: Set[(Int, Int)]) = {
+  def buildDiceGroup(positions: Set[(Int, Int)]) = {
     val dice = positions.map(placeDice(_))
     dice.foreach(_.change(Transform.ROTATE_RIGHT))
-    val group = new DiceGroup(game.clock, state, dice)
-    dice.foreach(d => d.state match {
-      case Dice.Solid(space, _) => d.state = Dice.Locked(p1, group, space)
-      case _ => throw new AssertionError("dice not solid")
-    })
-    game.tracker.track(group)
+    
+    val group = DiceGroup.createCharging(dice)
+    val activity = Activity.on(game.clock).diceLock(group)
+    dice.foreach(_.lock(activity))
+    game.tracker.track(activity)
     group
   }
 }
