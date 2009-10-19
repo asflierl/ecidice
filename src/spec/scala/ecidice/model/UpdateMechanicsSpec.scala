@@ -34,7 +34,7 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class UpdateMechanicsSpec extends SpecBase with GameContexts {
+object UpdateMechanicsSpec extends SpecBase with GameContexts {
   "The update mechanics" ->-(simpleGame) should {
     
     def updater = game.updateMechanics

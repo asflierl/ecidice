@@ -25,15 +25,38 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 
-main.src.dir = src
-test.src.dir = test-src
+repositories.remote << 'http://www.ibiblio.org/maven2/'
 
-build.dir = build
-main.build.dir = ${build.dir}/main
-test.build.dir = ${build.dir}/test
-doc.build.dir = ${build.dir}/doc
+JME = struct(
+  :audio => 'lib/jme/jme-audio.jar',
+  :awt => 'lib/jme/jme-awt.jar',
+  :collada => 'lib/jme/jme-collada.jar',
+  :colladabinding => 'lib/jme/jme-colladabinding.jar',
+  :editors => 'lib/jme/jme-editors.jar',
+  :effects => 'lib/jme/jme-effects.jar',
+  :font => 'lib/jme/jme-font.jar',
+  :gamestates => 'lib/jme/jme-gamestates.jar',
+  :model => 'lib/jme/jme-model.jar',
+  :ogrexml => 'lib/jme/jme-ogrexml.jar',
+  :scene => 'lib/jme/jme-scene.jar',
+  :terrain => 'lib/jme/jme-terrain.jar',
+  :xml => 'lib/jme/jme-xml.jar',
+  :jme => 'lib/jme/jme.jar')
 
-lib.dir = lib
+LWJGL = struct(
+  :jinput => 'lib/lwjgl/jinput.jar',
+  :applet => 'lib/lwjgl/lwjgl_util_applet.jar',
+  :util => 'lib/lwjgl/lwjgl_util.jar',
+  :lwjgl => 'lib/lwjgl/lwjgl.jar'
+)
 
-# override these in env.properties
-scala.home = /opt/local/share/scala
+JORBIS = 'lib/jorbis/jorbis-0.0.17.jar'
+
+SPECS = struct(
+  :specs => 'org.scala-tools.testing:specs:jar:1.6.0',
+  :mockito => 'org.mockito:mockito-all:jar:1.8.0',
+  :cglib => 'cglib:cglib:jar:2.1_3',
+  :asm => 'asm:asm:jar:1.5.3',
+  :objenesis => 'org.objenesis:objenesis:jar:1.1',
+  :hamcrest => 'org.hamcrest:hamcrest-all:jar:1.1'  
+)

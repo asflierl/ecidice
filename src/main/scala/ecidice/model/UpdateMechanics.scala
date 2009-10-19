@@ -41,15 +41,13 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
     var diceMoves : List[DiceMovement] = Nil
     
     finishedActivities.foreach(_ match {
-      case da : DiceAppearing => diceAppeared(da)
-      case pm : PlayerMovement => playerMovementEnded(pm) 
-      case dl : DiceLock => diceLocked(dl)
-      case m : DiceMovement => diceMoves = m :: diceMoves
+      case activity : DiceAppearing => diceAppeared(activity)
+      case activity : PlayerMovement => playerMovementEnded(activity) 
+      case activity : DiceLock => diceLocked(activity)
+      case activity : DiceMovement => diceMoves = activity :: diceMoves
     })
     
-    diceMoves.foreach((m) => {
-      
-    })
+    diceMoves.foreach(diceMovementEnded(_))
     
     finishedActivities.foreach(tracker.forget(_))
   }

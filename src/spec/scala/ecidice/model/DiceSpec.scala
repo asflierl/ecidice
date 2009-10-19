@@ -30,60 +30,73 @@
 package ecidice.model
 
 /**
- * Spec-based tests of the board model.
+ * Spec-based tests of the dice model.
  * 
  * @author Andreas Flierl
  */
-class BoardSpec extends SpecBase {
-  private val width = 5
-  private val depth = 3
-  
-  "The game board" should {
+object DiceSpec extends SpecBase {
+  "A dice" should {
+    val d = new Dice
     
-    val b = new Board(width, depth)
-    val center = b(2, 1)
-    
-    "return its tiles in the right order" in {
-      val iter = b.tiles
-      
-      for (x <- 0 until width; y <- 0 until depth) {
-        iter.hasNext must beTrue
-        iter.next mustEqual b(x, y)
-      }
-      
-      iter.hasNext must beFalse
+    def checkDice(top: Int, right: Int, front: Int) = {
+      d.top mustEqual top
+      d.right mustEqual right
+      d.front mustEqual front
+      d.bottom mustEqual (7 - top)
+      d.left mustEqual (7 - right)
+      d.back mustEqual (7 - front)
     }
     
-    "predict the correct position that results from a move from its center" in {
-      
-      "direction of move" | "result position" |>
-      Direction.BACKWARD  ! (2, 2)            |
-      Direction.FORWARD   ! (2, 0)            |
-      Direction.LEFT      ! (1, 1)            |  
-      Direction.RIGHT     ! (3, 1)            | { 
-        
-      (dir, result) =>
-        b.positionInDir(center, dir) mustEqual(result)
-      }
+    "initially look like this: top = 6, right = 5, front = 4" in {
+      d.top mustEqual 6
+      d.right mustEqual 5
+      d.front mustEqual 4
     }
     
-    "correctly indicate board bounds" in {
-      
-      "position" | "within bounds" |>
-      (0, 0)     ! true            |
-      (4, 2)     ! true            |
-      (1, 2)     ! true            |
-      (4, 1)     ! true            |
-      (5, 0)     ! false           |
-      (0, 3)     ! false           |
-      (-1, 1)    ! false           |
-      (2, -1)    ! false           |
-      (-1, -1)   ! false           |
-      (5, 3)     ! false           | { 
-        
-      (pos, result) =>
-        b.isWithinBounds(pos) mustEqual(result)
-      }
+    "initially be consistent" in {
+      d.top mustEqual (7 - d.bottom)
+      d.left mustEqual (7 - d.right)
+      d.front mustEqual (7 - d.back)
+    }
+
+    "correctly rotate backward" in {
+      d.change(Transform.ROTATE_BACKWARD)
+      checkDice(4, 5, 1)
+    }
+    
+    "correctly rotate forward" in {
+      d.change(Transform.ROTATE_FORWARD)
+      checkDice(3, 5, 6)
+    }
+    
+    "correctly rotate to the right" in {
+      d.change(Transform.ROTATE_RIGHT)
+      checkDice(2, 6, 4)
+    }
+    
+    "correctly rotate to the left" in {
+      d.change(Transform.ROTATE_LEFT)
+      checkDice(5, 1, 4)
+    }
+    
+    "correctly spin clockwise" in {
+      d.change(Transform.SPIN_CLOCKWISE)
+      checkDice(6, 3, 5)
+    }
+    
+    "correctly spin counter-clockwise" in {
+      d.change(Transform.SPIN_COUNTERCLOCKWISE)
+      checkDice(6, 4, 2)
+    }
+    
+    "correctly flip up/down" in {
+      d.change(Transform.FLIP_UP_OR_DOWN)
+      checkDice(1, 5, 3)
+    }
+    
+    "correctly flip left or right" in {
+      d.change(Transform.FLIP_LEFT_OR_RIGHT)
+      checkDice(1, 2, 4)
     }
   }
 }

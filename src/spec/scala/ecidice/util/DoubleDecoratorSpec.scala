@@ -29,18 +29,31 @@
 
 package ecidice.util
 
-class HashCodeSpec extends SpecBase {
-  "The hash code object" should {
-    "return a default value if no parameters are given" in {
-      HashCode() mustEqual 42
+object DoubleDecoratorSpec extends SpecBase {
+  "A double decorator" should {
+    val deco = new DoubleDecorator(0d)
+    
+    "produce a correct upwards stream" in {
+      val stream = deco to 1d step .5d
+      
+      stream.toList mustEqual List(0d, .5d, 1d)
     }
     
-    "calculate a good hash code for a single given parameter" in {
-      HashCode(25) mustEqual 42
+    "produce a correct downwards stream" in {
+      val stream = deco to -1.2d step -.4d
+      
+      stream.toList mustEqual List(0d, -.4d, -.8d, -1.2d)
     }
     
-    "calculate a good hash code for several given parameters" in {
-      HashCode(1, 2L, " ") mustEqual (((17 + 1) * 41 + 2) * 41 + 32)
+    "produce an empty stream if target is unreachable" in {
+      (deco to 1d step -.1d) aka "0 to 1 step -0.1" must beEmpty
+      (deco to -1d step .1d) aka "0 to -1 step 0.1" must beEmpty
+    }
+    
+    "produce a single-element stream if start equals target" in {
+      (deco to 0d step 1d).toList aka "0 to 0 step 1" mustEqual List(0d)
+      (deco to 0d step 0d).toList aka "0 to 0 step 0" mustEqual List(0d)
+      (deco to 0d step -1d).toList aka "0 to 0 step -1" mustEqual List(0d)
     }
   }
 }

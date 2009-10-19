@@ -36,7 +36,7 @@ import org.specs.ScalaCheck
  * 
  * @author Andreas Flierl
  */
-class ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
+object ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
   def referee = game.controlReferee
   
   "A control referee" ->-(simpleGame) should {  

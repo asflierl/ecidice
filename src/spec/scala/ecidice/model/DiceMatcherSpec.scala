@@ -27,33 +27,57 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.util
+package ecidice.model
 
-class FloatDecoratorSpec extends SpecBase {
-  "A float decorator" should {
-    val deco = new FloatDecorator(0f)
+object DiceMatcherSpec extends SpecBase with GameContexts {
+  def matcher = new DiceMatcher(board)
+  
+  "A dice matcher" ->-(simpleGame) should {
     
-    "produce a correct upwards stream" in {
-      val stream = deco to 1f step .5f
+    "correctly find a group of matching dice" in {
+      val d = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+      d(8).change(Transform.ROTATE_FORWARD)
+      d(4).change(Transform.ROTATE_FORWARD)
       
-      stream.toList mustEqual List(0f, .5f, 1f)
-    }
-    
-    "produce a correct downwards stream" in {
-      val stream = deco to -.4f step -.1f
+      val inc = d.filter(_.top == 6)
+      val exc = d.filter(_.top != 6)
       
-      stream.toList mustEqual List(0f, -.1f, -.2f, -.3f, -.4f)
+      val searchResult = matcher.find(d(0), board(0, 0))
+      
+      inc.foreach(searchResult must contain(_))
+      exc.foreach(searchResult must not contain(_))
     }
     
-    "produce an empty stream if target is unreachable" in {
-      (deco to 1f step -.1f) aka "0 to 1 step -0.1" must beEmpty
-      (deco to -1f step .1f) aka "0 to -1 step 0.1" must beEmpty
+    "correctly find only one of two groups of matching dice" in {
+      val d00 = placeDice(0, 0)
+      val d10 = placeDice(1, 0)
+      val d02 = placeDice(0, 2)
+      val d12 = placeDice(1, 2)
+      val d11 = placeDice(1, 1)
+      d11.change(Transform.ROTATE_LEFT)
+      
+      val s = matcher.find(d12, board(1, 2))
+      
+      List(d02, d12) foreach (s must contain(_))
+      List(d00, d10, d11) foreach (s must not contain(_))
     }
     
-    "produce a single-element stream if start equals target" in {
-      (deco to 0f step 1f).toList aka "0 to 0 step 1" mustEqual List(0f)
-      (deco to 0f step 0f).toList aka "0 to 0 step 0" mustEqual List(0f)
-      (deco to 0f step -1f).toList aka "0 to 0 step -1" mustEqual List(0f)
+    "correctly find a board full of matching dice" in {
+      val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+      
+      val s = matcher.find(dice(4), board(1, 1))
+      
+      dice foreach (s must contain(_))
+    }
+    
+    "correctly find no matches of an isolated dice" in {
+      List((1, 0), (0, 1), (2, 1), (1, 2)).foreach(placeDice(_))
+      val d = placeDice(1, 1)
+      d.change(Transform.ROTATE_FORWARD)
+      
+      val matches = matcher.find(d, board(1, 1))
+      
+      matches mustEqual Set(d)
     }
   }
 }

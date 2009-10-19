@@ -1,81 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test-src"/>
-	<classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jme/jme-audio.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-awt.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-collada.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-editors.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-effects.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-font.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-gamestates.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-model.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-scene.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-terrain.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme-xml.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jme/jme.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/i0n/Documents/own Doku and examples/JME-doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jorbis/jorbis-0.0.17.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/jinput.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util_applet.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar"/>
-	<classpathentry kind="lib" path="lib/jme/jme-ogrexml.jar"/>
-	<classpathentry kind="lib" path="lib/jme/jme-colladabinding.jar"/>
-	<classpathentry kind="lib" path="lib/scala/scala-library.jar"/>
-	<classpathentry kind="lib" path="lib/scalacheck/ScalaCheck-1.5.jar"/>
-	<classpathentry kind="lib" path="lib/specs/specs-1.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/junit/junit4.7.jar"/>
-	<classpathentry kind="lib" path="lib/mockito/mockito-all-1.8.0.jar"/>
-	<classpathentry kind="lib" path="lib/hamcrest/hamcrest-all-1.2.jar"/>
-	<classpathentry kind="output" path="bin"/>
+  <classpathentry kind="src" path="src/main/scala" excluding="**/.svn/|**/CVS/"/>
+  <classpathentry kind="src" path="src/spec/scala" excluding="**/.svn/|**/CVS/" output="target/spec/classes"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-audio.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-awt.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-collada.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-colladabinding.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-editors.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-effects.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-font.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-gamestates.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-model.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-ogrexml.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-scene.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-terrain.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-xml.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jorbis/jorbis-0.0.17.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/jinput.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl_util.jar"/>
+  <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl_util_applet.jar"/>
+  <classpathentry kind="lib" path="/opt/local/share/scala/lib/scala-compiler.jar"/>
+  <classpathentry kind="lib" path="/opt/local/share/scala/lib/scala-library.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/scala-tools/testing/specs/1.6.0/specs-1.6.0.jar" sourcepath="M2_REPO/org/scala-tools/testing/specs/1.6.0/specs-1.6.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.8.0/mockito-all-1.8.0.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.8.0/mockito-all-1.8.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar" sourcepath="M2_REPO/asm/asm/1.5.3/asm-1.5.3-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.1/objenesis-1.1.jar" sourcepath="M2_REPO/org/objenesis/objenesis/1.1/objenesis-1.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/scala-tools/testing/specs/1.5.0/specs-1.5.0.jar" sourcepath="M2_REPO/org/scala-tools/testing/specs/1.5.0/specs-1.5.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/scala-tools/testing/scalacheck/1.5/scalacheck-1.5.jar" sourcepath="M2_REPO/org/scala-tools/testing/scalacheck/1.5/scalacheck-1.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.5/junit-4.5.jar" sourcepath="M2_REPO/junit/junit/4.5/junit-4.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.2.0/jmock-1.2.0.jar" sourcepath="M2_REPO/jmock/jmock/1.2.0/jmock-1.2.0-sources.jar"/>
+  <classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 </classpath>

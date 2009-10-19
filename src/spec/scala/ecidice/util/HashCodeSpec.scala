@@ -27,26 +27,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.util
 
-import org.specs._
-import org.specs.runner._
- 
-class EcidiceSpec extends SpecificationWithJUnit {
-  "ecidice" isSpecifiedBy (
-    new model.BoardSpec,
-    new model.ClockSpec,
-    new model.ControlRefereeSpec,
-    new model.DiceGroupSpec,
-    new model.DiceSpec,
-    new model.DiceMatcherSpec,
-    new model.GameSpec,
-    new model.MovementRefereeSpec,
-    new model.TimespanSpec,
-    new model.UpdateMechanicsSpec,
+object HashCodeSpec extends SpecBase {
+  "The hash code object" should {
+    "return a default value if no parameters are given" in {
+      HashCode() mustEqual 42
+    }
     
-    new util.DoubleDecoratorSpec,
-    new util.FloatDecoratorSpec,
-    new util.HashCodeSpec
-  )
+    "calculate a good hash code for a single given parameter" in {
+      HashCode(25) mustEqual 42
+    }
+    
+    "calculate a good hash code for several given parameters" in {
+      HashCode(1, 2L, " ") mustEqual (((17 + 1) * 41 + 2) * 41 + 32)
+    }
+  }
 }

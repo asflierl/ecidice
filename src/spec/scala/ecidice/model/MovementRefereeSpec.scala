@@ -34,7 +34,7 @@ package ecidice.model
  * 
  * @author Andreas Flierl
  */
-class MovementRefereeSpec extends SpecBase with GameContexts {
+object MovementRefereeSpec extends SpecBase with GameContexts {
   def referee = game.movementReferee
   
   "The movement referee" ->-(simpleGame) should {

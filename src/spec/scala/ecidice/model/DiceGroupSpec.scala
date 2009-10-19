@@ -27,33 +27,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.util
+package ecidice.model
 
-class DoubleDecoratorSpec extends SpecBase {
-  "A double decorator" should {
-    val deco = new DoubleDecorator(0d)
+object DiceGroupSpec extends SpecBase {
+  "A dice group" should {
+    val clock = new Clock
+    val group = DiceGroup.createCharging(Set.empty)
     
-    "produce a correct upwards stream" in {
-      val stream = deco to 1d step .5d
+    "contain the dice previously added to it" in {
+      val d1 = new Dice
+      val d2 = new Dice
       
-      stream.toList mustEqual List(0d, .5d, 1d)
-    }
-    
-    "produce a correct downwards stream" in {
-      val stream = deco to -1.2d step -.4d
+      group += d1
+      group += d2
       
-      stream.toList mustEqual List(0d, -.4d, -.8d, -1.2d)
+      group.dice mustEqual Set(d1, d2)
     }
     
-    "produce an empty stream if target is unreachable" in {
-      (deco to 1d step -.1d) aka "0 to 1 step -0.1" must beEmpty
-      (deco to -1d step .1d) aka "0 to -1 step 0.1" must beEmpty
-    }
-    
-    "produce a single-element stream if start equals target" in {
-      (deco to 0d step 1d).toList aka "0 to 0 step 1" mustEqual List(0d)
-      (deco to 0d step 0d).toList aka "0 to 0 step 0" mustEqual List(0d)
-      (deco to 0d step -1d).toList aka "0 to 0 step -1" mustEqual List(0d)
+    "be able to clone itself, resulting in a similar group that is bursting" in {
+      val d1 = new Dice
+      group += d1
+      
+      val cloned = group.cloneAsBursting
+      
+      cloned.dice mustEqual group.dice
+      cloned.isBursting must beTrue
     }
   }
 }

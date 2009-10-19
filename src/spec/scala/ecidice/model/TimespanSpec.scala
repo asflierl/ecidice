@@ -29,67 +29,77 @@
 
 package ecidice.model
 
+import org.specs._
+
+import ecidice.util.Preamble._
+
 /**
- * Informally specifies the clock model.
+ * Spec-based tests of the timespan model.
  * 
  * @author Andreas Flierl
  */
-class ClockSpec extends SpecBase {
-  "A clock" should {
+object TimespanSpec extends SpecBase {  
+  "A timespan" should {
+    
     val clock = new Clock
+    var ts = Timespan(clock, clock.now + 1d, 1d)
     
-    "initially be set to 0" in {
-      clock.now mustEqual 0d
+    "not start in the past, initially" in {
+      Timespan(clock, clock.now - DOUBLE_DELTA, 1d) must throwAn[IllegalArgumentException]
     }
     
-    "correctly tick forward" in {
-      clock.tick(DOUBLE_DELTA)
-      clock.now must beCloseTo(DOUBLE_DELTA, DOUBLE_DELTA)
+    "not point backwards in time" in {
+      Timespan(clock, clock.now, -DOUBLE_DELTA) must throwAn[IllegalArgumentException]
     }
     
-    "not tick zero seconds" in {
-      clock.tick(0d) must throwAn[IllegalArgumentException]
+    "be able to represent a zero-second duration" in {
+      val span = Timespan(clock, clock.now, 0)
+      span.end mustEqual clock.now
     }
     
-    "not tick negatively" in {
-      clock.tick(-DOUBLE_DELTA) must throwAn[IllegalArgumentException]
+    "return the correct end time" in {
+      ts.end mustEqual 2d
     }
     
-    "call reactions when ticking" in {
-      val reaction = mock[() => Any]
-      
-      clock.addReaction(reaction)
+    "display 0% progress right after initialisation" in {
+      ts.progress mustEqual 0d
+    }
+  
+    "report 0% progress if the current time is before the timespan start" in {
+      clock.tick(.5f)
+      ts.progress mustEqual 0f
+    }
+    
+    "report 0% progress if the current time equals the timespan start" in {
       clock.tick(1d)
-      
-      reaction() was called
+      ts.progress mustEqual 0d
     }
     
-    "not call reactions when ticking zero seconds" in {
-      val reaction = mock[() => Any]
-      
-      clock.addReaction(reaction)
-      clock.tick(0d) must throwAn[IllegalArgumentException]
-      
-      reaction() wasnt called
+    "report the correct progress if the current time lies in the timespan" in {
+      clock.tick(1d)
+      for (x <- 0d to 1d step .001d) {
+        ts.progress must beCloseTo(x, DOUBLE_DELTA)
+        clock.tick(.001d)
+      }
     }
     
-    "not call any reactions when ticking negatively" in {
-      val reaction = mock[() => Any]
+    "report 100% progress if the current time equals the timespan end" in {
+      clock.tick(2d)
+      ts.progress mustEqual 1d
       
-      clock.addReaction(reaction)
-      clock.tick(-1d) must throwAn[IllegalArgumentException]
-      
-      reaction() wasnt called
     }
     
-    "still provide microsecond accuracy after 100 years" in {
+    "report 100% progress if the current time is after the timespan end" in {
+      clock.tick(4d)
+      ts.progress mustEqual 1d
+    }
+    
+    "report an accurate progress with large clock times" in {
       clock.tick(100d * 365d * 24d * 60d * 60d)
-      val before = clock.now
-      
-      clock.tick(1E-6)
-      val after = clock.now
-      
-      (after - before) must beLessThanOrEqualTo(1E-6)
-    } 
+      ts = Timespan(clock, 4E-6d)
+      clock.tick(3E-6d)
+
+      ts.progress must beCloseTo(.75, DOUBLE_DELTA)
+    }
   }
 }
