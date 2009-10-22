@@ -8,7 +8,7 @@
 #   this list of conditions and the following disclaimer.
 # - Redistributions in binary form must reproduce the above copyright notice, 
 #   this list of conditions and the following disclaimer in the documentation 
-#  and/or other materials provided with the distribution.
+#   and/or other materials provided with the distribution.
 # - Neither the names of the copyright holders nor the names of its 
 #   contributors may be used to endorse or promote products derived from this 
 #   software without specific prior written permission.
@@ -27,30 +27,7 @@
 
 repositories.remote << 'http://www.ibiblio.org/maven2/'
 
-JME = struct(
-  :audio => 'lib/jme/jme-audio.jar',
-  :awt => 'lib/jme/jme-awt.jar',
-  :collada => 'lib/jme/jme-collada.jar',
-  :colladabinding => 'lib/jme/jme-colladabinding.jar',
-  :editors => 'lib/jme/jme-editors.jar',
-  :effects => 'lib/jme/jme-effects.jar',
-  :font => 'lib/jme/jme-font.jar',
-  :gamestates => 'lib/jme/jme-gamestates.jar',
-  :model => 'lib/jme/jme-model.jar',
-  :ogrexml => 'lib/jme/jme-ogrexml.jar',
-  :scene => 'lib/jme/jme-scene.jar',
-  :terrain => 'lib/jme/jme-terrain.jar',
-  :xml => 'lib/jme/jme-xml.jar',
-  :jme => 'lib/jme/jme.jar')
-
-LWJGL = struct(
-  :jinput => 'lib/lwjgl/jinput.jar',
-  :applet => 'lib/lwjgl/lwjgl_util_applet.jar',
-  :util => 'lib/lwjgl/lwjgl_util.jar',
-  :lwjgl => 'lib/lwjgl/lwjgl.jar'
-)
-
-JORBIS = 'lib/jorbis/jorbis-0.0.17.jar'
+JME = [:jme, :lwjgl, :jorbis].map { |lib| Dir["lib/#{lib}/*.jar"] } 
 
 SPECS = struct(
   :specs => 'org.scala-tools.testing:specs:jar:1.6.0',

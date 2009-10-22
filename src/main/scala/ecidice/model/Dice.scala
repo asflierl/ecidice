@@ -45,10 +45,13 @@ package ecidice.model
  *  4
  * </pre>
  * to sufficiently describe the rotation of the dice.
+ * <p>
+ * This class is final because it is not designed for extension through 
+ * inheritance (esp. considering equals(Any)).
  * 
  * @author Andreas Flierl
  */
-class Dice {
+final class Dice {
   private val serial = Dice.nextSerial
   
   private var topFace = 6
@@ -97,6 +100,13 @@ class Dice {
     case Transform.FLIP_UP_OR_DOWN => set(bottom, right, back)
     case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
   }
+  
+  override def equals(obj: Any) = obj match {
+    case other : Dice => other.serial == serial
+    case _ => false
+  }
+  
+  override def hashCode = serial
   
   override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, 
                                                       right, front)

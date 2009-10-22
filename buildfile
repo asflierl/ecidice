@@ -8,7 +8,7 @@
 #   this list of conditions and the following disclaimer.
 # - Redistributions in binary form must reproduce the above copyright notice, 
 #   this list of conditions and the following disclaimer in the documentation 
-#  and/or other materials provided with the distribution.
+#   and/or other materials provided with the distribution.
 # - Neither the names of the copyright holders nor the names of its 
 #   contributors may be used to endorse or promote products derived from this 
 #   software without specific prior written permission.
@@ -31,6 +31,6 @@ require :artifacts
 ENV['USE_FSC'] = 'yes'
 
 define 'ecidice' do
-  compile.with JME, LWJGL, JORBIS
+  compile.with JME
   test.with SPECS
 end

@@ -42,7 +42,6 @@ import com.jmex.game.state.GameState;
  * 
  * @author Andreas Flierl
  */
-@SerialVersionUID(1L)
 class WorldController(game: StandardGame) 
     extends BasicGameStateNode[GameState]("game world") {
 
