@@ -60,7 +60,7 @@ class BubbleView(row: Int, column: Int, maxindex: Int) extends Node("bubble") {
   addLight(sphere)
   
   attachChild(sphere)
-  updateRenderState
+  updateRenderState()
   
   /**
    * Creates and returns the surrounding sphere.
@@ -99,7 +99,7 @@ class BubbleView(row: Int, column: Int, maxindex: Int) extends Node("bubble") {
     z.setWritable(false)
     sphere.setRenderState(z)
     
-    sphere;
+    sphere
   }
   
   /**
@@ -107,18 +107,16 @@ class BubbleView(row: Int, column: Int, maxindex: Int) extends Node("bubble") {
    * 
    * @return a color for this bubble
    */
-  def getColor = {
-    row match {
-      case 0 => ColorRGBA.white
-      case 1 => ColorRGBA.red
-      case 2 => ColorRGBA.green
-      case 3 => ColorRGBA.yellow
-      case 4 => ColorRGBA.blue
-      case 5 => ColorRGBA.orange
-      case 6 => ColorRGBA.magenta
-      case 7 => ColorRGBA.cyan
-      case _ => ColorRGBA.black
-    }
+  def getColor = row match {
+    case 0 => ColorRGBA.white
+    case 1 => ColorRGBA.red
+    case 2 => ColorRGBA.green
+    case 3 => ColorRGBA.yellow
+    case 4 => ColorRGBA.blue
+    case 5 => ColorRGBA.orange
+    case 6 => ColorRGBA.magenta
+    case 7 => ColorRGBA.cyan
+    case _ => ColorRGBA.black
   }
   
   /**
@@ -127,7 +125,7 @@ class BubbleView(row: Int, column: Int, maxindex: Int) extends Node("bubble") {
    * @param sphere the sphere that shall be decorated
    * @return the newly added light
    */
-  def addLight(sphere: Sphere) {
+  def addLight(sphere: Sphere) = {
     val light = new PointLight
     light.setLocation(sphere.getCenter.add(new Vector3f(R / 2f, R / 2f, 
             R + .5f)))
@@ -147,6 +145,6 @@ class BubbleView(row: Int, column: Int, maxindex: Int) extends Node("bubble") {
     
     sphere.setRenderState(ls)
     
-    return light
+    light
   }
 }

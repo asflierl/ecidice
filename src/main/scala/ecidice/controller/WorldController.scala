@@ -45,16 +45,16 @@ import com.jmex.game.state.GameState;
 class WorldController(game: StandardGame) 
     extends BasicGameStateNode[GameState]("game world") {
 
-  private val boardController = new BoardController()
-  attachChild(boardController);
-  boardController.setActive(true);
+  private val boardController = new BoardController
+  attachChild(boardController)
+  boardController.setActive(true)
 
-  private val fps = new FPSGameState();
-  attachChild(fps);
-  fps.setActive(true);
+  private val fps = new FPSGameState()
+  attachChild(fps)
+  fps.setActive(true)
 
-  game.getCamera().setLocation(new Vector3f(-1.5f, -1, 30));
-  game.getCamera().lookAt(new Vector3f(0, 0, 0), new Vector3f(0f, 1f, 0f));
+  game.getCamera.setLocation(new Vector3f(-1.5f, -1, 30))
+  game.getCamera.lookAt(new Vector3f(0, 0, 0), new Vector3f(0f, 1f, 0f))
 
-  rootNode.updateRenderState();
+  rootNode.updateRenderState()
 }

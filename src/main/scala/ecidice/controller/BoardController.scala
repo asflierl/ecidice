@@ -38,7 +38,7 @@ import com.jme.scene.state.BlendState
 import com.jme.scene.state.LightState
 import com.jme.system.DisplaySystem
 import com.jmex.game.state.BasicGameStateNode
-import com.jmex.game.state.GameStateNode
+import com.jmex.game.state.GameState
 
 import ecidice.view.BubbleView
 
@@ -47,31 +47,25 @@ import ecidice.view.BubbleView
  * 
  * @author Andreas Flierl
  */
-class BoardController extends BasicGameStateNode[GameStateNode[_]]("game board") {    
-  addBubbles
-  setupBlending
-  addHighlights
+class BoardController extends BasicGameStateNode[GameState]("game board") {    
+  addBubbles()
+  setupBlending()
+  addHighlights()
   
-  rootNode.updateRenderState
+  rootNode.updateRenderState()
   
   /**
    * Adds the 64 bubbles as children to this node.
    */
-  def addBubbles : Unit = {
-    val bubbleViews = new ListBuffer[BubbleView]
-    for (ring <- 0 until 8; index <- 0 until 8) {
-      bubbleViews += new BubbleView(ring, index, 8)
-    }
+  def addBubbles() =
+    for (ring <- 0 until 8; index <- 0 until 8)
+      rootNode.attachChild(new BubbleView(ring, index, 8))
     
-    for (obj <- bubbleViews) {
-      rootNode.attachChild(obj);
-    }
-  }
    
   /**
    * Enables alpha blending for the whole board.
    */
-  def setupBlending : Unit = {
+  def setupBlending() = {
     // Blending
     
     val alphaState = DisplaySystem.getDisplaySystem.getRenderer.createBlendState
@@ -88,7 +82,7 @@ class BoardController extends BasicGameStateNode[GameStateNode[_]]("game board")
   /**
    * Adds a specular highlighting point light.
    */
-  def addHighlights : Unit = {
+  def addHighlights() = {
     val ls = DisplaySystem.getDisplaySystem.getRenderer.createLightState
 
     val spec = new PointLight
