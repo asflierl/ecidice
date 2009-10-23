@@ -27,7 +27,7 @@
 
 repositories.remote << 'http://www.ibiblio.org/maven2/'
 
-JME = [:jme, :lwjgl, :jorbis].map { |lib| Dir["lib/#{lib}/*.jar"] } 
+JME = %w[jme lwjgl jorbis].map { |lib| Dir["lib/#{lib}/*.jar"] } 
 
 SPECS = struct(
   :specs => 'org.scala-tools.testing:specs:jar:1.6.0',
