@@ -40,7 +40,7 @@ package ecidice.model
  * @param content what's in this space
  */
 class Space(val tile: Tile) {
-  private var state : State = Empty
+  private var state: State = Empty
   
   def isFloor = (this == tile.floor)  
   def isRaised = (this == tile.raised)

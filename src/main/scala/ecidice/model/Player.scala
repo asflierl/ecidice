@@ -30,7 +30,7 @@
 package ecidice.model
 
 class Player(spawnPoint: Tile) {
-  private var state : State = Standing(spawnPoint)
+  private var state: State = Standing(spawnPoint)
   
   def isStanding = state.isInstanceOf[Standing]
   def isController = state.isInstanceOf[Controlling]

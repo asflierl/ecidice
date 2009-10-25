@@ -55,7 +55,7 @@ object Main extends Logging {
    */
   def main(args: Array[String]) {
     val settings = new PreferencesGameSettings(Preferences.userRoot().node(
-        Localizer.translate.appName));
+        Localizer.translate.appName))
 
     try {
       if (GameSettingsPanel.prompt(settings, Localizer.translate.appName)
@@ -73,13 +73,13 @@ object Main extends Logging {
     val game = new StandardGame(Localizer.translate.appName,
                                 StandardGame.GameType.GRAPHICAL, settings)
 
-    game.start();
-    game.setUncaughtExceptionHandler(Terminator);
+    game.start()
+    game.setUncaughtExceptionHandler(Terminator)
     
-    val worldController = new WorldController(game);
-    GameStateManager.getInstance().attachChild(worldController);
-    MouseInput.get().setCursorVisible(true);
-    worldController.setActive(true);
+    val worldController = new WorldController(game)
+    GameStateManager.getInstance().attachChild(worldController)
+    MouseInput.get.setCursorVisible(true)
+    worldController.setActive(true)
   }
   
   /**

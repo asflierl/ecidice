@@ -30,8 +30,8 @@
 package ecidice.model
 
 final class DiceGroup private {
-  private var state : DiceGroup.State = _
-  private var diceSet : Set[Dice] = Set.empty[Dice]
+  private var state: DiceGroup.State = _
+  private var diceSet: Set[Dice] = Set.empty[Dice]
   
   private def init(state: DiceGroup.State, dice: Set[Dice]) = {
     this.state = state

@@ -47,7 +47,7 @@ class FloatDecorator(wrapped: Float) {
   def to(max: Float) = {
     object ContinuousStream {
       def step(by: Float) = {
-        def seq(now: Float) : Stream[Float] = 
+        def seq(now: Float): Stream[Float] = 
           if (Math.abs(now) >= Math.abs(max)) Stream.cons(max, Stream.empty) 
           else Stream.cons(now, seq(now + by))
         

@@ -48,7 +48,7 @@ package ecidice.model
  * @author Andreas Flierl
  */
 class ControlReferee {
-  private var player : Player = _
+  private var player: Player = _
   
   /**
    * Requests for this player to gain control over the dice below her.
@@ -60,7 +60,7 @@ class ControlReferee {
    * @return the dice that is under the control of the player now or 
    *         <code>None</code>
    */
-  def requestControl(player: Player) : Option[Dice] = {
+  def requestControl(player: Player): Option[Dice] = {
     this.player = player
     
     if (player.isStanding) requestControlOnTile(player.location)

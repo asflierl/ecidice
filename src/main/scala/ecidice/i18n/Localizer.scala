@@ -36,7 +36,7 @@ package ecidice.i18n
  * @see Localization
  */
 object Localizer {
-  @volatile private var loc : Localization = English
+  @volatile private var loc: Localization = English
   
   /**
    * Returns the current localization (default English).
@@ -48,7 +48,7 @@ object Localizer {
    * 
    * @param loc the localization to set as the current one
    */
-  def setLocalization(loc : Localization) {
+  def setLocalization(loc: Localization) {
     this.loc = loc
   }
 }

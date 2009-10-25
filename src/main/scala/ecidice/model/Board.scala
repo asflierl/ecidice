@@ -71,7 +71,7 @@ class Board(val width: Int, val depth: Int) {
    * @param y the depth position (front to back)
    * @return the tile at the specified coordinates
    */
-  def apply(x: Int, y: Int) : Tile = {
+  def apply(x: Int, y: Int): Tile = {
     tileArr(x)(y)
   }
   
@@ -81,7 +81,7 @@ class Board(val width: Int, val depth: Int) {
    * @param p the position as a tuple (x, y)
    * @return the tile at the specified coordinates
    */
-  def apply(p: (Int, Int)) : Tile = apply(p._1, p._2)
+  def apply(p: (Int, Int)): Tile = apply(p._1, p._2)
   
   /**
    * Determines the position resulting from a movement from tile <code>t</code>
@@ -105,7 +105,7 @@ class Board(val width: Int, val depth: Int) {
    * @param y the depth position (front to back)
    * @return whether the specified position is within bounds
    */
-  def isWithinBounds(x: Int, y: Int) : Boolean = 
+  def isWithinBounds(x: Int, y: Int): Boolean = 
     (x >= 0 && x < width) && (y >= 0 && y < depth)
   
   /**
@@ -114,5 +114,5 @@ class Board(val width: Int, val depth: Int) {
    * @param p the position to examine as tuple (x, y)
    * @return whether the specified position is within bounds
    */
-  def isWithinBounds(p: (Int, Int)) : Boolean = isWithinBounds(p._1, p._2)
+  def isWithinBounds(p: (Int, Int)): Boolean = isWithinBounds(p._1, p._2)
 }

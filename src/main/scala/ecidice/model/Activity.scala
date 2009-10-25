@@ -35,7 +35,30 @@ package ecidice.model
  * @author Andreas Flierl
  */
 sealed abstract class Activity {
-  def time : Timespan
+  def time: Timespan
+}
+
+trait DiceAppearing extends Activity {
+  def dice: Dice
+  def location: Space
+}
+  
+trait DiceMovement extends Activity {
+  def dice: Dice
+  def origin: Space
+  def destination: Space 
+  def transform: Transform.Value
+  def controller: Player
+}
+                        
+trait DiceLock extends Activity {
+  def group: DiceGroup
+}
+
+trait PlayerMovement extends Activity {
+  def player: Player
+  def origin: Tile
+  def destination: Tile
 }
 
 object Activity {
@@ -44,35 +67,40 @@ object Activity {
   val CHARGE_DURATION = 10f
   val BURST_DURATION = 1f 
   
+  private case class DiceAppearingImpl(dice: Dice, location: Space, 
+    time: Timespan) extends DiceAppearing
+
+  private case class DiceMovementImpl(dice: Dice, origin: Space, 
+    destination: Space, transform: Transform.Value, controller: Player, 
+    time: Timespan) extends DiceMovement
+
+  private case class DiceLockImpl(group: DiceGroup, time: Timespan)
+    extends DiceLock
+
+  private case class PlayerMovementImpl(player: Player, origin: Tile, 
+    destination: Tile, time: Timespan) extends PlayerMovement
+  
   def on(clock: Clock) = {
     object Factory {
-      def diceAppearing(dice: Dice, location: Space) =
-        DiceAppearing(dice, location, Timespan(clock, APPEAR_DURATION))
+      def diceAppearing(dice: Dice, location: Space): DiceAppearing = 
+        DiceAppearingImpl(dice, location, Timespan(clock, APPEAR_DURATION))
       
       def diceMovement(dice: Dice, origin: Space, destination: Space, 
-          transform: Transform.Value, controller: Player) =
-        DiceMovement(dice, origin, destination, transform, controller,
-                     Timespan(clock, MOVE_DURATION))
+          transform: Transform.Value, controller: Player): DiceMovement =
+        DiceMovementImpl(dice, origin, destination, transform, controller,
+          Timespan(clock, MOVE_DURATION))
       
-      def diceLock(group: DiceGroup) =
-        DiceLock(group, Timespan(clock, CHARGE_DURATION))
+      def diceLock(group: DiceGroup): DiceLock =
+        DiceLockImpl(group, Timespan(clock, CHARGE_DURATION))
       
-      def playerMovement(player: Player, origin: Tile, destination: Tile) =
-        PlayerMovement(player, origin, destination, 
+      def playerMovement(player: Player, origin: Tile, destination: Tile)
+         : PlayerMovement =
+        PlayerMovementImpl(player, origin, destination, 
                        Timespan(clock, MOVE_DURATION))
     }
+    
+    
     Factory
   }
 }
 
-case class DiceAppearing(dice: Dice, location: Space, time: Timespan)
-  extends Activity
-  
-case class DiceMovement(dice: Dice, origin: Space, destination: Space, 
-                        transform: Transform.Value, controller: Player,
-                        time: Timespan) extends Activity
-                        
-case class DiceLock(group: DiceGroup, time: Timespan) extends Activity
-
-case class PlayerMovement(player: Player, origin: Tile, destination: Tile,
-                          time: Timespan) extends Activity

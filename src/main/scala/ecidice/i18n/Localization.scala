@@ -35,6 +35,6 @@ package ecidice.i18n
  * @author Andreas Flierl
  */
 trait Localization {
-  def appName : String
-  def windowTitle : String
+  def appName: String
+  def windowTitle: String
 }

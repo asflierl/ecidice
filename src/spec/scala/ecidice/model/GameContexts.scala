@@ -33,8 +33,8 @@ import org.specs.Specification
 import org.specs.specification.Context
 
 trait GameContexts extends Specification {
-  var board : Board = _
-  var game : Game = _
+  var board: Board = _
+  var game: Game = _
   
   val simpleGame = beforeContext {
     board = new Board(3, 3)
@@ -44,7 +44,7 @@ trait GameContexts extends Specification {
   def p1 = game.players(0)
   def p2 = game.players(1)
   
-  def placePlayer(player: Player, pos: (Int, Int)) : Unit =
+  def placePlayer(player: Player, pos: (Int, Int)): Unit =
     player.stand(board(pos))
   
   def within(ctx: Context)(action: => Any) = {
@@ -62,7 +62,7 @@ trait GameContexts extends Specification {
    * @param y the depth component of the position to place the dice
    * @return the newly created and placed dice
    */
-  def placeDice(pos: (Int, Int)) : Dice = {
+  def placeDice(pos: (Int, Int)): Dice = {
     val dice = new Dice
     val destinationSpace = findDestinationSpace(board(pos))
       

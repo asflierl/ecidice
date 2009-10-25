@@ -41,8 +41,9 @@ object UpdateMechanicsSpec extends SpecBase with GameContexts {
     
     "make the activity tracker forget finished activities" in {
       val s = board(0, 0)
-      val finished = PlayerMovement(p1, s, s, Timespan(game.clock, 0))      
-      val pending = PlayerMovement(p1, s, s, Timespan(game.clock, 10))
+      val finished = Activity.on(game.clock).playerMovement(p1, s, s)
+      game.clock.tick(Activity.MOVE_DURATION)
+      val pending = Activity.on(game.clock).playerMovement(p1, s, s)
 
       game.tracker.track(finished)
       game.tracker.track(pending)

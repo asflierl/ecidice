@@ -61,7 +61,7 @@ class Timespan private (clock: Clock, val start: Double, private val ttl: Double
     else (clock.now - start) / (end - start)
   
   override def equals(obj: Any) = obj match {
-    case x : Timespan => (x.start == start) && (x.ttl == ttl)
+    case x: Timespan => (x.start == start) && (x.ttl == ttl)
     case _ => false
   }
 

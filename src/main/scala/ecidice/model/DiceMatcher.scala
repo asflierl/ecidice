@@ -50,9 +50,9 @@ package ecidice.model
  * and BZ.
  */
 class DiceMatcher(board: Board) {
-  var src : Dice = _
+  var src: Dice = _
   
-  def find(src: Dice, start: Tile) : Set[Dice] = {
+  def find(src: Dice, start: Tile): Set[Dice] = {
     this.src = src
     findFromTile(start, Set(src))
   }
@@ -65,7 +65,7 @@ class DiceMatcher(board: Board) {
     res
   }
   
-  private def findFromDice(dice: Dice, group: Set[Dice]) : Set[Dice] =
+  private def findFromDice(dice: Dice, group: Set[Dice]): Set[Dice] =
     if (dice.top != src.top || group.contains(dice)) group
     else if (dice.isSolid && !dice.isControlled)
       findFromTile(dice.location.tile, group + dice)

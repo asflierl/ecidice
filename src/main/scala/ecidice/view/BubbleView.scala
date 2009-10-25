@@ -67,7 +67,7 @@ class BubbleView(row: Int, column: Int, maxindex: Int) extends Node("bubble") {
    * 
    * @return a new, transparent sphere
    */
-  def createSphere : Sphere = {
+  def createSphere: Sphere = {
     val sphere = new Sphere("BubbleView-%d-%d".format(row, column))
     
     val xpos = column * D - (maxindex - 1) * D / 2f

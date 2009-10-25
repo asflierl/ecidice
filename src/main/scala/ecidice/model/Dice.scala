@@ -61,7 +61,7 @@ final class Dice {
   /**
    * Holds the state of this dice in respect to the game rules.
    */
-  private var state : State = _
+  private var state: State = _
   
   def top = topFace  
   def bottom = opposite(topFace)
@@ -102,7 +102,7 @@ final class Dice {
   }
   
   override def equals(obj: Any) = obj match {
-    case other : Dice => other.serial == serial
+    case other: Dice => other.serial == serial
     case _ => false
   }
   
@@ -121,7 +121,7 @@ final class Dice {
   
   def isControlled = state match {
     case Solid(_, controller) if (controller != None) => true
-    case _ : Moving => true
+    case _: Moving => true
     case _ => false
   }
   
@@ -144,7 +144,7 @@ final class Dice {
   
   def controller = state match {
     case Solid(_, controller) if (controller != None) => controller.get
-    case Moving(DiceMovement(_, _, _, _, controller, _)) => controller
+    case Moving(movement) => movement.controller
     case _ => throw new IllegalStateException("dice is uncontrolled")
   }
   

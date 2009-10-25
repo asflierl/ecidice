@@ -38,13 +38,13 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   
   def update {
     val finishedActivities = tracker.activities.filter(_.time.isOver)
-    var diceMoves : List[DiceMovement] = Nil
+    var diceMoves: List[DiceMovement] = Nil
     
     finishedActivities.foreach(_ match {
-      case activity : DiceAppearing => diceAppeared(activity)
-      case activity : PlayerMovement => playerMovementEnded(activity) 
-      case activity : DiceLock => diceLocked(activity)
-      case activity : DiceMovement => diceMoves = activity :: diceMoves
+      case activity: DiceAppearing => diceAppeared(activity)
+      case activity: PlayerMovement => playerMovementEnded(activity) 
+      case activity: DiceLock => diceLocked(activity)
+      case activity: DiceMovement => diceMoves = activity:: diceMoves
     })
     
     diceMoves.foreach(diceMovementEnded(_))

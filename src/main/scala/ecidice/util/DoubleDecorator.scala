@@ -47,7 +47,7 @@ class DoubleDecorator(wrapped: Double) {
   def to(max: Double) = {
     object ContinuousStream {
       def step(by: Double) = {
-        def seq(now: Double) : Stream[Double] = 
+        def seq(now: Double): Stream[Double] = 
           if (Math.abs(now) >= Math.abs(max)) Stream.cons(max, Stream.empty) 
           else Stream.cons(now, seq(now + by))
         

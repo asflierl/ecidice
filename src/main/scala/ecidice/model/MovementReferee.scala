@@ -35,9 +35,9 @@ package ecidice.model
  * @author Andreas Flierl
  */
 class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
-  private var player : Player = _
-  private var direction : Direction.Value = _
-  private var dice : Dice = _
+  private var player: Player = _
+  private var direction: Direction.Value = _
+  private var dice: Dice = _
   
   /**
    * Requests for a player to move in direction <code>dir</code>.
@@ -49,7 +49,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
    * @param dir the direction the player wants to move in
    * @return whether the move was allowed (and started)
    */
-  def requestMove(player: Player, direction: Direction.Value) : Boolean = {
+  def requestMove(player: Player, direction: Direction.Value): Boolean = {
     this.player = player
     this.direction = direction
     
@@ -68,7 +68,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
    * move around.
    */
   private def requestPlayerMove(player: Player, direction: Direction.Value,
-      start: Tile) : Boolean = {
+      start: Tile): Boolean = {
     
     val destination = board.positionInDir(start, direction)
     if (! board.isWithinBounds(destination)) return false 
@@ -82,13 +82,13 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
    * it. This is only granted if the target position is within bounds and the
    * tile at that position is free to be moved to.
    */
-  private def requestDiceMove(player: Player, direction: Direction.Value) : Boolean = {
+  private def requestDiceMove(player: Player, direction: Direction.Value): Boolean = {
     if (dice.isSolid && player == dice.controller) tryToMoveFrom(dice.location)
     else if (dice.isMoving) wouldBeSameDiceMove(dice.movement)
     else false
   }
     
-  private def tryToMoveFrom(start: Space) : Boolean = {
+  private def tryToMoveFrom(start: Space): Boolean = {
     val position = board.positionInDir(start.tile, direction)
 
     if (! board.isWithinBounds(position)) return false
@@ -118,7 +118,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
     dice.move(move)
   }
   
-  private def findDestinationSpace(tile: Tile) : Option[Space] =
+  private def findDestinationSpace(tile: Tile): Option[Space] =
     if (tile.floor.isEmpty) Some(tile.floor)
     else if (tile.floor.isOccupied) examineOccupied(tile.floor.dice)
     else None

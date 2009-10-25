@@ -56,7 +56,7 @@ class Game(numPlayers: Int, val board: Board) {
    * Creates <code>num</code> players in this game, starting at the board's 
    * predefined spawn locations.
    */
-  private def createPlayers(num: Int) : List[Player] =
+  private def createPlayers(num: Int): List[Player] =
     if (num == numPlayers) Nil
     else new Player(board.spawnPoints(num)) :: createPlayers(num + 1)
   
