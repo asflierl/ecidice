@@ -82,11 +82,10 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
    * it. This is only granted if the target position is within bounds and the
    * tile at that position is free to be moved to.
    */
-  private def requestDiceMove(player: Player, direction: Direction.Value): Boolean = {
+  private def requestDiceMove(player: Player, direction: Direction.Value): Boolean =
     if (dice.isSolid && player == dice.controller) tryToMoveFrom(dice.location)
     else if (dice.isMoving) wouldBeSameDiceMove(dice.movement)
     else false
-  }
     
   private def tryToMoveFrom(start: Space): Boolean = {
     val position = board.positionInDir(start.tile, direction)

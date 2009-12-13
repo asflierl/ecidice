@@ -23,7 +23,7 @@
   <classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl_util_applet.jar"/>
   <classpathentry kind="lib" path="/opt/local/share/scala/lib/scala-compiler.jar"/>
   <classpathentry kind="lib" path="/opt/local/share/scala/lib/scala-library.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/scala-tools/testing/specs/1.6.0/specs-1.6.0.jar" sourcepath="M2_REPO/org/scala-tools/testing/specs/1.6.0/specs-1.6.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/scala-tools/testing/specs/1.6.1/specs-1.6.1.jar" sourcepath="M2_REPO/org/scala-tools/testing/specs/1.6.1/specs-1.6.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.8.0/mockito-all-1.8.0.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.8.0/mockito-all-1.8.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar" sourcepath="M2_REPO/asm/asm/1.5.3/asm-1.5.3-sources.jar"/>

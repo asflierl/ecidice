@@ -29,6 +29,23 @@
 
 package ecidice
 
-import org.specs.runner.JUnit4
+import org.specs.Specification
 
-class EcidiceJUnit4Suite extends JUnit4(CompositeSpec)
+object CompositeSpec extends Specification {
+  "ecidice".isSpecifiedBy(
+    model.BoardSpec,
+    model.ClockSpec,
+    model.ControlRefereeSpec,
+    model.DiceGroupSpec,
+    model.DiceMatcherSpec,
+    model.DiceSpec,
+    model.GameSpec,
+    model.MovementRefereeSpec,
+    model.TimespanSpec,
+    model.UpdateMechanicsSpec,
+    
+    util.DoubleDecoratorSpec,
+    util.FloatDecoratorSpec,
+    util.HashCodeSpec
+  )
+}

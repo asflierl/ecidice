@@ -188,35 +188,36 @@ final class Dice {
   /**
    * Supertype of a dice's possible states.
    */
-  sealed abstract class State
+  private sealed abstract class State
   
   /**
    * The dice is appearing. It can not be controlled nor moved. It occupies 
    * some space.
    */
-  case class Appearing(activity: DiceAppearing) extends State
+  private case class Appearing(activity: DiceAppearing) extends State
   
   /**
    * The dice is solid now. It can be controlled by a player. It occupies
    * some space.
    */
-  case class Solid(where: Space, controller: Option[Player]) extends State
+  private case class Solid(where: Space, controller: Option[Player])
+    extends State
   
   /**
    * The dice is moving. During movement, it is always controlled by a player.
    * The movement object defines the space occupied while moving.
    */
-  case class Moving(activity: DiceMovement) extends State
+  private case class Moving(activity: DiceMovement) extends State
     
   /**
    * The dice has been locked and is part of a dice group, i.e. it is either
    * charging or bursting. This state is always initiated by a player. The dice
    * occupies some space.
    */
-  case class Locked(initiator: Player, activity: DiceLock, where: Space)
+  private case class Locked(initiator: Player, activity: DiceLock, where: Space)
     extends State
   
-  case object Burst extends State
+  private case object Burst extends State
 }
 
 object Dice {

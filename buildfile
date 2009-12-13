@@ -33,4 +33,5 @@ ENV['USE_FSC'] = 'yes'
 define 'ecidice' do
   compile.with JME
   test.with SPECS
+  test.include 'ecidice.CompositeSpec$'
 end
