@@ -48,9 +48,9 @@ trait GameContexts extends Specification {
     player.stand(board(pos))
   
   def within(ctx: Context)(action: => Any) = {
-    ctx.beforeActions()
+    //ctx.beforeActions()
     action
-    ctx.afterActions()
+    //ctx.afterActions()
   }
   
   /**

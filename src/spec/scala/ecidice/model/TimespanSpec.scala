@@ -30,7 +30,7 @@
 package ecidice.model
 
 import org.specs._
-
+import ecidice.SpecBase
 import ecidice.util.Preamble._
 
 /**
@@ -77,7 +77,7 @@ object TimespanSpec extends SpecBase {
     
     "report the correct progress if the current time lies in the timespan" in {
       clock.tick(1d)
-      for (x <- 0d to 1d step .001d) {
+      for (x <- 0d to 1d by .001d) {
         ts.progress must beCloseTo(x, DOUBLE_DELTA)
         clock.tick(.001d)
       }

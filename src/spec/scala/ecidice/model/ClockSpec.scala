@@ -29,12 +29,14 @@
 
 package ecidice.model
 
+import ecidice.SpecBase
+
 /**
  * Informally specifies the clock model.
  * 
  * @author Andreas Flierl
  */
-object ClockSpec extends SpecBase {
+object ClockSpec extends ecidice.SpecBase {
   "A clock" should {
     val clock = new Clock
     

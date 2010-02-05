@@ -29,6 +29,8 @@
 
 package ecidice.util
 
+import ecidice.SpecBase
+
 object HashCodeSpec extends SpecBase {
   "The hash code object" should {
     "return a default value if no parameters are given" in {

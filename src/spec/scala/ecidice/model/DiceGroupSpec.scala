@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.SpecBase
+
 object DiceGroupSpec extends SpecBase {
   "A dice group" should {
     val clock = new Clock

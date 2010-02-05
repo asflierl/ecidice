@@ -61,7 +61,7 @@ class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
     else false
   }
   
-  def wouldBeSamePlayerMove(move: PlayerMovement) =
+  private def wouldBeSamePlayerMove(move: PlayerMovement) =
     (move.destination.pos == board.positionInDir(player.location, direction))
   
   /* This is the easy case: the player controls no dice and just wants to

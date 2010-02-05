@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.SpecBase
+
 /**
  * Spec-based tests of the board model.
  * 

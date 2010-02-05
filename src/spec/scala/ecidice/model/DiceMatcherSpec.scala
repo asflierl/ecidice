@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.SpecBase
+
 object DiceMatcherSpec extends SpecBase with GameContexts {
   def matcher = new DiceMatcher(board)
   

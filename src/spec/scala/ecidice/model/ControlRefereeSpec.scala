@@ -29,6 +29,7 @@
 
 package ecidice.model
 
+import ecidice.SpecBase
 import org.specs.ScalaCheck
 
 /**

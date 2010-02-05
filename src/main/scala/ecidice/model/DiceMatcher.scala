@@ -59,7 +59,7 @@ class DiceMatcher(board: Board) {
   
   private def findFromTile(t: Tile, g: Set[Dice]) = {
     var res = g
-    Direction.elements.foreach(
+    Direction.values.foreach(
       diceInDir(t, _, Tile.Level.FLOOR).foreach( 
         (next) => res = findFromDice(next, res)))
     res

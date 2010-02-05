@@ -45,9 +45,7 @@ class Clock {
     reactions.foreach(_())
   }
   
-  def addReaction(r: Reaction) = 
-    reactions += r
+  def addReaction(r: Reaction) = (reactions += r)
   
-  def removeReaction(r: Reaction) =
-    reactions -= r
+  def removeReaction(r: Reaction) = (reactions -= r)
 }

@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.SpecBase
+
 /**
  * 
  * 
@@ -40,7 +42,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
   "The movement referee" ->-(simpleGame) should {
  
     "allow a player in the center to move in all directions" in {
-      Direction.elements.foreach((dir) => within (simpleGame) {
+      Direction.values.foreach((dir) => within (simpleGame) {
         placePlayer(p1, (1, 1))
         
         val request = "movement request: " + dir
@@ -59,7 +61,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
       (2, 2)            ! (Direction.FORWARD, Direction.LEFT)     | {  
         
       (corner, allowed) =>
-        for (dir <- Direction.elements) {
+        for (dir <- Direction.values) {
           placePlayer(p1, corner)
           game.movementReferee.requestMove(p1, dir) must be (dir == allowed._1 || dir == allowed._2)
         }
@@ -75,7 +77,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
       (2, 1)          ! Direction.RIGHT                 | {
         
       (pos, disallowed) =>
-        for (dir <- Direction.elements) {
+        for (dir <- Direction.values) {
           placePlayer(p1, pos)
           val correct = (dir != disallowed)
           game.movementReferee.requestMove(p1, dir) must be (correct)
@@ -85,7 +87,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
     }
     
     "allow a player to move in any direction with a floor dice from the center" in {
-      for (somewhere <- Direction.elements) within (simpleGame) {
+      for (somewhere <- Direction.values) within (simpleGame) {
         placePlayer(p1, (1, 1))
         val d1 = placeDice(1, 1)
         
@@ -95,7 +97,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
     }
     
     "allow a player to move in any direction with an upper dice from the center" in {
-      for (somewhere <- Direction.elements) {
+      for (somewhere <- Direction.values) {
         placePlayer(p1, (1, 1))
         placeDice(1, 1)
         val d1 = placeDice(1, 1)

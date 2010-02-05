@@ -37,5 +37,4 @@ package ecidice.util
  */
 object Preamble {
   implicit def decorateFloat(f: Float) = new FloatDecorator(f)
-  implicit def decorateDouble(d: Double) = new DoubleDecorator(d)
 }
