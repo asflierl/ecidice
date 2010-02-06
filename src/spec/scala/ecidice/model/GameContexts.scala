@@ -36,7 +36,14 @@ trait GameContexts extends Specification {
   var board: Board = _
   var game: Game = _
   
-  val simpleGame = beforeContext {
+  class SimpleContext(act: => Any) {
+    def beforeAction = act
+  }
+  
+  implicit def SimpleToSpecsContext(simple: SimpleContext) =
+    beforeContext { simple.beforeAction() }
+  
+  val simpleGame = new SimpleContext {
     board = new Board(3, 3)
     game = new Game(2, board)
   }
@@ -47,10 +54,9 @@ trait GameContexts extends Specification {
   def placePlayer(player: Player, pos: (Int, Int)): Unit =
     player.stand(board(pos))
   
-  def within(ctx: Context)(action: => Any) = {
-    //ctx.beforeActions()
+  def within(ctx: SimpleContext)(action: => Any) = {
+    ctx.beforeAction()
     action
-    //ctx.afterActions()
   }
   
   /**
