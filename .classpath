@@ -5,25 +5,6 @@
 	<classpathentry excluding="**/.svn/|**/CVS/" kind="src" path="src/main/scala"/>
 	<classpathentry kind="src" path="src/spec/scala"/>
 	<classpathentry kind="lib" path="lib/specs/scalacheck_2.8.0.Beta1-RC5-1.7-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-audio.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-awt.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-collada.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-colladabinding.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-editors.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-effects.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-font.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-gamestates.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-model.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-ogrexml.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-scene.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-terrain.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme-xml.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jme/jme.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/jorbis/jorbis-0.0.17.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/jinput.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="/Users/i0n/Documents/workspace/ecidice/lib/lwjgl/lwjgl_util_applet.jar"/>
 	<classpathentry kind="lib" path="lib/specs/specs_2.8.0.Beta1-1.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/specs/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/specs/asm-3.0.jar"/>
@@ -31,5 +12,24 @@
 	<classpathentry kind="lib" path="lib/specs/com.springsource.org.objenesis-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/specs/hamcrest-library-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/specs/mockito-all-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-audio.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-awt.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-collada.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-colladabinding.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-editors.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-effects.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-font.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-gamestates.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-model.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-ogrexml.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-scene.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-terrain.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme-xml.jar"/>
+	<classpathentry kind="lib" path="lib/jme/jme.jar"/>
+	<classpathentry kind="lib" path="lib/jorbis/jorbis-0.0.17.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
