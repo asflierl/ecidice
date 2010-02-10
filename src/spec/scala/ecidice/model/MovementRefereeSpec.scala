@@ -42,14 +42,16 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
   "The movement referee" ->-(simpleGame) should {
  
     "allow a player in the center to move in all directions" in {
-      Direction.values.foreach((dir) => within (simpleGame) {
-        placePlayer(p1, (1, 1))
+      for (dir <- Direction.values) {
+        "from the center " + dir >> {
+          placePlayer(p1, (1, 1))
         
-        val request = "movement request: " + dir
-        game.movementReferee.requestMove(p1, dir) aka request must beTrue
-        
-        p1.isMoving must beTrue
-      })
+          val request = "movement request: " + dir
+          game.movementReferee.requestMove(p1, dir) aka request must beTrue
+          
+          p1.isMoving must beTrue
+        }
+      }
     }
     
     "correctly handle player movement in the corners" in {
@@ -87,23 +89,28 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
     }
     
     "allow a player to move in any direction with a floor dice from the center" in {
-      for (somewhere <- Direction.values) within (simpleGame) {
-        placePlayer(p1, (1, 1))
-        val d1 = placeDice(1, 1)
-        
-        game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
-        game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+      for (somewhere <- Direction.values) {
+        "from the center " + somewhere >> {
+          placePlayer(p1, (1, 1))
+          val d1 = placeDice(1, 1)
+          
+          game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+          game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+          d1.movement.destination.isFloor must beTrue
+        }
       }
     }
     
     "allow a player to move in any direction with an upper dice from the center" in {
       for (somewhere <- Direction.values) {
-        placePlayer(p1, (1, 1))
-        placeDice(1, 1)
-        val d1 = placeDice(1, 1)
-        
-        game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
-        game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+        "from the center " + somewhere >> {
+          placePlayer(p1, (1, 1))
+          placeDice(1, 1)
+          val d1 = placeDice(1, 1)
+          
+          game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+          game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+        }
       }
     }
     

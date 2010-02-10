@@ -36,28 +36,16 @@ trait GameContexts extends Specification {
   var board: Board = _
   var game: Game = _
   
-  class SimpleContext(act: => Any) {
-    def beforeAction = act
-  }
-  
-  implicit def SimpleToSpecsContext(simple: SimpleContext) =
-    beforeContext { simple.beforeAction() }
-  
-  val simpleGame = new SimpleContext {
+  val simpleGame = beforeContext {
     board = new Board(3, 3)
     game = new Game(2, board)
-  }
+  } 
   
   def p1 = game.players(0)
   def p2 = game.players(1)
   
   def placePlayer(player: Player, pos: (Int, Int)): Unit =
     player.stand(board(pos))
-  
-  def within(ctx: SimpleContext)(action: => Any) = {
-    ctx.beforeAction()
-    action
-  }
   
   /**
    * Helper method that creates a new dice and places it at the topmost 
