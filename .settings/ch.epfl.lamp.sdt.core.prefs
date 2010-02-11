@@ -1,4 +1,4 @@
-#Fri Feb 05 23:56:12 CET 2010
+#Thu Feb 11 23:09:35 CET 2010
 <file>=false
 Xcheck-null=false
 Xcheckinit=false
@@ -13,7 +13,7 @@ Xwarninit=false
 Yclosure-elim=false
 Ydead-code=false
 Ydetach=false
-Yinline=true
+Yinline=false
 Ylinearizer=rpo
 Yno-generic-signatures=false
 Yno-imports=false

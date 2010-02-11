@@ -1,0 +1,17 @@
+ecidice
+-------
+
+How to build:
+ - Java JDK 6 installed, JAVA_HOME env variable pointing to it
+ - Scala 2.8.x installed, SCALA_HOME env variable pointing to it
+ - (buildr 1.3.x installed and in your PATH)  <-- does not work currently
+   instead:
+   Eclipse 3.5.x, with the Scala 2.8 and the eGit plug-ins:
+    + the .project and .classpath files as well as the .settings dir are 
+      provided
+    + import the base dir into Eclipse as Scala Project
+    + EcidiceJUnit4Suite.launch is a run configuration for the specs-based tests
+    + ecidice.Main.launch runs the main class, configured (native libs) 
+      for Mac OS X. You can duplicate this config and alter the copy if you want
+      to run on another OS.
+    

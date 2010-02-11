@@ -32,8 +32,9 @@ package ecidice
 import org.specs._
 import org.specs.util._
 import org.specs.mock.Mockito
+import org.specs.ScalaCheck
 
-trait SpecBase extends Specification with DataTables with Mockito {
+trait SpecBase extends Specification with DataTables with Mockito with ScalaCheck {
   val FLOAT_DELTA = 1E-6f
   val DOUBLE_DELTA = 1E-12d
   
