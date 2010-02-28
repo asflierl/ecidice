@@ -29,18 +29,18 @@
 
 package ecidice
 
-import com.jme.input.MouseInput;
-import com.jmex.editors.swing.settings.GameSettingsPanel;
-import com.jmex.game.StandardGame;
-import com.jme.app.AbstractGame;
-import com.jme.system.PreferencesGameSettings;
-import com.jmex.game.state.GameStateManager;
+import com.jme.input.MouseInput
+import com.jmex.editors.swing.settings.GameSettingsPanel
+import com.jmex.game.StandardGame
+import com.jme.app.AbstractGame
+import com.jme.system.PreferencesGameSettings
+import com.jmex.game.state.GameStateManager
 
-import ecidice.controller.WorldController;
-import ecidice.i18n.Localizer;
-import ecidice.util.Logging;
+import ecidice.controller.WorldController
+import ecidice.i18n.L10n
+import ecidice.util.Logging
 
-import java.util.prefs.Preferences;
+import java.util.prefs.Preferences
 
 /**
  * The application's entry point object.
@@ -55,10 +55,10 @@ object Main extends Logging {
    */
   def main(args: Array[String]) {
     val settings = new PreferencesGameSettings(Preferences.userRoot().node(
-        Localizer.translate.appName))
+        L10n.of.appName))
 
     try {
-      if (GameSettingsPanel.prompt(settings, Localizer.translate.appName)
+      if (GameSettingsPanel.prompt(settings, L10n.of.appName)
           == false) {
         Logger.info("game startup cancelled")
         return
@@ -70,7 +70,7 @@ object Main extends Logging {
       }
     }
 
-    val game = new StandardGame(Localizer.translate.appName,
+    val game = new StandardGame(L10n.of.appName,
                                 StandardGame.GameType.GRAPHICAL, settings)
 
     game.start()
@@ -83,13 +83,12 @@ object Main extends Logging {
   }
   
   /**
-   * Handler for uncaught exceptions in JME threads.  Logs the exception and
-   * terminates the program.
+   * Handler for uncaught exceptions in JME threads.
    */
   private object Terminator extends Thread.UncaughtExceptionHandler {
     def uncaughtException(thread: Thread, thrown: Throwable) {
-      Logger.severe("uncaught exception in thread " + thread, thrown);
-      System.exit(1);
+      Logger.severe("uncaught exception in thread " + thread, thrown)
+      System.exit(1)
     }
   }
 }

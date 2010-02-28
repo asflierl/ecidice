@@ -34,7 +34,7 @@ package ecidice.i18n
  * 
  * @author Andreas Flierl
  */
-object English extends Localization {
-  def appName = "ecidice"
-  def windowTitle = "ecidice - a game by Andreas Flierl"
+object English extends L10n {
+  val appName = "ecidice"
+  val windowTitle = "ecidice - a game by Andreas Flierl"
 }
