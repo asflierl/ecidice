@@ -5,7 +5,6 @@
 	<classpathentry excluding="**/.svn/|**/CVS/" kind="src" path="src/main/scala"/>
 	<classpathentry kind="src" path="src/spec/scala"/>
 	<classpathentry kind="lib" path="lib/specs/scalacheck_2.8.0.Beta1-RC5-1.7-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/specs/specs_2.8.0.Beta1-1.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/specs/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/specs/asm-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/specs/cglib-nodep-2.1_3.jar"/>
@@ -31,5 +30,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util_applet.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/specs/specs_2.8.0.Beta1-1.6.4-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

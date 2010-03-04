@@ -68,10 +68,9 @@ class ControlReferee {
     else None
   }
     
-  private def requestControlOnTile(tile: Tile) = {
+  private def requestControlOnTile(tile: Tile) =
     if (tile.raised.isEmpty) requestControlInSpace(tile.floor)
     else requestControlInSpace(tile.raised) 
-  }
   
   private def requestControlInSpace(space: Space) =
     if (space.isOccupied) requestControlOverDice(space.dice)
