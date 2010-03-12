@@ -90,15 +90,18 @@ final class Dice {
    * 
    * @param how the transform to apply
    */
-  def change(how: Transform.Value) = how match {
-    case Transform.ROTATE_BACKWARD => set(front, right, bottom)
-    case Transform.ROTATE_FORWARD => set(back, right, top)
-    case Transform.ROTATE_RIGHT => set(left, top, front)
-    case Transform.ROTATE_LEFT => set(right, bottom, front)
-    case Transform.SPIN_CLOCKWISE => set(top, back, right)
-    case Transform.SPIN_COUNTERCLOCKWISE => set(top, front, left)
-    case Transform.FLIP_UP_OR_DOWN => set(bottom, right, back)
-    case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
+  def change(how: Transform.Value) = {
+    how match {
+      case Transform.ROTATE_BACKWARD => set(front, right, bottom)
+      case Transform.ROTATE_FORWARD => set(back, right, top)
+      case Transform.ROTATE_RIGHT => set(left, top, front)
+      case Transform.ROTATE_LEFT => set(right, bottom, front)
+      case Transform.SPIN_CLOCKWISE => set(top, back, right)
+      case Transform.SPIN_COUNTERCLOCKWISE => set(top, front, left)
+      case Transform.FLIP_UP_OR_DOWN => set(bottom, right, back)
+      case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
+    }
+    this
   }
   
   override def equals(obj: Any) = obj match {

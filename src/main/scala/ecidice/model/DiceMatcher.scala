@@ -33,7 +33,8 @@ package ecidice.model
  * Finds and returns all dice (including <code>src</code>) that show the same 
  * top face as <code>src</code> and that are reachable from <code>src</code>
  * via other such dice (by only moving up, down, left or right once or 
- * several times). Only solid dice that are uncontrolled are considered.
+ * several times). Only solid dice that are uncontrolled and on the floor
+ * level are considered.
  * <p>
  * As an example consider the following 3 x 3 board:
  * <pre>

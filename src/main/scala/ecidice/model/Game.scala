@@ -45,12 +45,12 @@ import scala.collection.immutable._
 //TODO when do new dice spawn?
 //TODO take tile visibility into account
 class Game(numPlayers: Int, val board: Board) {
-  lazy val players = createPlayers(0)
-  val clock = new Clock
-  val tracker = new ActivityTracker
-  val updateMechanics = new UpdateMechanics(board, clock, tracker)
-  val movementReferee = new MovementReferee(board, clock, tracker)
-  val controlReferee = new ControlReferee
+  private[model] lazy val players = createPlayers(0)
+  private[model] val clock = new Clock
+  private[model] val tracker = new ActivityTracker
+  private[model] val updateMechanics = new UpdateMechanics(board, clock, tracker)
+  private[model] val movementReferee = new MovementReferee(board, clock, tracker)
+  private[model] val controlReferee = new ControlReferee
   
   /**
    * Creates <code>num</code> players in this game, starting at the board's 

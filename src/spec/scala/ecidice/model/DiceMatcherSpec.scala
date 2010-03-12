@@ -37,14 +37,14 @@ object DiceMatcherSpec extends SpecBase with GameContexts {
   "A dice matcher" ->-(simpleGame) should {
     
     "correctly find a group of matching dice" in {
-      val d = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
-      d(8).change(Transform.ROTATE_FORWARD)
-      d(4).change(Transform.ROTATE_FORWARD)
+      val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+      dice(8).change(Transform.ROTATE_FORWARD)
+      dice(4).change(Transform.ROTATE_FORWARD)
       
-      val inc = d.filter(_.top == 6)
-      val exc = d.filter(_.top != 6)
+      val inc = dice.filter(_.top == 6)
+      val exc = dice.filter(_.top != 6)
       
-      val searchResult = matcher.find(d(0), board(0, 0))
+      val searchResult = matcher.find(dice(0), board(0, 0))
       
       inc.foreach(searchResult must contain(_))
       exc.foreach(searchResult must not contain(_))
@@ -55,8 +55,7 @@ object DiceMatcherSpec extends SpecBase with GameContexts {
       val d10 = placeDice(1, 0)
       val d02 = placeDice(0, 2)
       val d12 = placeDice(1, 2)
-      val d11 = placeDice(1, 1)
-      d11.change(Transform.ROTATE_LEFT)
+      val d11 = placeDice(1, 1).change(Transform.ROTATE_LEFT)
       
       val s = matcher.find(d12, board(1, 2))
       
