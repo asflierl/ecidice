@@ -29,15 +29,4 @@
 
 package ecidice.model.dice
 
-import ecidice.model.DiceAppearing
-
-class AppearingDice protected (
-    factory: AppearingDice => DiceAppearing,
-    rotation: Rotation,
-    serial: Int)
-  extends Dice[AppearingDice](rotation, serial)
-{
-  lazy val appearing = factory(this)
-  
-  protected def create(rotation: Rotation) = new AppearingDice(factory, rotation, serial)
-}
+case class Rotation(top: Int, right: Int, front: Int)
