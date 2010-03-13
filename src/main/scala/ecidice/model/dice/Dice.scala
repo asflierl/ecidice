@@ -48,9 +48,6 @@ import ecidice.util._
  *  4
  * </pre>
  * to sufficiently describe the rotation of the dice.
- * <p>
- * This class is final because it is not designed for extension through 
- * inheritance (esp. considering equals(Any)).
  * 
  * @author Andreas Flierl
  */
@@ -83,12 +80,12 @@ abstract class Dice [A <: Dice[_]] protected (
     }
   }
   
-  override def equals(obj: Any) = obj match {
+  override final def equals(obj: Any) = obj match {
     case other: Dice[_] => other.serial == serial
     case _ => false
   }
   
-  override def hashCode = HashCode(serial)
+  override final lazy val hashCode = HashCode(serial)
   
   override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, right, front)
 }

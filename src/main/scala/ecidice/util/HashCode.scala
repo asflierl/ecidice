@@ -37,6 +37,6 @@ package ecidice.util
 object HashCode {
   def apply(l: Any*): Int =
     if (l.isEmpty) 42
-    else if (l.length == 1) 17 + l(0).hashCode
-    else ((17 + l(0).hashCode) /: l.drop(1))(_ * 41 + _.hashCode)
+    else if (l.length == 1) 17 + l.head.hashCode
+    else ((17 + l.head.hashCode) /: l.tail)(_ * 41 + _.hashCode)
 }
