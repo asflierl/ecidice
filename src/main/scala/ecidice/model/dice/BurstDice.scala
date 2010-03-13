@@ -29,16 +29,7 @@
 
 package ecidice.model.dice
 
-import ecidice.model._
-
-/**
- * A solid dice that occupies some space.
- */
-class SolidDice protected (
-    location: Space,
-    rot: Rotation,
-    ser: Long) 
-  extends Dice[SolidDice](rot, ser)
-{
-  protected def create(rotation: Rotation) = new SolidDice(location, rotation, serial)
+class BurstDice protected (rot: Rotation, ser: Long)
+    extends Dice[BurstDice](rot, ser) {
+  protected def create(rotation: Rotation) = new BurstDice(rotation, serial)
 }

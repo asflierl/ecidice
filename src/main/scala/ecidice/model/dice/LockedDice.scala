@@ -31,6 +31,11 @@ package ecidice.model.dice
 
 import ecidice.model._
 
+/**
+ * The dice has been locked and is part of a dice group, i.e. it is either
+ * charging or bursting. This state is always initiated by a player. The dice
+ * occupies some space.
+ */
 class LockedDice protected (
     factory: LockedDice => DiceLock,
     rot: Rotation,

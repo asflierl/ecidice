@@ -31,6 +31,9 @@ package ecidice.model.dice
 
 import ecidice.model.DiceAppearing
 
+/**
+ * A dice that is appearing that already occupies some space.
+ */
 class AppearingDice protected (
     factory: AppearingDice => DiceAppearing,
     rotation: Rotation,

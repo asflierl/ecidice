@@ -31,6 +31,9 @@ package ecidice.model.dice
 
 import ecidice.model._
 
+/**
+ * A solid dice that occupies some space, controlled by a player.
+ */
 class SolidControlledDice protected (
     val location: Space,
     val controller: Player,

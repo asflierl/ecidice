@@ -31,6 +31,10 @@ package ecidice.model.dice
 
 import ecidice.model.DiceMovement
 
+/**
+ * The dice is moving. During movement, it is always controlled by a player and 
+ * occupies 2 spaces (origin and destination) during movement.
+ */
 class MovingDice protected (
     factory: MovingDice => DiceMovement,
     rot: Rotation,

@@ -193,30 +193,13 @@ final class Dice {
    */
   private sealed abstract class State
   
-  /**
-   * The dice is appearing. It can not be controlled nor moved. It occupies 
-   * some space.
-   */
   private case class Appearing(activity: DiceAppearing) extends State
   
-  /**
-   * The dice is solid now. It can be controlled by a player. It occupies
-   * some space.
-   */
   private case class Solid(where: Space, controller: Option[Player])
     extends State
   
-  /**
-   * The dice is moving. During movement, it is always controlled by a player.
-   * The movement object defines the space occupied while moving.
-   */
   private case class Moving(activity: DiceMovement) extends State
-    
-  /**
-   * The dice has been locked and is part of a dice group, i.e. it is either
-   * charging or bursting. This state is always initiated by a player. The dice
-   * occupies some space.
-   */
+  
   private case class Locked(initiator: Player, activity: DiceLock, where: Space)
     extends State
   
