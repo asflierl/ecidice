@@ -35,8 +35,11 @@ package ecidice.util
  * @author Andreas Flierl
  */
 object HashCode {
-  def apply(l: Any*): Int =
-    if (l.isEmpty) 42
-    else if (l.length == 1) 17 + l.head.hashCode
-    else ((17 + l.head.hashCode) /: l.tail)(_ * 41 + _.hashCode)
+  def apply(args: Any*): Int =
+    if (args.isEmpty) 42
+    else if (args.length == 1) start(args)
+    else (start(args) /: args.tail)(combine)
+    
+  private def start(args: Any*): Int = 17 + args.head.hashCode
+  private def combine(left: Int, right: Any): Int = left * 41 + right.hashCode 
 }
