@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.model.dice._
+
 /**
  * Indicates that a game event is timed and needs to be tracked/managed.
  * 
@@ -39,12 +41,12 @@ sealed abstract class Activity {
 }
 
 trait DiceAppearing extends Activity {
-  def dice: Dice
+  def dice: AppearingDice
   def location: Space
 }
   
 trait DiceMovement extends Activity {
-  def dice: Dice
+  def dice: MovingDice
   def origin: Space
   def destination: Space 
   def transform: Transform.Value
@@ -67,10 +69,10 @@ object Activity {
   val CHARGE_DURATION = 10f
   val BURST_DURATION = 1f 
   
-  private case class DiceAppearingImpl(dice: Dice, location: Space, 
+  private case class DiceAppearingImpl(dice: AppearingDice, location: Space, 
     time: Timespan) extends DiceAppearing
 
-  private case class DiceMovementImpl(dice: Dice, origin: Space, 
+  private case class DiceMovementImpl(dice: MovingDice, origin: Space, 
     destination: Space, transform: Transform.Value, controller: Player, 
     time: Timespan) extends DiceMovement
 
@@ -82,10 +84,10 @@ object Activity {
   
   def on(clock: Clock) = {
     object Factory {
-      def diceAppearing(dice: Dice, location: Space): DiceAppearing = 
+      def diceAppearing(dice: AppearingDice, location: Space): DiceAppearing = 
         DiceAppearingImpl(dice, location, Timespan(clock, APPEAR_DURATION))
       
-      def diceMovement(dice: Dice, origin: Space, destination: Space, 
+      def diceMovement(dice: MovingDice, origin: Space, destination: Space, 
           transform: Transform.Value, controller: Player): DiceMovement =
         DiceMovementImpl(dice, origin, destination, transform, controller,
           Timespan(clock, MOVE_DURATION))

@@ -44,4 +44,12 @@ class MovingDice protected (
   lazy val movement = factory(this)
   
   protected def create(rotation: Rotation) = new MovingDice(factory, rotation, serial)
+  
+  def origin = movement.origin
+  def destination = movement.destination
+  def controller = movement.controller
+  def transform = movement.transform
+  
+  def stop = new SolidControlledDice(controller, destination, 
+      rotationAfterTransform(transform), serial)
 }

@@ -52,8 +52,8 @@ import ecidice.util._
  * @author Andreas Flierl
  */
 abstract class Dice [A <: Dice[_]] protected (
-    rotation: Rotation,
-    private[dice] val serial: Long) 
+    protected val rotation: Rotation,
+    protected val serial: Long) 
 { this: A =>
   
   def top = rotation.top
@@ -67,16 +67,18 @@ abstract class Dice [A <: Dice[_]] protected (
   
   protected def create(newRotation: Rotation): A
   
-  def change(how: Transform.Value) = {
+  def transform(how: Transform.Value) = create(rotationAfterTransform(how))
+  
+  protected def rotationAfterTransform(how: Transform.Value) = {
     how match {
-      case Transform.ROTATE_BACKWARD => create(Rotation(front, right, bottom))
-      case Transform.ROTATE_FORWARD => create(Rotation(back, right, top))
-      case Transform.ROTATE_RIGHT => create(Rotation(left, top, front))
-      case Transform.ROTATE_LEFT => create(Rotation(right, bottom, front))
-      case Transform.SPIN_CLOCKWISE => create(Rotation(top, back, right))
-      case Transform.SPIN_COUNTERCLOCKWISE => create(Rotation(top, front, left))
-      case Transform.FLIP_UP_OR_DOWN => create(Rotation(bottom, right, back))
-      case Transform.FLIP_LEFT_OR_RIGHT => create(Rotation(bottom, left, front))
+      case Transform.ROTATE_BACKWARD => Rotation(front, right, bottom)
+      case Transform.ROTATE_FORWARD => Rotation(back, right, top)
+      case Transform.ROTATE_RIGHT => Rotation(left, top, front)
+      case Transform.ROTATE_LEFT => Rotation(right, bottom, front)
+      case Transform.SPIN_CLOCKWISE => Rotation(top, back, right)
+      case Transform.SPIN_COUNTERCLOCKWISE => Rotation(top, front, left)
+      case Transform.FLIP_UP_OR_DOWN => Rotation(bottom, right, back)
+      case Transform.FLIP_LEFT_OR_RIGHT => Rotation(bottom, left, front)
     }
   }
   
@@ -99,5 +101,7 @@ object Dice {//TODO not thread-safe, might need a fix in the context of more thr
     before
   }
   
-//  def appear()
+  def appear(clock: Clock, location: Space) = new AppearingDice(
+      (d: AppearingDice) => Activity.on(clock).diceAppearing(d, location),
+      Rotation(6, 5, 4), nextSerial)
 }

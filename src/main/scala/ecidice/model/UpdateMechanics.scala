@@ -30,6 +30,7 @@
 package ecidice.model
 
 import ecidice.util.NotYetImplementedException
+import ecidice.model.dice._
 
 class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   private val diceMatcher = new DiceMatcher(board)
@@ -53,7 +54,7 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   }
   
   private def diceAppeared(affected: DiceAppearing) =
-    affected.dice.solidify(affected.location, None)
+    affected.dice.makeSolid
   
   private def diceMovementEnded(move: DiceMovement) = {
     move.dice.change(move.transform)

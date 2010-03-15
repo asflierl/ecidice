@@ -27,8 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model.player
 
-import ecidice.model.Transform
+import ecidice.model._
 
-case class Rotation(top: Int, right: Int, front: Int)
+class PlayerMovingWithDice(factory: PlayerMovingWithDice => DiceMovement) extends Player {
+  lazy val movement = factory(this)
+}

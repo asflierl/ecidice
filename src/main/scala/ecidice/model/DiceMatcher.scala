@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.model.dice._
+
 /**
  * Finds and returns all dice (including <code>src</code>) that show the same 
  * top face as <code>src</code> and that are reachable from <code>src</code>
@@ -51,26 +53,26 @@ package ecidice.model
  * and BZ.
  */
 class DiceMatcher(board: Board) {
-  var src: Dice = _
+  var src: SolidDice = _
   
-  def find(src: Dice, start: Tile): Set[Dice] = {
+  def find(src: SolidDice, start: Tile): Set[SolidDice] = {
     this.src = src
     findFromTile(start, Set(src))
   }
   
-  private def findFromTile(t: Tile, g: Set[Dice]) = {
+  private def findFromTile(t: Tile, g: Set[SolidDice]) = {
     var res = g
     Direction.values.foreach(
-      diceInDir(t, _, Tile.Level.FLOOR).foreach( 
-        (next) => res = findFromDice(next, res)))
+      diceInDir(t, _, Tile.Level.FLOOR).partialMap { 
+        case next: SolidDice => res = findFromDice(next, res)
+      }
+    )
     res
   }
   
-  private def findFromDice(dice: Dice, group: Set[Dice]): Set[Dice] =
+  private def findFromDice(dice: SolidDice, group: Set[SolidDice]): Set[SolidDice] =
     if (dice.top != src.top || group.contains(dice)) group
-    else if (dice.isSolid && !dice.isControlled)
-      findFromTile(dice.location.tile, group + dice)
-    else group
+    else findFromTile(dice.location.tile, group + dice)
   
   private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
     val pos = board.positionInDir(t, dir)

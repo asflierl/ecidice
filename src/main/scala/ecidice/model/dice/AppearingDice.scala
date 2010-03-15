@@ -36,11 +36,13 @@ import ecidice.model.DiceAppearing
  */
 class AppearingDice protected (
     factory: AppearingDice => DiceAppearing,
-    rotation: Rotation,
-    serial: Int)
-  extends Dice[AppearingDice](rotation, serial)
+    rot: Rotation,
+    ser: Long)
+  extends Dice[AppearingDice](rot, ser)
 {
   lazy val appearing = factory(this)
   
   protected def create(rotation: Rotation) = new AppearingDice(factory, rotation, serial)
+  
+  def makeSolid = new SolidDice(appearing.location, rotation, serial)
 }

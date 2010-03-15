@@ -29,32 +29,24 @@
 
 package ecidice.model
 
-final class DiceGroup private {
-  private var state: DiceGroup.State = _
-  private var diceSet: Set[Dice] = Set.empty[Dice]
-  
-  private def init(state: DiceGroup.State, dice: Set[Dice]) = {
-    this.state = state
-    diceSet ++= dice
-    this
-  }
-  
+import ecidice.model.dice._
+
+final class DiceGroup private (state: DiceGroup.State, diceSet: Set[LockedDice]) {
   def isCharging = (state == DiceGroup.Charging)
   def isBursting = (state == DiceGroup.Bursting)
-  def cloneAsBursting = new DiceGroup().init(DiceGroup.Bursting, diceSet)
+  def cloneAsBursting = new DiceGroup(DiceGroup.Bursting, diceSet)
   
-  def +=(d: Dice) = (diceSet += d)
-  def ++(otherGroup: DiceGroup) = (diceSet ++ otherGroup.dice)
+  def +(d: LockedDice) = new DiceGroup(state, diceSet + d)
+  def ++(otherGroup: DiceGroup) = new DiceGroup(state, diceSet ++ otherGroup.dice)
   def dice = diceSet
-  def contains(d: Dice) = diceSet.contains(d)
-  
-  
+  def contains(d: LockedDice) = diceSet.contains(d)
 }
+
 object DiceGroup {
-  def createCharging(dice: Set[Dice]) = new DiceGroup().init(Charging, dice)
-  def createBursting(dice: Set[Dice]) = new DiceGroup().init(Bursting, dice)
+  def createCharging(dice: Set[LockedDice]) = new DiceGroup(Charging, dice)
+  def createBursting(dice: Set[LockedDice]) = new DiceGroup(Bursting, dice)
   
-  private sealed abstract class State
+  private[model] sealed trait State
   private object Charging extends State
   private object Bursting extends State
 }

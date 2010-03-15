@@ -31,6 +31,8 @@ package ecidice.model
 
 import scala.collection.immutable._
 
+import ecidice.model.dice._
+
 /**
  * Central mediator that manages the objects participating in a game and updates
  * their state according to requested actions within the game rules.
@@ -72,11 +74,9 @@ class Game(numPlayers: Int, val board: Board) {
     val space = board(x, y).floor
     
     if (space.isEmpty) {
-      val dice = new Dice
+      val dice = Dice.appear(clock, space)
       space.occupy(dice)
-      val activity = Activity.on(clock).diceAppearing(dice, space)
-      dice.appear(activity)
-      tracker.track(activity)
+      tracker.track(dice.appearing)
       Some(dice)
     } else None
   }

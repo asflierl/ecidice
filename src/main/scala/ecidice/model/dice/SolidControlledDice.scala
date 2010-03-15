@@ -35,12 +35,18 @@ import ecidice.model._
  * A solid dice that occupies some space, controlled by a player.
  */
 class SolidControlledDice protected (
-    val location: Space,
     val controller: Player,
+    val location: Space,
     rot: Rotation,
     ser: Long) 
   extends Dice[SolidControlledDice](rot, ser)
 {
   protected def create(rotation: Rotation) =
-    new SolidControlledDice(location, controller, rotation, serial)
+    new SolidControlledDice(controller, location, rotation, serial)
+  
+  def makeUncontrolled = new SolidDice(location, rotation, serial)
+  
+  def move(clock: Clock, destination: Space, transform: Transform) =
+    new MovingDice(Activity.on(clock).diceMovement(_, 
+        location, destination, transform, controller), rotation, serial)
 }

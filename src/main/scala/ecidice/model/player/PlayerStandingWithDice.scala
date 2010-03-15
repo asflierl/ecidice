@@ -27,8 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model.player
 
-import ecidice.model.Transform
+import ecidice.model._
+import ecidice.model.dice._
 
-case class Rotation(top: Int, right: Int, front: Int)
+class PlayerStandingWithDice(val dice: SolidControlledDice) extends Player {
+
+}
