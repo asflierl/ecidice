@@ -27,40 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice.model.activity
 
+import ecidice.model._
 import ecidice.model.dice._
+import ecidice.model.player._
 
-/**
- * Indicates that a game event is timed and needs to be tracked/managed.
- * 
- * @author Andreas Flierl
- */
-sealed abstract class Activity {
+trait Activity {
   def time: Timespan
-}
-
-trait DiceAppearing extends Activity {
-  def dice: AppearingDice
-  def location: Space
-}
-  
-trait DiceMovement extends Activity {
-  def dice: MovingDice
-  def origin: Space
-  def destination: Space 
-  def transform: Transform.Value
-  def controller: Player
-}
-                        
-trait DiceLock extends Activity {
-  def group: DiceGroup
-}
-
-trait PlayerMovement extends Activity {
-  def player: Player
-  def origin: Tile
-  def destination: Tile
 }
 
 object Activity {
@@ -105,4 +79,3 @@ object Activity {
     Factory
   }
 }
-

@@ -30,6 +30,8 @@
 package ecidice.model.dice
 
 import ecidice.model._
+import ecidice.model.player._
+
 
 /**
  * A solid dice that occupies some space.

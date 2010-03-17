@@ -27,27 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model.activity
 
 import ecidice.model._
+import ecidice.model.dice._
 import ecidice.model.player._
 
-/**
- * A solid dice that occupies some space, controlled by a player.
- */
-class SolidControlledDice protected (
-    val controller: PlayerStandingWithDice,
-    val location: Space,
-    rot: Rotation,
-    ser: Long) 
-  extends Dice[SolidControlledDice](rot, ser)
-{
-  protected def create(rotation: Rotation) =
-    new SolidControlledDice(controller, location, rotation, serial)
-  
-  def makeUncontrolled = new SolidDice(location, rotation, serial)
-  
-  def move(clock: Clock, destination: Space, transform: Transform) =
-    new MovingDice(Activity.on(clock).diceMovement(_, 
-        location, destination, transform, controller), rotation, serial)
+trait DiceMovement {
+  def dice: MovingDice
+  def origin: Space
+  def destination: Space 
+  def transform: Transform.Value
+  def controller: Player
 }
