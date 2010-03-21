@@ -39,11 +39,11 @@ class PlayerStandingWithDice private[player] (
 ) extends Player {
   lazy val dice = diceByName
   
-  def move(destination: Space, transform: Transform.Value, clock: Clock) = {
+  def move(destination: Space, transform: Transform.Value, now: Instant) = {
     lazy val player = new PlayerMovingWithDice(activity, id)
     lazy val movingDice = dice.move(activity) 
     lazy val activity: DiceMovement = DiceMovement(movingDice, player, dice.location, 
-        destination, transform, clock)
+        destination, transform, now)
         
     player
   }

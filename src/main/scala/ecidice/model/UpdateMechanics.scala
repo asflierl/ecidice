@@ -32,13 +32,11 @@ package ecidice.model
 import ecidice.util.NotYetImplementedException
 import ecidice.model.dice._
 
-class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
+class UpdateMechanics(board: Board, now: Instant, tracker: ActivityTracker) {
   private val diceMatcher = new DiceMatcher(board)
   
-  clock.addReaction(update _)
-  
   def update {
-    val finishedActivities = tracker.activities.filter(_.time.isOver)
+    val finishedActivities = tracker.activities.filter(_.time.isOver(now))
     var diceMoves: List[DiceMovement] = Nil
     
     finishedActivities.foreach(_ match {

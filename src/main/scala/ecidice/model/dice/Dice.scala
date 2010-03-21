@@ -82,9 +82,9 @@ object Dice {
     before
   }
   
-  def appear(location: Space, clock: Clock) = { 
+  def appear(location: Space, now: Instant) = { 
     lazy val dice = new AppearingDice(activity, Rotation(6, 5, 4), nextSerial)
-    lazy val activity: DiceAppearing = DiceAppearing(dice, location, clock)
+    lazy val activity: DiceAppearing = DiceAppearing(dice, location, now)
     
     dice
   }

@@ -48,10 +48,10 @@ import ecidice.model.dice._
 //TODO take tile visibility into account
 class Game(numPlayers: Int, val board: Board) {
   private[model] lazy val players = createPlayers(0)
-  private[model] val clock = new Clock
+  private[model] val now = Instant()
   private[model] val tracker = new ActivityTracker
-  private[model] val updateMechanics = new UpdateMechanics(board, clock, tracker)
-  private[model] val movementReferee = new MovementReferee(board, clock, tracker)
+  private[model] val updateMechanics = new UpdateMechanics(board, now, tracker)
+  private[model] val movementReferee = new MovementReferee(board, now, tracker)
   private[model] val controlReferee = new ControlReferee
   
   /**
@@ -74,7 +74,7 @@ class Game(numPlayers: Int, val board: Board) {
     val space = board(x, y).floor
     
     if (space.isEmpty) {
-      val dice = Dice.appear(clock, space)
+      val dice = Dice.appear(now, space)
       space.occupy(dice)
       tracker.track(dice.appearing)
       Some(dice)

@@ -46,14 +46,14 @@ class DiceMovement private (
 }
 
 object DiceMovement {
-  val MOVE_DURATION = 0.25d
+  val MOVE_DURATION = Duration(0.25d)
   
   def apply(dice: => MovingDice, 
             player: => PlayerMovingWithDice,
             origin: Space,
             destination: Space,
             transform: Transform.Value,
-            clock: Clock) = 
+            now: Instant) = 
     new DiceMovement(dice, player, origin, destination, transform, 
-        Timespan(clock, MOVE_DURATION))
+        Timespan(now, MOVE_DURATION))
 }

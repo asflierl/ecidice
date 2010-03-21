@@ -38,7 +38,7 @@ import ecidice.model.player._
  * 
  * @author Andreas Flierl
  */
-class MovementReferee(board: Board, clock: Clock, tracker: ActivityTracker) {
+class MovementReferee(board: Board, now: Instant, tracker: ActivityTracker) {
   private var player: Player = _
   private var direction: Direction.Value = _
   private var dice: Dice = _

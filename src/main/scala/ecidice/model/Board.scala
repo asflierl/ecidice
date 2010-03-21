@@ -38,8 +38,7 @@ package ecidice.model
  * @param depth the number of tiles from front to back
  */
 class Board(val width: Int, val depth: Int) {
-  private val tileArr = Array.tabulate(width, depth)(
-    (x, y) => new Tile(x, y)) 
+  private val tileArr = Array.tabulate(width, depth)(new Tile(_, _)) 
   
   /**
    * Returns an iterator that traverses over all tiles of this board. The tiles

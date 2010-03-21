@@ -42,8 +42,8 @@ class DiceAppearing private (
 }
 
 object DiceAppearing {
-  val APPEAR_DURATION = 5d
+  val APPEAR_DURATION = Duration(5d)
   
-  def apply(dice: => AppearingDice, location: Space, clock: Clock) =
-    new DiceAppearing(dice, location, Timespan(clock, APPEAR_DURATION))
+  def apply(dice: => AppearingDice, location: Space, now: Instant) =
+    new DiceAppearing(dice, location, Timespan(now, APPEAR_DURATION))
 }

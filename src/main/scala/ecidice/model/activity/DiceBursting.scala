@@ -41,8 +41,8 @@ class DiceBursting private (
 }
 
 object DiceBursting {
-  val BURST_DURATION = 1d
+  val BURST_DURATION = Duration(1d)
   
-  def apply(group: => Set[LockedDice[DiceBursting]], clock: Clock) =
-    new DiceBursting(group, Timespan(clock, BURST_DURATION))
+  def apply(group: => Set[LockedDice[DiceBursting]], now: Instant) =
+    new DiceBursting(group, Timespan(now, BURST_DURATION))
 }

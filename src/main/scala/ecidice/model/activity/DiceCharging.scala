@@ -39,8 +39,8 @@ class DiceCharging private (
 ) extends DiceLock[DiceCharging] {
   lazy val group = groupByName
   
-  def burst = {
-    lazy val activity = DiceBursting(regrouped, timespan.clock)
+  def burst(now: Instant) = {
+    lazy val activity = DiceBursting(regrouped, now)
     lazy val regrouped: Set[LockedDice[DiceBursting]] = group.map(_.regroup(activity))
     
     activity
@@ -48,10 +48,10 @@ class DiceCharging private (
 }
 
 object DiceCharging {
-  val CHARGE_DURATION = 10d
+  val CHARGE_DURATION = Duration(10d)
   
-  def apply(dice: Set[SolidDice], clock: Clock) = {
-    lazy val activity = new DiceCharging(group, Timespan(clock, CHARGE_DURATION))
+  def apply(dice: Set[SolidDice], now: Instant) = {
+    lazy val activity = new DiceCharging(group, Timespan(now, CHARGE_DURATION))
     lazy val group: Set[LockedDice[DiceCharging]] = dice.map(_.lock(activity))
     
     activity
