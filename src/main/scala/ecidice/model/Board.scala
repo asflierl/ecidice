@@ -59,7 +59,7 @@ class Board(val width: Int, val depth: Int) {
   }
   
   /**
-   * Currently hard-coded for 4 players.
+   * TODO Currently hard-coded for 4 players.
    */
   val spawnPoints = tileArr(0)(0) :: tileArr(width - 1)(0) :: 
     tileArr(width - 1)(depth - 1) :: tileArr(0)(depth - 1) :: Nil

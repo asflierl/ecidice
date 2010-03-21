@@ -29,27 +29,27 @@
 
 package ecidice.model.dice
 
-import ecidice.model.DiceMovement
+import ecidice.model.activity.DiceMovement
+import ecidice.model.player.PlayerStandingWithDice
 
 /**
  * The dice is moving. During movement, it is always controlled by a player and 
- * occupies 2 spaces (origin and destination) during movement.
+ * occupies 2 spaces (origin and destination).
  */
-class MovingDice protected (
-    factory: MovingDice => DiceMovement,
+class MovingDice private[dice] (
+    activityByName: => DiceMovement,
     rot: Rotation,
-    ser: Long) 
-  extends Dice[MovingDice](rot, ser)
-{
-  lazy val movement = factory(this)
-  
-  protected def create(rotation: Rotation) = new MovingDice(factory, rotation, serial)
+    ser: Long
+) extends Dice(rot, ser) {
+  lazy val movement = activityByName
   
   def origin = movement.origin
   def destination = movement.destination
   def controller = movement.controller
   def transform = movement.transform
   
-  def stop = new SolidControlledDice(controller, destination, 
-      rotationAfterTransform(transform), serial)
+  def stop(player: => PlayerStandingWithDice) = new SolidControlledDice(player, 
+      destination, rotation.transform(transform), serial)
+    
 }
+

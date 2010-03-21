@@ -30,7 +30,11 @@
 package ecidice.model.player
 
 import ecidice.model._
+import ecidice.model.activity._
 
-class MovingPlayer(factory: MovingPlayer => PlayerMovement) extends Player {
-  lazy val movement = factory(this)
+class MovingPlayer private[player] ( 
+    movementByName: => PlayerMovement,
+    val id: Int
+) extends Player {
+  lazy val movement = movementByName
 }

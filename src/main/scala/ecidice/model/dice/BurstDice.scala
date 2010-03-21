@@ -29,7 +29,4 @@
 
 package ecidice.model.dice
 
-class BurstDice protected (rot: Rotation, ser: Long)
-    extends Dice[BurstDice](rot, ser) {
-  protected def create(rotation: Rotation) = new BurstDice(rotation, serial)
-}
+class BurstDice private[dice] (rot: Rotation, ser: Long) extends Dice(rot, ser)

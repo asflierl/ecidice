@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.model.activity._
+
 class ActivityTracker {
   private var trackedActivities = Set.empty[Activity]
   

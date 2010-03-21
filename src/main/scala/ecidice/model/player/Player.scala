@@ -29,6 +29,12 @@
 
 package ecidice.model.player
 
-trait Player {
+import ecidice.model._
 
+trait Player {
+  def id: Int
+}
+
+object Player {
+  def spawn(loc: Tile, id: Int) = new StandingPlayer(loc, id)
 }

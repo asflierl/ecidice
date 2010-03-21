@@ -33,8 +33,12 @@ import ecidice.model._
 import ecidice.model.dice._
 import ecidice.model.player._
 
-trait PlayerMovement {
+abstract class PlayerMovement {
   def player: Player
   def origin: Tile
   def destination: Tile
+}
+
+object PlayerMovement {
+  val MOVE_DURATION = 0.25f
 }

@@ -31,23 +31,20 @@ package ecidice.model.dice
 
 import ecidice.model._
 import ecidice.model.player._
+import ecidice.model.activity._
 
 /**
  * A solid dice that occupies some space, controlled by a player.
  */
-class SolidControlledDice protected (
-    val controller: PlayerStandingWithDice,
+class SolidControlledDice private[dice] (
+    controllerByName: => PlayerStandingWithDice,
     val location: Space,
     rot: Rotation,
-    ser: Long) 
-  extends Dice[SolidControlledDice](rot, ser)
-{
-  protected def create(rotation: Rotation) =
-    new SolidControlledDice(controller, location, rotation, serial)
+    ser: Long
+) extends Dice(rot, ser) {
+  lazy val controller = controllerByName
   
   def makeUncontrolled = new SolidDice(location, rotation, serial)
   
-  def move(clock: Clock, destination: Space, transform: Transform) =
-    new MovingDice(Activity.on(clock).diceMovement(_, 
-        location, destination, transform, controller), rotation, serial)
+  def move(activity: => DiceMovement) = new MovingDice(activity, rotation, serial)
 }

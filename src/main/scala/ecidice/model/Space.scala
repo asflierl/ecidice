@@ -61,7 +61,7 @@ class Space(val tile: Tile) {
   }
   
   def empty() = (state = Empty)
-  def occupy(dice: Dice[_]) = (state = Occupied(dice))
+  def occupy(dice: Dice) = (state = Occupied(dice))
   def involve(move: DiceMovement) = (state = Busy(move))
   
   override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
@@ -79,7 +79,7 @@ class Space(val tile: Tile) {
    * This marks a space as occupied (by a dice). Other dice can not move or
    * appear here.
    */
-  case class Occupied(dice: Dice[_]) extends State
+  case class Occupied(dice: Dice) extends State
   
   /**
    * An instance of this class is present on the "from" and "to" spaces that are

@@ -30,7 +30,19 @@
 package ecidice.model.player
 
 import ecidice.model._
+import ecidice.model.activity._
+import ecidice.model.dice._
 
-class PlayerMovingWithDice(factory: PlayerMovingWithDice => DiceMovement) extends Player {
-  lazy val movement = factory(this)
+class PlayerMovingWithDice private[player] (
+    activityByName: => DiceMovement,
+    val id: Int
+) extends Player {
+  lazy val movement = activityByName
+  
+  def stop = {
+    lazy val player = new PlayerStandingWithDice(dice, id)
+    lazy val dice: SolidControlledDice = movement.dice.stop(player)
+    
+    player
+  }
 }

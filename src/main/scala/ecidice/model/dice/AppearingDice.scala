@@ -29,20 +29,17 @@
 
 package ecidice.model.dice
 
-import ecidice.model.DiceAppearing
+import ecidice.model.activity.DiceAppearing
 
 /**
  * A dice that is appearing that already occupies some space.
  */
-class AppearingDice protected (
-    factory: AppearingDice => DiceAppearing,
+class AppearingDice private[dice] (
+    activityByName: => DiceAppearing,
     rot: Rotation,
-    ser: Long)
-  extends Dice[AppearingDice](rot, ser)
-{
-  lazy val appearing = factory(this)
-  
-  protected def create(rotation: Rotation) = new AppearingDice(factory, rotation, serial)
+    ser: Long
+) extends Dice(rot, ser) {
+  lazy val appearing = activityByName
   
   def makeSolid = new SolidDice(appearing.location, rotation, serial)
 }

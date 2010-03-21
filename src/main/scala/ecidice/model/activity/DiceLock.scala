@@ -33,6 +33,11 @@ import ecidice.model._
 import ecidice.model.dice._
 import ecidice.model.player._
 
-trait DiceLock {
+abstract class DiceLock {
   def group: DiceGroup
+}
+
+object DiceLock {
+  val CHARGE_DURATION = 10f
+  val BURST_DURATION = 1f 
 }

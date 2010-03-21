@@ -30,19 +30,17 @@
 package ecidice.model.dice
 
 import ecidice.model._
+import ecidice.model.activity._
 
 /**
  * The dice has been locked and is part of a dice group, i.e. it is either
  * charging or bursting. This state is always initiated by a player. The dice
  * occupies some space.
  */
-class LockedDice protected (
-    factory: LockedDice => DiceLock,
+class LockedDice private[dice] (
+    lockByName: => DiceLock,
     rot: Rotation,
-    ser: Long) 
-  extends Dice[LockedDice](rot, ser)
-{
-  lazy val lock = factory(this)
-  
-  protected def create(rotation: Rotation) = new LockedDice(factory, rotation, serial)
+    ser: Long
+) extends Dice(rot, ser) {
+  lazy val lock = lockByName
 }

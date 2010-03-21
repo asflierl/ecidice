@@ -32,18 +32,15 @@ package ecidice.model.dice
 import ecidice.model._
 import ecidice.model.player._
 
-
 /**
  * A solid dice that occupies some space.
  */
-class SolidDice protected (
+class SolidDice private[dice] (
     val location: Space,
     rot: Rotation,
     ser: Long) 
-  extends Dice[SolidDice](rot, ser)
+  extends Dice(rot, ser)
 {
-  protected def create(rotation: Rotation) = new SolidDice(location, rotation, serial)
-  
-  def makeControlled(controller: Player) = 
+  def makeControlled(controller: PlayerStandingWithDice) =
     new SolidControlledDice(controller, location, rotation, serial)
 }

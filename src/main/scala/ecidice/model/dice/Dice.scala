@@ -30,6 +30,7 @@
 package ecidice.model.dice
 
 import ecidice.model._
+import ecidice.model.activity._
 import ecidice.util._
 
 /**
@@ -51,39 +52,19 @@ import ecidice.util._
  * 
  * @author Andreas Flierl
  */
-abstract class Dice [A <: Dice[_]] protected (
+abstract class Dice protected (
     protected val rotation: Rotation,
     protected val serial: Long) 
-{ this: A =>
-  
+{
   def top = rotation.top
-  def bottom = opposite(top)
+  def bottom = rotation.bottom
   def right = rotation.right
-  def left = opposite(right)
+  def left = rotation.left
   def front = rotation.front
-  def back = opposite(front)
-  
-  private def opposite(eyes: Int) = 7 - eyes
-  
-  protected def create(newRotation: Rotation): A
-  
-  def transform(how: Transform.Value) = create(rotationAfterTransform(how))
-  
-  protected def rotationAfterTransform(how: Transform.Value) = {
-    how match {
-      case Transform.ROTATE_BACKWARD => Rotation(front, right, bottom)
-      case Transform.ROTATE_FORWARD => Rotation(back, right, top)
-      case Transform.ROTATE_RIGHT => Rotation(left, top, front)
-      case Transform.ROTATE_LEFT => Rotation(right, bottom, front)
-      case Transform.SPIN_CLOCKWISE => Rotation(top, back, right)
-      case Transform.SPIN_COUNTERCLOCKWISE => Rotation(top, front, left)
-      case Transform.FLIP_UP_OR_DOWN => Rotation(bottom, right, back)
-      case Transform.FLIP_LEFT_OR_RIGHT => Rotation(bottom, left, front)
-    }
-  }
+  def back = rotation.back
   
   override final def equals(obj: Any) = obj match {
-    case other: Dice[_] => other.serial == serial
+    case other: Dice => other.serial == serial
     case _ => false
   }
   
@@ -92,7 +73,7 @@ abstract class Dice [A <: Dice[_]] protected (
   override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, right, front)
 }
 
-object Dice {//TODO not thread-safe, might need a fix in the context of more threads
+object Dice {
   private var serial = 0L
 
   private[dice] def nextSerial = {
@@ -101,7 +82,10 @@ object Dice {//TODO not thread-safe, might need a fix in the context of more thr
     before
   }
   
-  def appear(clock: Clock, location: Space) = new AppearingDice(
-      (d: AppearingDice) => Activity.on(clock).diceAppearing(d, location),
-      Rotation(6, 5, 4), nextSerial)
+  def appear(location: Space, clock: Clock) = { 
+    lazy val dice = new AppearingDice(activity, Rotation(6, 5, 4), nextSerial)
+    lazy val activity: DiceAppearing = DiceAppearing(dice, location, clock)
+    
+    dice
+  }
 }

@@ -31,4 +31,21 @@ package ecidice.model.dice
 
 import ecidice.model.Transform
 
-case class Rotation(top: Int, right: Int, front: Int)
+case class Rotation(top: Int, right: Int, front: Int) {
+  def bottom = opposite(top)
+  def left = opposite(right)
+  def back = opposite(front)
+  
+  private def opposite(eyes: Int) = 7 - eyes
+  
+  def transform(how: Transform.Value) = how match {
+    case Transform.ROTATE_BACKWARD => Rotation(front, right, bottom)
+    case Transform.ROTATE_FORWARD => Rotation(back, right, top)
+    case Transform.ROTATE_RIGHT => Rotation(left, top, front)
+    case Transform.ROTATE_LEFT => Rotation(right, bottom, front)
+    case Transform.SPIN_CLOCKWISE => Rotation(top, back, right)
+    case Transform.SPIN_COUNTERCLOCKWISE => Rotation(top, front, left)
+    case Transform.FLIP_UP_OR_DOWN => Rotation(bottom, right, back)
+    case Transform.FLIP_LEFT_OR_RIGHT => Rotation(bottom, left, front)
+  }
+}

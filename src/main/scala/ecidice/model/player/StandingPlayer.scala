@@ -30,7 +30,17 @@
 package ecidice.model.player
 
 import ecidice.model._
+import ecidice.model.dice._
 
-class StandingPlayer(val location: Space) extends Player {
-
+class StandingPlayer private[player] (
+    val location: Tile, 
+    val id: Int
+) extends Player {
+  def control(dice: => SolidDice) = {
+    lazy val controller = new PlayerStandingWithDice(controlled, id)
+    lazy val controlled: SolidControlledDice = dice.makeControlled(controller)
+    
+    controller
+  }
 }
+
