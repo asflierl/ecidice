@@ -29,4 +29,6 @@
 
 package ecidice.model.dice
 
-class BurstDice private[dice] (rot: Rotation, ser: Long) extends Dice(rot, ser)
+import ecidice.model.activity._
+
+class BurstDice(dice: LockedDice[DiceBursting]) extends Dice(dice.rotation, dice.serial)

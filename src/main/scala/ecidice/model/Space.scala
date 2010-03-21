@@ -29,6 +29,7 @@
 
 package ecidice.model
 
+import ecidice.model.activity._
 import ecidice.model.dice._
 
 /**
@@ -65,7 +66,7 @@ class Space(val tile: Tile) {
   def involve(move: DiceMovement) = (state = Busy(move))
   
   override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
-    (if (isRaised) "raised" else "floor"))
+    if (isRaised) "raised" else "floor")
   
   sealed abstract class State
 

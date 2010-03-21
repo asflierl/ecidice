@@ -40,5 +40,5 @@ abstract class PlayerMovement {
 }
 
 object PlayerMovement {
-  val MOVE_DURATION = 0.25f
+  val MOVE_DURATION = 0.25d
 }

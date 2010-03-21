@@ -37,10 +37,12 @@ import ecidice.model.activity._
  * charging or bursting. This state is always initiated by a player. The dice
  * occupies some space.
  */
-class LockedDice private[dice] (
-    lockByName: => DiceLock,
+class LockedDice[A <: DiceLock[A]] private[dice] (
+    lockByName: => DiceLock[A],
     rot: Rotation,
     ser: Long
 ) extends Dice(rot, ser) {
   lazy val lock = lockByName
+  
+  def regroup[B <: DiceLock[B]](lock: => B) = new LockedDice[B](lock, rotation, serial)
 }

@@ -53,8 +53,8 @@ import ecidice.util._
  * @author Andreas Flierl
  */
 abstract class Dice protected (
-    protected val rotation: Rotation,
-    protected val serial: Long) 
+    protected[dice] val rotation: Rotation,
+    protected[dice] val serial: Long) 
 {
   def top = rotation.top
   def bottom = rotation.bottom

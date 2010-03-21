@@ -40,7 +40,7 @@ import ecidice.util.HashCode
  * @param start the instant this timespan starts
  * @param ttl the initial time-to-live (aka duration)
  */
-class Timespan private (clock: Clock, val start: Double, private val ttl: Double) {
+class Timespan private (val clock: Clock, val start: Double, private val ttl: Double) {
   if (start < clock.now) throw new IllegalArgumentException(
     "a timespan may not start in the past")
   

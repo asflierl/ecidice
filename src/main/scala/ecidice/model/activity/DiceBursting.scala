@@ -27,26 +27,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice.model.activity
 
+import ecidice.model._
 import ecidice.model.dice._
+import ecidice.model.player._
 
-final class DiceGroup private (state: DiceGroup.State, diceSet: Set[LockedDice]) {
-  def isCharging = (state == DiceGroup.Charging)
-  def isBursting = (state == DiceGroup.Bursting)
-  def cloneAsBursting = new DiceGroup(DiceGroup.Bursting, diceSet)
-  
-  def +(d: LockedDice) = new DiceGroup(state, diceSet + d)
-  def ++(otherGroup: DiceGroup) = new DiceGroup(state, diceSet ++ otherGroup.dice)
-  def dice = diceSet
-  def contains(d: LockedDice) = diceSet.contains(d)
+class DiceBursting private (
+    groupByName: => Set[LockedDice[DiceBursting]],
+    val timespan: Timespan
+) extends DiceLock[DiceBursting] {
+  lazy val group = groupByName
 }
 
-object DiceGroup {
-  def createCharging(dice: Set[LockedDice]) = new DiceGroup(Charging, dice)
-  def createBursting(dice: Set[LockedDice]) = new DiceGroup(Bursting, dice)
+object DiceBursting {
+  val BURST_DURATION = 1d
   
-  private[model] sealed trait State
-  private object Charging extends State
-  private object Bursting extends State
+  def apply(group: => Set[LockedDice[DiceBursting]], clock: Clock) =
+    new DiceBursting(group, Timespan(clock, BURST_DURATION))
 }

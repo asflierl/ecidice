@@ -33,6 +33,27 @@ import ecidice.model._
 import ecidice.model.dice._
 import ecidice.model.player._
 
-trait DiceLock[A <: DiceLock[A]] extends Activity { this: A =>
-  def group: Set[LockedDice[A]]
+class DiceCharging private (
+    groupByName: => Set[LockedDice[DiceCharging]],
+    val timespan: Timespan
+) extends DiceLock[DiceCharging] {
+  lazy val group = groupByName
+  
+  def burst = {
+    lazy val activity = DiceBursting(regrouped, timespan.clock)
+    lazy val regrouped: Set[LockedDice[DiceBursting]] = group.map(_.regroup(activity))
+    
+    activity
+  }
+}
+
+object DiceCharging {
+  val CHARGE_DURATION = 10d
+  
+  def apply(dice: Set[SolidDice], clock: Clock) = {
+    lazy val activity = new DiceCharging(group, Timespan(clock, CHARGE_DURATION))
+    lazy val group: Set[LockedDice[DiceCharging]] = dice.map(_.lock(activity))
+    
+    activity
+  }
 }

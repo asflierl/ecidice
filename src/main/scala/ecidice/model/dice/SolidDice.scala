@@ -30,6 +30,7 @@
 package ecidice.model.dice
 
 import ecidice.model._
+import ecidice.model.activity._
 import ecidice.model.player._
 
 /**
@@ -43,4 +44,6 @@ class SolidDice private[dice] (
 {
   def makeControlled(controller: PlayerStandingWithDice) =
     new SolidControlledDice(controller, location, rotation, serial)
+  
+  def lock[A <: DiceLock[A]](lock: => A) = new LockedDice[A](lock, rotation, serial)
 }
