@@ -3,7 +3,6 @@
 	<classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry excluding="**/.svn/|**/CVS/" kind="src" path="src/main/scala"/>
-	<classpathentry kind="src" path="src/spec/scala"/>
 	<classpathentry kind="lib" path="lib/specs/scalacheck_2.8.0.Beta1-RC5-1.7-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/specs/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/specs/asm-3.0.jar"/>

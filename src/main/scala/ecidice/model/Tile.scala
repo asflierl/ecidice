@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import ecidice.model.space._
+
 /**
  * Represents a tile in the game board. Each tile has an (inititally empty)
  * space on the floor and on the raised level (i.e. on top of another dice).
@@ -37,8 +39,8 @@ package ecidice.model
  */
 case class Tile(x: Int, y: Int) {
   var visibility = Tile.Visibility.VISIBLE
-  lazy val floor = new Space(this)
-  lazy val raised = new Space(this)
+  lazy val floor = new EmptySpace(this)
+  lazy val raised = new EmptySpace(this)
   
   def pos = (x, y)
 }
