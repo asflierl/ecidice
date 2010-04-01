@@ -27,29 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model.space
 
-import ecidice.model.activity.DiceMovement
-import ecidice.model.player.PlayerStandingWithDice
+import ecidice.model._
 
-/**
- * The dice is moving. During movement, it is always controlled by a player and 
- * occupies 2 spaces (origin and destination).
- */
-class MovingDice private[dice] (
-    activityByName: => DiceMovement,
-    val rotation: Rotation,
-    val serial: Long
-) extends Dice {
-  lazy val movement = activityByName
-  
-  def origin = movement.origin
-  def destination = movement.destination
-  def controller = movement.controller
-  def transform = movement.transform
-  
-  def stop(player: => PlayerStandingWithDice) = new SolidControlledDice(player, 
-      destination, rotation.transform(transform), serial)
-    
-}
-
+class EmptySpace(val tile: Tile) extends Space

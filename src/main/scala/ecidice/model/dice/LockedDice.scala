@@ -39,9 +39,9 @@ import ecidice.model.activity._
  */
 class LockedDice[A <: DiceLock[A]] private[dice] (
     lockByName: => DiceLock[A],
-    rot: Rotation,
-    ser: Long
-) extends Dice(rot, ser) {
+    val rotation: Rotation,
+    val serial: Long
+) extends Dice with Stationary {
   lazy val lock = lockByName
   
   def regroup[B <: DiceLock[B]](lock: => B) = new LockedDice[B](lock, rotation, serial)

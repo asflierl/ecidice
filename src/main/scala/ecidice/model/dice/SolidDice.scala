@@ -38,10 +38,9 @@ import ecidice.model.player._
  */
 class SolidDice private[dice] (
     val location: Space,
-    rot: Rotation,
-    ser: Long) 
-  extends Dice(rot, ser)
-{
+    val rotation: Rotation,
+    val serial: Long
+) extends Dice with Stationary {
   def makeControlled(controller: PlayerStandingWithDice) =
     new SolidControlledDice(controller, location, rotation, serial)
   

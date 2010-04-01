@@ -39,9 +39,9 @@ import ecidice.model.activity._
 class SolidControlledDice private[dice] (
     controllerByName: => PlayerStandingWithDice,
     val location: Space,
-    rot: Rotation,
-    ser: Long
-) extends Dice(rot, ser) {
+    val rotation: Rotation,
+    val serial: Long
+) extends Dice with Stationary {
   lazy val controller = controllerByName
   
   def makeUncontrolled = new SolidDice(location, rotation, serial)

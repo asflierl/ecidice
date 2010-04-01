@@ -31,4 +31,7 @@ package ecidice.model.dice
 
 import ecidice.model.activity._
 
-class BurstDice(dice: LockedDice[DiceBursting]) extends Dice(dice.rotation, dice.serial)
+class BurstDice(
+    val rotation: Rotation,
+    val serial: Long
+) extends Dice

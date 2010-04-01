@@ -36,9 +36,9 @@ import ecidice.model.activity.DiceAppearing
  */
 class AppearingDice private[dice] (
     activityByName: => DiceAppearing,
-    rot: Rotation,
-    ser: Long
-) extends Dice(rot, ser) {
+    val rotation: Rotation,
+    val serial: Long
+) extends Dice with Stationary {
   lazy val appearing = activityByName
   
   def makeSolid = new SolidDice(appearing.location, rotation, serial)
