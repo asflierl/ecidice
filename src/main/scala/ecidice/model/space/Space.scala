@@ -37,6 +37,9 @@ import ecidice.model._
  * raised level. Such a space can be empty, occupied by a dice or be the start
  * or destination of a dice's movement.
  * 
+ * Because immutability currently stops at the boundary tile/space, whenever a
+ * new space is created, the assigned tile must be updated!
+ * 
  * @author Andreas Flierl
  */
 trait Space {

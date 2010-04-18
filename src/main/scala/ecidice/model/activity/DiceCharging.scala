@@ -33,26 +33,17 @@ import ecidice.model._
 import ecidice.model.dice._
 import ecidice.model.player._
 
-class DiceCharging private (
-    groupByName: => Set[LockedDice[DiceCharging]],
-    val time: Timespan
+class DiceCharging(
+    dice: Set[SolidDice],
+    now: Instant
 ) extends DiceLock[DiceCharging] {
-  lazy val group = groupByName
+  val duration = Duration(10d)
+  lazy val time = Timespan(now, duration)
+  lazy val group: Set[LockedDice[DiceCharging]] = dice.map(_.lock(this))
   
   def burst(now: Instant) = {
-    lazy val activity = DiceBursting(regrouped, now)
+    lazy val activity = new DiceBursting(regrouped, now)
     lazy val regrouped: Set[LockedDice[DiceBursting]] = group.map(_.regroup(activity))
-    
-    activity
-  }
-}
-
-object DiceCharging {
-  val CHARGE_DURATION = Duration(10d)
-  
-  def apply(dice: Set[SolidDice], now: Instant) = {
-    lazy val activity = new DiceCharging(group, Timespan(now, CHARGE_DURATION))
-    lazy val group: Set[LockedDice[DiceCharging]] = dice.map(_.lock(activity))
     
     activity
   }

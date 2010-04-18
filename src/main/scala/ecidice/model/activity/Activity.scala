@@ -34,6 +34,7 @@ import ecidice.model.dice._
 import ecidice.model.player._
 
 trait Activity {
+  def duration: Duration
   def time: Timespan
 }
 

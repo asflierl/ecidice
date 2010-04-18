@@ -43,7 +43,7 @@ class PlayerStandingWithDice private[player] (
   def move(destination: EmptySpace, transform: Transform.Value, now: Instant) = {
     lazy val player = new PlayerMovingWithDice(activity, id)
     lazy val movingDice = dice.move(activity) 
-    lazy val activity: DiceMovement = DiceMovement(movingDice, player, origin, 
+    lazy val activity: DiceMovement = new DiceMovement(movingDice, player, origin, 
         destSpace, transform, now)
     lazy val origin: BusySpace = new BusySpace(dice.location.tile, dice.location.level, activity)
     lazy val destSpace: BusySpace = new BusySpace(destination.tile, destination.level, activity)
@@ -55,7 +55,7 @@ class PlayerStandingWithDice private[player] (
   def relinquishControl = {
     val player = new StandingPlayer(dice.location.tile, id)
     val uncontrolledDice = dice.makeUncontrolled
-    uncontrolledDice.location.tile.updateWith(uncontrolledDice.location)
+    
     player
   }
 }

@@ -48,7 +48,7 @@ class SolidDice private[dice] (
     lazy val dice = new SolidControlledDice(controller, newLocation, rotation, serial)
     lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, 
         location.level, dice)
-    
+    newLocation.tile.updateWith(newLocation)
     dice
   }
   

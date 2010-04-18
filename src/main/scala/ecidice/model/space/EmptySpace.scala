@@ -33,6 +33,6 @@ import ecidice.model._
 import ecidice.model.dice._
 
 class EmptySpace(
-  val tile: Tile,
-  val level: Tile.Level.Value
+    val tile: Tile,
+    val level: Tile.Level.Value
 ) extends Space

@@ -34,16 +34,11 @@ import ecidice.model.dice._
 import ecidice.model.player._
 import ecidice.model.space._
 
-class DiceAppearing private (
+class DiceAppearing(
     diceByName: => AppearingDice, 
-    val time: Timespan
+    now: Instant
 ) extends Activity {
+  val duration = Duration(5d)
+  lazy val time = Timespan(now, duration)
   lazy val dice = diceByName
-}
-
-object DiceAppearing {
-  val APPEAR_DURATION = Duration(5d)
-  
-  def apply(dice: => AppearingDice, location: Space, now: Instant) =
-    new DiceAppearing(dice, Timespan(now, APPEAR_DURATION))
 }

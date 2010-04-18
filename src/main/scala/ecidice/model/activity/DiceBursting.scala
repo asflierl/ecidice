@@ -33,16 +33,11 @@ import ecidice.model._
 import ecidice.model.dice._
 import ecidice.model.player._
 
-class DiceBursting private (
+class DiceBursting(
     groupByName: => Set[LockedDice[DiceBursting]],
-    val time: Timespan
+    now: Instant
 ) extends DiceLock[DiceBursting] {
+  val duration = Duration(1d)
+  lazy val time = Timespan(now, duration)
   lazy val group = groupByName
-}
-
-object DiceBursting {
-  val BURST_DURATION = Duration(1d)
-  
-  def apply(group: => Set[LockedDice[DiceBursting]], now: Instant) =
-    new DiceBursting(group, Timespan(now, BURST_DURATION))
 }

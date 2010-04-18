@@ -34,9 +34,9 @@ import ecidice.model.dice._
 import ecidice.model._
 
 class OccupiedSpace (
-  val tile: Tile,
-  val level: Tile.Level.Value,
-  diceByName: => Dice with Stationary
+    val tile: Tile,
+    val level: Tile.Level.Value,
+    diceByName: => Dice with Stationary
 ) extends Space {
   lazy val dice = diceByName
 }

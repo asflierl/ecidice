@@ -43,9 +43,6 @@ class PlayerMovingWithDice private[player] (
   def stop = {
     lazy val player = new PlayerStandingWithDice(dice, id)
     lazy val dice: SolidControlledDice = movement.dice.stop(player)
-    val origin = new EmptySpace(movement.origin.tile, movement.origin.level)
-    origin.tile.updateWith(origin)
-    dice.location.tile.updateWith(dice.location)
     
     player
   }

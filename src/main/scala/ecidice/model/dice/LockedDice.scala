@@ -51,7 +51,7 @@ class LockedDice[A <: DiceLock[A]] private[dice] (
     lazy val dice = new LockedDice[B](lock, location, rotation, serial)
     lazy val loc: OccupiedSpace = new OccupiedSpace(location.tile, 
         location.level, dice)
-    
+    loc.tile.updateWith(loc)
     dice
   }
 }

@@ -55,6 +55,10 @@ class MovingDice private[dice] (
     lazy val loc: OccupiedSpace = new OccupiedSpace(destination.tile, 
         destination.level, dice)
     
+    val origin = new EmptySpace(movement.origin.tile, movement.origin.level)
+    origin.tile.updateWith(origin)
+    loc.tile.updateWith(loc)
+    
     dice
   }
       
