@@ -32,6 +32,7 @@ package ecidice.model.player
 import ecidice.model._
 import ecidice.model.activity._
 import ecidice.model.dice._
+import ecidice.model.space._
 
 class PlayerStandingWithDice private[player] (
     diceByName: => SolidControlledDice,
@@ -39,14 +40,17 @@ class PlayerStandingWithDice private[player] (
 ) extends Player {
   lazy val dice = diceByName
   
-  def move(destination: Space, transform: Transform.Value, now: Instant) = {
+  def move(destination: EmptySpace, transform: Transform.Value, now: Instant) = {
     lazy val player = new PlayerMovingWithDice(activity, id)
     lazy val movingDice = dice.move(activity) 
-    lazy val activity: DiceMovement = DiceMovement(movingDice, player, dice.location, 
-        destination, transform, now)
+    lazy val activity: DiceMovement = DiceMovement(movingDice, player, origin, 
+        destSpace, transform, now)
+    lazy val origin: BusySpace = new BusySpace(dice.location.tile, activity)
+    lazy val destSpace: BusySpace = new BusySpace(destination.tile, activity)
         
     player
   }
   
-  def relinquishControl = (new StandingPlayer(dice.location.tile, id), dice.makeUncontrolled)
+  def relinquishControl = 
+    (new StandingPlayer(dice.location.tile, id), dice.makeUncontrolled)
 }

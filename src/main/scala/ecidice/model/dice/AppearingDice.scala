@@ -30,16 +30,24 @@
 package ecidice.model.dice
 
 import ecidice.model.activity.DiceAppearing
+import ecidice.model.space._
 
 /**
  * A dice that is appearing that already occupies some space.
  */
 class AppearingDice private[dice] (
     activityByName: => DiceAppearing,
+    locationByName: => OccupiedSpace,
     val rotation: Rotation,
     val serial: Long
 ) extends Dice with Stationary {
   lazy val appearing = activityByName
+  lazy val location = locationByName
   
-  def makeSolid = new SolidDice(appearing.location, rotation, serial)
+  def makeSolid = {
+    lazy val dice = new SolidDice(newLocation, rotation, serial)
+    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, dice)
+    
+    dice
+  }
 }

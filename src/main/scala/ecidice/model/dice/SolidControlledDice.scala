@@ -32,19 +32,26 @@ package ecidice.model.dice
 import ecidice.model._
 import ecidice.model.player._
 import ecidice.model.activity._
+import ecidice.model.space._
 
 /**
  * A solid dice that occupies some space, controlled by a player.
  */
 class SolidControlledDice private[dice] (
     controllerByName: => PlayerStandingWithDice,
-    val location: Space,
+    locationByName: => OccupiedSpace,
     val rotation: Rotation,
     val serial: Long
 ) extends Dice with Stationary {
   lazy val controller = controllerByName
+  lazy val location = locationByName
   
-  def makeUncontrolled = new SolidDice(location, rotation, serial)
+  def makeUncontrolled = {
+    lazy val dice = new SolidDice(newLocation, rotation, serial)
+    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, dice)
+    
+    dice
+  }
   
   def move(activity: => DiceMovement) = new MovingDice(activity, rotation, serial)
 }

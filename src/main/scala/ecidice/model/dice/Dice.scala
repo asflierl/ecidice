@@ -31,6 +31,7 @@ package ecidice.model.dice
 
 import ecidice.model._
 import ecidice.model.activity._
+import ecidice.model.space._
 import ecidice.util._
 
 /**
@@ -82,9 +83,10 @@ object Dice {
     before
   }
   
-  def appear(location: Space, now: Instant) = { 
-    lazy val dice = new AppearingDice(activity, Rotation(6, 5, 4), nextSerial)
+  def appear(emptyLocation: EmptySpace, now: Instant) = { 
+    lazy val dice = new AppearingDice(activity, location, Rotation(6, 5, 4), nextSerial)
     lazy val activity: DiceAppearing = DiceAppearing(dice, location, now)
+    lazy val location: OccupiedSpace = new OccupiedSpace(emptyLocation.tile, dice)
     
     dice
   }

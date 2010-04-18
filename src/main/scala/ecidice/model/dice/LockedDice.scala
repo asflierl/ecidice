@@ -31,6 +31,7 @@ package ecidice.model.dice
 
 import ecidice.model._
 import ecidice.model.activity._
+import ecidice.model.space._
 
 /**
  * The dice has been locked and is part of a dice group, i.e. it is either
@@ -39,10 +40,17 @@ import ecidice.model.activity._
  */
 class LockedDice[A <: DiceLock[A]] private[dice] (
     lockByName: => DiceLock[A],
+    locationByName: => OccupiedSpace,
     val rotation: Rotation,
     val serial: Long
 ) extends Dice with Stationary {
   lazy val lock = lockByName
+  lazy val location = locationByName
   
-  def regroup[B <: DiceLock[B]](lock: => B) = new LockedDice[B](lock, rotation, serial)
+  def regroup[B <: DiceLock[B]](lock: => B) = {
+    lazy val dice = new LockedDice[B](lock, location, rotation, serial)
+    lazy val loc: OccupiedSpace = new OccupiedSpace(location.tile, dice)
+    
+    dice
+  }
 }

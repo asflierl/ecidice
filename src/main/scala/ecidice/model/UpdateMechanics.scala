@@ -33,56 +33,56 @@ import ecidice.util.NotYetImplementedException
 import ecidice.model.dice._
 
 class UpdateMechanics(board: Board, now: Instant, tracker: ActivityTracker) {
-  private val diceMatcher = new DiceMatcher(board)
-  
-  def update {
-    val finishedActivities = tracker.activities.filter(_.time.isOver(now))
-    var diceMoves: List[DiceMovement] = Nil
-    
-    finishedActivities.foreach(_ match {
-      case activity: DiceAppearing => diceAppeared(activity)
-      case activity: PlayerMovement => playerMovementEnded(activity) 
-      case activity: DiceLock => diceLocked(activity)
-      case activity: DiceMovement => diceMoves = activity:: diceMoves
-    })
-    
-    diceMoves.foreach(diceMovementEnded(_))
-    
-    finishedActivities.foreach(tracker.forget(_))
-  }
-  
-  private def diceAppeared(affected: DiceAppearing) =
-    affected.dice.makeSolid
-  
-  private def diceMovementEnded(move: DiceMovement) = {
-    move.dice.change(move.transform)
-      
-    if (move.dice.top == 1) {
-      board.tiles filter (_.floor.isOccupied)
-    }
-        
-    val group = diceMatcher.find(move.dice, move.destination.tile)    
-    
-    throw new NotYetImplementedException
-  }
-  
-  private def playerMovementEnded(affected: PlayerMovement) =
-    affected.player.stand(affected.destination)
-  
-  private def diceLocked(affected: DiceLock) =
-    if (affected.group.isCharging) diceCharged(affected)
-    else diceBurst(affected)
-  
-  private def diceCharged(affected: DiceLock) = {
-    val burst = Activity.on(clock).diceLock(affected.group.cloneAsBursting)
-    burst.group.dice.foreach(dice => dice.lock(burst, dice.initiator))
-    tracker.track(burst)
-  }
-  
-  private def diceBurst(affected: DiceLock) = {
-    affected.group.dice.foreach(dice => {
-      dice.location.empty()
-      dice.burst()
-    })
-  }
+//  private val diceMatcher = new DiceMatcher(board)
+//  
+//  def update {
+//    val finishedActivities = tracker.activities.filter(_.time.isOver(now))
+//    var diceMoves: List[DiceMovement] = Nil
+//    
+//    finishedActivities.foreach(_ match {
+//      case activity: DiceAppearing => diceAppeared(activity)
+//      case activity: PlayerMovement => playerMovementEnded(activity) 
+//      case activity: DiceLock => diceLocked(activity)
+//      case activity: DiceMovement => diceMoves = activity:: diceMoves
+//    })
+//    
+//    diceMoves.foreach(diceMovementEnded(_))
+//    
+//    finishedActivities.foreach(tracker.forget(_))
+//  }
+//  
+//  private def diceAppeared(affected: DiceAppearing) =
+//    affected.dice.makeSolid
+//  
+//  private def diceMovementEnded(move: DiceMovement) = {
+//    move.dice.change(move.transform)
+//      
+//    if (move.dice.top == 1) {
+//      board.tiles filter (_.floor.isOccupied)
+//    }
+//        
+//    val group = diceMatcher.find(move.dice, move.destination.tile)    
+//    
+//    throw new NotYetImplementedException
+//  }
+//  
+//  private def playerMovementEnded(affected: PlayerMovement) =
+//    affected.player.stand(affected.destination)
+//  
+//  private def diceLocked(affected: DiceLock) =
+//    if (affected.group.isCharging) diceCharged(affected)
+//    else diceBurst(affected)
+//  
+//  private def diceCharged(affected: DiceLock) = {
+//    val burst = Activity.on(clock).diceLock(affected.group.cloneAsBursting)
+//    burst.group.dice.foreach(dice => dice.lock(burst, dice.initiator))
+//    tracker.track(burst)
+//  }
+//  
+//  private def diceBurst(affected: DiceLock) = {
+//    affected.group.dice.foreach(dice => {
+//      dice.location.empty()
+//      dice.burst()
+//    })
+//  }
 }

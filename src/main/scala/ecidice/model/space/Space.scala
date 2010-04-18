@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice.model.space
 
 import ecidice.model.dice._
 import ecidice.model._

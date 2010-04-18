@@ -39,7 +39,7 @@ import ecidice.util.HashCode
  * @param start the instant this timespan starts
  * @param duration this timespan's duration
  */
-case class Timespan private (start: Instant, duration: Duration) {
+case class Timespan(start: Instant, duration: Duration) {
   val end = start.after(duration)
 
   def isOver(now: Instant) = (now >= end)

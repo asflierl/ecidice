@@ -32,17 +32,20 @@ package ecidice.model.activity
 import ecidice.model._
 import ecidice.model.dice._
 import ecidice.model.player._
+import ecidice.model.space._
 
 class DiceMovement private (
     diceByName: => MovingDice,
     playerByName: => PlayerMovingWithDice,
-    val origin: Space,
-    val destination: Space,
+    originByName: => BusySpace,
+    destinationByName: => BusySpace,
     val transform: Transform.Value,
-    val timespan: Timespan
+    val time: Timespan
 ) extends Activity {
   lazy val dice = diceByName
   lazy val controller = playerByName
+  lazy val origin = originByName
+  lazy val destination = destinationByName
 }
 
 object DiceMovement {
@@ -50,8 +53,8 @@ object DiceMovement {
   
   def apply(dice: => MovingDice, 
             player: => PlayerMovingWithDice,
-            origin: Space,
-            destination: Space,
+            origin: => BusySpace,
+            destination: => BusySpace,
             transform: Transform.Value,
             now: Instant) = 
     new DiceMovement(dice, player, origin, destination, transform, 

@@ -53,31 +53,31 @@ import ecidice.model.dice._
  * and BZ.
  */
 class DiceMatcher(board: Board) {
-  var src: SolidDice = _
-  
-  def find(src: SolidDice, start: Tile): Set[SolidDice] = {
-    this.src = src
-    findFromTile(start, Set(src))
-  }
-  
-  private def findFromTile(t: Tile, g: Set[SolidDice]) = {
-    var res = g
-    Direction.values.foreach(
-      diceInDir(t, _, Tile.Level.FLOOR).partialMap { 
-        case next: SolidDice => res = findFromDice(next, res)
-      }
-    )
-    res
-  }
-  
-  private def findFromDice(dice: SolidDice, group: Set[SolidDice]): Set[SolidDice] =
-    if (dice.top != src.top || group.contains(dice)) group
-    else findFromTile(dice.location.tile, group + dice)
-  
-  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
-    val pos = board.positionInDir(t, dir)
-    if (board.isWithinBounds(pos) && board(pos).floor.isOccupied)
-      Some(board(pos).floor.dice)
-    else None
-  }
+//  var src: SolidDice = _
+//  
+//  def find(src: SolidDice, start: Tile): Set[SolidDice] = {
+//    this.src = src
+//    findFromTile(start, Set(src))
+//  }
+//  
+//  private def findFromTile(t: Tile, g: Set[SolidDice]) = {
+//    var res = g
+//    Direction.values.foreach(
+//      diceInDir(t, _, Tile.Level.FLOOR).partialMap { 
+//        case next: SolidDice => res = findFromDice(next, res)
+//      }
+//    )
+//    res
+//  }
+//  
+//  private def findFromDice(dice: SolidDice, group: Set[SolidDice]): Set[SolidDice] =
+//    if (dice.top != src.top || group.contains(dice)) group
+//    else findFromTile(dice.location.tile, group + dice)
+//  
+//  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
+//    val pos = board.positionInDir(t, dir)
+//    if (board.isWithinBounds(pos) && board(pos).floor.isOccupied)
+//      Some(board(pos).floor.dice)
+//    else None
+//  }
 }

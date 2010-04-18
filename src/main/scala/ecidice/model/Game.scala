@@ -32,6 +32,7 @@ package ecidice.model
 import scala.collection.immutable._
 
 import ecidice.model.dice._
+import ecidice.model.player._
 
 /**
  * Central mediator that manages the objects participating in a game and updates
@@ -60,7 +61,7 @@ class Game(numPlayers: Int, val board: Board) {
    */
   private def createPlayers(num: Int): List[Player] =
     if (num == numPlayers) Nil
-    else new Player(board.spawnPoints(num)) :: createPlayers(num + 1)
+    else Player.spawn(board.spawnPoints(num), num) :: createPlayers(num + 1)
   
   /**
    * Spawns a dice at the specified position on the board and updates the
@@ -70,14 +71,14 @@ class Game(numPlayers: Int, val board: Board) {
    * @param y the depth position on the board
    * @return optionally the new dice
    */
-  def spawnDice(x: Int, y: Int) = {
-    val space = board(x, y).floor
-    
-    if (space.isEmpty) {
-      val dice = Dice.appear(now, space)
-      space.occupy(dice)
-      tracker.track(dice.appearing)
-      Some(dice)
-    } else None
-  }
+//  def spawnDice(x: Int, y: Int) = {
+//    val space = board(x, y).floor
+//    
+//    if (space.isEmpty) {
+//      val dice = Dice.appear(now, space)
+//      space.occupy(dice)
+//      tracker.track(dice.appearing)
+//      Some(dice)
+//    } else None
+//  }
 }

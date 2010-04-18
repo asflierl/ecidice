@@ -39,99 +39,99 @@ import ecidice.model.player._
  * @author Andreas Flierl
  */
 class MovementReferee(board: Board, now: Instant, tracker: ActivityTracker) {
-  private var player: Player = _
-  private var direction: Direction.Value = _
-  private var dice: Dice = _
-  
-  /**
-   * Requests for a player to move in direction <code>dir</code>.
-   * <p>
-   * On a successful request, this method sets all necessary model state to
-   * represent the new situation.
-   * 
-   * @param p the player requesting to move
-   * @param dir the direction the player wants to move in
-   * @return whether the move was allowed (and started)
-   */
-  def requestMove(player: Player, direction: Direction.Value): Boolean = {
-    this.player = player
-    this.direction = direction
-    
-    if (player.isStanding) requestPlayerMove(player, direction, player.location)
-    else if (player.isController) {
-      this.dice = player.dice
-      requestDiceMove(player, direction)
-    } else if (player.isMoving) wouldBeSamePlayerMove(player.movement)
-    else false
-  }
-  
-  private def wouldBeSamePlayerMove(move: PlayerMovement) =
-    (move.destination.pos == board.positionInDir(player.location, direction))
-  
-  /* This is the easy case: the player controls no dice and just wants to
-   * move around.
-   */
-  private def requestPlayerMove(player: Player, direction: Direction.Value,
-      start: Tile): Boolean = {
-    
-    val destination = board.positionInDir(start, direction)
-    if (! board.isWithinBounds(destination)) return false 
-    val move = Activity.on(clock).playerMovement(player, start, board(destination)) 
-    player.move(move)
-    tracker.track(move)
-    true
-  }
-
-  /* Somewhat tricky: the player controls a dice and wants to move along with
-   * it. This is only granted if the target position is within bounds and the
-   * tile at that position is free to be moved to.
-   */
-  private def requestDiceMove(player: Player, direction: Direction.Value): Boolean =
-    if (dice.isSolid && player == dice.controller) tryToMoveFrom(dice.location)
-    else if (dice.isMoving) wouldBeSameDiceMove(dice.movement)
-    else false
-    
-  private def tryToMoveFrom(start: Space): Boolean = {
-    val position = board.positionInDir(start.tile, direction)
-
-    if (! board.isWithinBounds(position)) return false
-    
-    val tile = board(position)
-    val destination = findDestinationSpace(tile)
-    
-    if (destination.isEmpty) return false
-    
-    startDiceMovement(start, destination.get)
-    true
-  }
-  
-  private def wouldBeSameDiceMove(move: DiceMovement) =
-    (player == move.controller) &&
-    (move.destination.tile.pos == board.positionInDir(move.origin.tile, direction))
-  
-  private def startDiceMovement(origin: Space, destination: Space) = {
-    val transform = Transform(origin, destination, direction)
-    val move = Activity.on(clock).diceMovement(dice, origin, destination, 
-                                               transform, player)
-    
-    tracker.track(move)
-    
-    origin.involve(move)
-    destination.involve(move)
-    dice.move(move)
-  }
-  
-  private def findDestinationSpace(tile: Tile): Option[Space] =
-    if (tile.floor.isEmpty) Some(tile.floor)
-    else if (tile.floor.isOccupied) examineOccupied(tile.floor.dice)
-    else None
-  
-  private def examineOccupied(diceOnFloor: Dice) = 
-    if (! diceOnFloor.isSolid) None
-    else if (diceOnFloor.isControlled) None
-    else examineRaised(diceOnFloor.location.tile.raised)
-  
-  private def examineRaised(destination: Space) = 
-    if (destination.isEmpty) Some(destination)
-    else None
+//  private var player: Player = _
+//  private var direction: Direction.Value = _
+//  private var dice: Dice = _
+//  
+//  /**
+//   * Requests for a player to move in direction <code>dir</code>.
+//   * <p>
+//   * On a successful request, this method sets all necessary model state to
+//   * represent the new situation.
+//   * 
+//   * @param p the player requesting to move
+//   * @param dir the direction the player wants to move in
+//   * @return whether the move was allowed (and started)
+//   */
+//  def requestMove(player: Player, direction: Direction.Value): Boolean = {
+//    this.player = player
+//    this.direction = direction
+//    
+//    if (player.isStanding) requestPlayerMove(player, direction, player.location)
+//    else if (player.isController) {
+//      this.dice = player.dice
+//      requestDiceMove(player, direction)
+//    } else if (player.isMoving) wouldBeSamePlayerMove(player.movement)
+//    else false
+//  }
+//  
+//  private def wouldBeSamePlayerMove(move: PlayerMovement) =
+//    (move.destination.pos == board.positionInDir(player.location, direction))
+//  
+//  /* This is the easy case: the player controls no dice and just wants to
+//   * move around.
+//   */
+//  private def requestPlayerMove(player: Player, direction: Direction.Value,
+//      start: Tile): Boolean = {
+//    
+//    val destination = board.positionInDir(start, direction)
+//    if (! board.isWithinBounds(destination)) return false 
+//    val move = Activity.on(clock).playerMovement(player, start, board(destination)) 
+//    player.move(move)
+//    tracker.track(move)
+//    true
+//  }
+//
+//  /* Somewhat tricky: the player controls a dice and wants to move along with
+//   * it. This is only granted if the target position is within bounds and the
+//   * tile at that position is free to be moved to.
+//   */
+//  private def requestDiceMove(player: Player, direction: Direction.Value): Boolean =
+//    if (dice.isSolid && player == dice.controller) tryToMoveFrom(dice.location)
+//    else if (dice.isMoving) wouldBeSameDiceMove(dice.movement)
+//    else false
+//    
+//  private def tryToMoveFrom(start: Space): Boolean = {
+//    val position = board.positionInDir(start.tile, direction)
+//
+//    if (! board.isWithinBounds(position)) return false
+//    
+//    val tile = board(position)
+//    val destination = findDestinationSpace(tile)
+//    
+//    if (destination.isEmpty) return false
+//    
+//    startDiceMovement(start, destination.get)
+//    true
+//  }
+//  
+//  private def wouldBeSameDiceMove(move: DiceMovement) =
+//    (player == move.controller) &&
+//    (move.destination.tile.pos == board.positionInDir(move.origin.tile, direction))
+//  
+//  private def startDiceMovement(origin: Space, destination: Space) = {
+//    val transform = Transform(origin, destination, direction)
+//    val move = Activity.on(clock).diceMovement(dice, origin, destination, 
+//                                               transform, player)
+//    
+//    tracker.track(move)
+//    
+//    origin.involve(move)
+//    destination.involve(move)
+//    dice.move(move)
+//  }
+//  
+//  private def findDestinationSpace(tile: Tile): Option[Space] =
+//    if (tile.floor.isEmpty) Some(tile.floor)
+//    else if (tile.floor.isOccupied) examineOccupied(tile.floor.dice)
+//    else None
+//  
+//  private def examineOccupied(diceOnFloor: Dice) = 
+//    if (! diceOnFloor.isSolid) None
+//    else if (diceOnFloor.isControlled) None
+//    else examineRaised(diceOnFloor.location.tile.raised)
+//  
+//  private def examineRaised(destination: Space) = 
+//    if (destination.isEmpty) Some(destination)
+//    else None
 }

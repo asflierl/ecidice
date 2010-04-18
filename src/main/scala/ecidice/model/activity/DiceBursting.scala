@@ -35,7 +35,7 @@ import ecidice.model.player._
 
 class DiceBursting private (
     groupByName: => Set[LockedDice[DiceBursting]],
-    val timespan: Timespan
+    val time: Timespan
 ) extends DiceLock[DiceBursting] {
   lazy val group = groupByName
 }

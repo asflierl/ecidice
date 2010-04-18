@@ -48,39 +48,39 @@ package ecidice.model
  * @author Andreas Flierl
  */
 class ControlReferee {
-  private var player: Player = _
-  
-  /**
-   * Requests for this player to gain control over the dice below her.
-   * <p>
-   * On a successful request, this method sets all necessary model state to
-   * represent the new situation.
-   * 
-   * @param p the player requesting control over a dice
-   * @return the dice that is under the control of the player now or 
-   *         <code>None</code>
-   */
-  def requestControl(player: Player): Option[Dice] = {
-    this.player = player
-    
-    if (player.isStanding) requestControlOnTile(player.location)
-    else if (player.isController) Some(player.dice)
-    else None
-  }
-    
-  private def requestControlOnTile(tile: Tile) =
-    if (tile.raised.isEmpty) requestControlInSpace(tile.floor)
-    else requestControlInSpace(tile.raised) 
-  
-  private def requestControlInSpace(space: Space) =
-    if (space.isOccupied) requestControlOverDice(space.dice)
-    else None
-  
-  private def requestControlOverDice(dice: Dice) = 
-    if (! dice.isSolid || dice.isControlled) None
-    else {
-      dice.submitTo(player)
-      player.control(dice)
-      Some(dice)
-    }
+//  private var player: Player = _
+//  
+//  /**
+//   * Requests for this player to gain control over the dice below her.
+//   * <p>
+//   * On a successful request, this method sets all necessary model state to
+//   * represent the new situation.
+//   * 
+//   * @param p the player requesting control over a dice
+//   * @return the dice that is under the control of the player now or 
+//   *         <code>None</code>
+//   */
+//  def requestControl(player: Player): Option[Dice] = {
+//    this.player = player
+//    
+//    if (player.isStanding) requestControlOnTile(player.location)
+//    else if (player.isController) Some(player.dice)
+//    else None
+//  }
+//    
+//  private def requestControlOnTile(tile: Tile) =
+//    if (tile.raised.isEmpty) requestControlInSpace(tile.floor)
+//    else requestControlInSpace(tile.raised) 
+//  
+//  private def requestControlInSpace(space: Space) =
+//    if (space.isOccupied) requestControlOverDice(space.dice)
+//    else None
+//  
+//  private def requestControlOverDice(dice: Dice) = 
+//    if (! dice.isSolid || dice.isControlled) None
+//    else {
+//      dice.submitTo(player)
+//      player.control(dice)
+//      Some(dice)
+//    }
 }

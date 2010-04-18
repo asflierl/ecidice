@@ -31,6 +31,7 @@ package ecidice.model.dice
 
 import ecidice.model.activity.DiceMovement
 import ecidice.model.player.PlayerStandingWithDice
+import ecidice.model.space._
 
 /**
  * The dice is moving. During movement, it is always controlled by a player and 
@@ -48,8 +49,14 @@ class MovingDice private[dice] (
   def controller = movement.controller
   def transform = movement.transform
   
-  def stop(player: => PlayerStandingWithDice) = new SolidControlledDice(player, 
-      destination, rotation.transform(transform), serial)
+  def stop(player: => PlayerStandingWithDice) = {
+    lazy val dice = new SolidControlledDice(player, loc, 
+        rotation.transform(transform), serial)
+    lazy val loc: OccupiedSpace = new OccupiedSpace(destination.tile, dice)
+    
+    dice
+  }
+      
     
 }
 

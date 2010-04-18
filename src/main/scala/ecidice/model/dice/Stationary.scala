@@ -30,7 +30,8 @@
 package ecidice.model.dice
 
 import ecidice.model._
+import ecidice.model.space._
 
 trait Stationary {
-  def location: Space
+  def location: OccupiedSpace
 }
