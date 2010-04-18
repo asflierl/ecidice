@@ -49,7 +49,8 @@ class LockedDice[A <: DiceLock[A]] private[dice] (
   
   def regroup[B <: DiceLock[B]](lock: => B) = {
     lazy val dice = new LockedDice[B](lock, location, rotation, serial)
-    lazy val loc: OccupiedSpace = new OccupiedSpace(location.tile, dice)
+    lazy val loc: OccupiedSpace = new OccupiedSpace(location.tile, 
+        location.level, dice)
     
     dice
   }

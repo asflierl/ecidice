@@ -39,6 +39,7 @@ class StandingPlayer private[player] (
   def control(dice: => SolidDice) = {
     lazy val controller = new PlayerStandingWithDice(controlled, id)
     lazy val controlled: SolidControlledDice = dice.makeControlled(controller)
+    controlled.location.tile.updateWith(controlled.location)
     
     controller
   }

@@ -42,8 +42,9 @@ import ecidice.model._
 trait Space {
   def tile: Tile
   
-  def isFloor = (this == tile.floor)
-  def isRaised = (this == tile.raised)
+  def level: Tile.Level.Value
+  def isFloor = (level == Tile.Level.FLOOR)
+  def isRaised = (level == Tile.Level.RAISED)
   
   override def toString = 
     "Space(%d, %d, %s)".format(tile.x, tile.y, if (isRaised) "raised" else "floor")

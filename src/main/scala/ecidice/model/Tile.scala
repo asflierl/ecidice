@@ -39,8 +39,16 @@ import ecidice.model.space._
  */
 case class Tile(x: Int, y: Int) {
   var visibility = Tile.Visibility.VISIBLE
-  lazy val floor = new EmptySpace(this)
-  lazy val raised = new EmptySpace(this)
+  private var floorSpace: Space = new EmptySpace(this, Tile.Level.FLOOR)
+  private var raisedSpace: Space = new EmptySpace(this, Tile.Level.RAISED)
+  
+  def floor = floorSpace
+  def raised = raisedSpace
+  
+  def updateWith(s: Space) = s.level match {
+    case Tile.Level.FLOOR => floorSpace = s
+    case Tile.Level.RAISED => raisedSpace = s
+  }
   
   def pos = (x, y)
 }

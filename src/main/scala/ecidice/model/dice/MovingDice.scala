@@ -52,7 +52,8 @@ class MovingDice private[dice] (
   def stop(player: => PlayerStandingWithDice) = {
     lazy val dice = new SolidControlledDice(player, loc, 
         rotation.transform(transform), serial)
-    lazy val loc: OccupiedSpace = new OccupiedSpace(destination.tile, dice)
+    lazy val loc: OccupiedSpace = new OccupiedSpace(destination.tile, 
+        destination.level, dice)
     
     dice
   }

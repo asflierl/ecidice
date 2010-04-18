@@ -46,7 +46,8 @@ class AppearingDice private[dice] (
   
   def makeSolid = {
     lazy val dice = new SolidDice(newLocation, rotation, serial)
-    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, dice)
+    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, 
+        location.level, dice)
     
     dice
   }

@@ -32,6 +32,10 @@ package ecidice.model.space
 import ecidice.model.activity._
 import ecidice.model._
 
-class BusySpace(val tile: Tile, movementByName: => DiceMovement) extends Space {
+class BusySpace(
+  val tile: Tile, 
+  val level: Tile.Level.Value,
+  movementByName: => DiceMovement
+) extends Space {
   lazy val movement = movementByName
 }

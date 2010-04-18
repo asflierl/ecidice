@@ -32,6 +32,7 @@ package ecidice.model.player
 import ecidice.model._
 import ecidice.model.activity._
 import ecidice.model.dice._
+import ecidice.model.space._
 
 class PlayerMovingWithDice private[player] (
     activityByName: => DiceMovement,
@@ -42,6 +43,9 @@ class PlayerMovingWithDice private[player] (
   def stop = {
     lazy val player = new PlayerStandingWithDice(dice, id)
     lazy val dice: SolidControlledDice = movement.dice.stop(player)
+    val origin = new EmptySpace(movement.origin.tile, movement.origin.level)
+    origin.tile.updateWith(origin)
+    dice.location.tile.updateWith(dice.location)
     
     player
   }

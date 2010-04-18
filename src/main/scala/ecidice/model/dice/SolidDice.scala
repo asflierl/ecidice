@@ -46,15 +46,17 @@ class SolidDice private[dice] (
   
   def makeControlled(controller: => PlayerStandingWithDice) = {
     lazy val dice = new SolidControlledDice(controller, newLocation, rotation, serial)
-    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, dice)
+    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, 
+        location.level, dice)
     
     dice
   }
   
   def lock[A <: DiceLock[A]](lock: => A) = {
     lazy val dice = new LockedDice[A](lock, newLocation, rotation, serial)
-    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, dice)
-    
+    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, 
+        location.level, dice)
+    newLocation.tile.updateWith(newLocation)
     dice
   }
 }

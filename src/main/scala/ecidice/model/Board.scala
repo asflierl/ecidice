@@ -70,9 +70,7 @@ class Board(val width: Int, val depth: Int) {
    * @param y the depth position (front to back)
    * @return the tile at the specified coordinates
    */
-  def apply(x: Int, y: Int): Tile = {
-    tileArr(x)(y)
-  }
+  def apply(x: Int, y: Int): Tile = tileArr(x)(y)
   
   /**
    * Returns the tile at the specified position.
