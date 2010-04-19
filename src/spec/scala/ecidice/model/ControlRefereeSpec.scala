@@ -26,87 +26,87 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package ecidice.model
-
-import ecidice.SpecBase
-import org.specs.ScalaCheck
-
-/**
- * Informal specification of the control request referee.
- * 
- * @author Andreas Flierl
- */
-object ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
-  def referee = game.controlReferee
-  
-  "A control referee" ->-(simpleGame) should {  
-    
-    "not grant control on any tile when the board is empty" in {
-      for (x <- 0 to 2; y <- 0 to 2) {
-        placePlayer(p1, (x, y))
-        
-        val request = "control request on (%d, %d)".format(x, y)
-        referee.requestControl(p1) aka request must be (None)
-        
-        p1.isStanding must beTrue
-        p1.location must be (board(x, y))
-      }
-    }
-    
-    "grant control over a single dice on the floor" in {
-      placePlayer(p1, (1, 1))
-      val d = placeDice(1, 1)
-      
-      referee.requestControl(p1) mustEqual Some(d)
-      
-      d.isSolid must beTrue
-      d.location must be (board(1, 1).floor)
-      d.controller must be (p1)
-    }
-    
-    "grant control over the upper of 2 stacked dice" in {
-      placePlayer(p1, (1, 1))
-      val d1 = placeDice(1, 1)
-      val d2 = placeDice(1, 1)
-      
-      referee.requestControl(p1) mustEqual Some(d2)
-      d2.isSolid must beTrue
-      d2.location must be (board(1, 1).raised)
-      d2.controller must be (p1)
-      d1.isSolid must beTrue
-      d1.location must be (board(1, 1).floor)
-      d1.isControlled must beFalse
-      d1.controller must throwAn[IllegalStateException]
-      p1.isController must beTrue
-      p1.dice must be (d2)
-    }
-    
-    "not grant control over an appearing dice" in {
-      placePlayer(p1, (1, 1))
-      game.spawnDice(1, 1) aka "spawning" must beSome[Dice]
-      referee.requestControl(p1) aka "control request" must beNone
-    }
-    
-    "not grant a player control over a dice at the floor level " +
-    "that is already controlled by another player" in {
-      placePlayer(p1, (1, 1))
-      placePlayer(p2, (1, 1))
-      val d1 = placeDice(1, 1)
-      
-      referee.requestControl(p1) mustEqual Some(d1)
-      referee.requestControl(p2) must beNone
-    }
-    
-    "not grant a player control over a dice at the raised level " +
-    "that is already controlled by another player" in {
-      placePlayer(p1, (1, 1))
-      placePlayer(p2, (1, 1))
-      placeDice(1, 1)
-      val d1 = placeDice(1, 1)
-      
-      referee.requestControl(p1) mustEqual Some(d1)
-      referee.requestControl(p2) must beNone
-    }
-  }
-}
+//
+//package ecidice.model
+//
+//import ecidice.SpecBase
+//import org.specs.ScalaCheck
+//
+///**
+// * Informal specification of the control request referee.
+// * 
+// * @author Andreas Flierl
+// */
+//object ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
+//  def referee = game.controlReferee
+//  
+//  "A control referee" ->-(simpleGame) should {  
+//    
+//    "not grant control on any tile when the board is empty" in {
+//      for (x <- 0 to 2; y <- 0 to 2) {
+//        placePlayer(p1, (x, y))
+//        
+//        val request = "control request on (%d, %d)".format(x, y)
+//        referee.requestControl(p1) aka request must be (None)
+//        
+//        p1.isStanding must beTrue
+//        p1.location must be (board(x, y))
+//      }
+//    }
+//    
+//    "grant control over a single dice on the floor" in {
+//      placePlayer(p1, (1, 1))
+//      val d = placeDice(1, 1)
+//      
+//      referee.requestControl(p1) mustEqual Some(d)
+//      
+//      d.isSolid must beTrue
+//      d.location must be (board(1, 1).floor)
+//      d.controller must be (p1)
+//    }
+//    
+//    "grant control over the upper of 2 stacked dice" in {
+//      placePlayer(p1, (1, 1))
+//      val d1 = placeDice(1, 1)
+//      val d2 = placeDice(1, 1)
+//      
+//      referee.requestControl(p1) mustEqual Some(d2)
+//      d2.isSolid must beTrue
+//      d2.location must be (board(1, 1).raised)
+//      d2.controller must be (p1)
+//      d1.isSolid must beTrue
+//      d1.location must be (board(1, 1).floor)
+//      d1.isControlled must beFalse
+//      d1.controller must throwAn[IllegalStateException]
+//      p1.isController must beTrue
+//      p1.dice must be (d2)
+//    }
+//    
+//    "not grant control over an appearing dice" in {
+//      placePlayer(p1, (1, 1))
+//      game.spawnDice(1, 1) aka "spawning" must beSome[Dice]
+//      referee.requestControl(p1) aka "control request" must beNone
+//    }
+//    
+//    "not grant a player control over a dice at the floor level " +
+//    "that is already controlled by another player" in {
+//      placePlayer(p1, (1, 1))
+//      placePlayer(p2, (1, 1))
+//      val d1 = placeDice(1, 1)
+//      
+//      referee.requestControl(p1) mustEqual Some(d1)
+//      referee.requestControl(p2) must beNone
+//    }
+//    
+//    "not grant a player control over a dice at the raised level " +
+//    "that is already controlled by another player" in {
+//      placePlayer(p1, (1, 1))
+//      placePlayer(p2, (1, 1))
+//      placeDice(1, 1)
+//      val d1 = placeDice(1, 1)
+//      
+//      referee.requestControl(p1) mustEqual Some(d1)
+//      referee.requestControl(p2) must beNone
+//    }
+//  }
+//}

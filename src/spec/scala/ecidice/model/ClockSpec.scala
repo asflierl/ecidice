@@ -26,72 +26,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package ecidice.model
-
-import ecidice.SpecBase
-
-/**
- * Informally specifies the clock model.
- * 
- * @author Andreas Flierl
- */
-object ClockSpec extends ecidice.SpecBase {
-  "A clock" should {
-    val clock = new Clock
-    
-    "initially be set to 0" in {
-      clock.now mustEqual 0d
-    }
-    
-    "correctly tick forward" in {
-      clock.tick(DOUBLE_DELTA)
-      clock.now must beCloseTo(DOUBLE_DELTA, DOUBLE_DELTA)
-    }
-    
-    "not tick zero seconds" in {
-      clock.tick(0d) must throwAn[IllegalArgumentException]
-    }
-    
-    "not tick negatively" in {
-      clock.tick(-DOUBLE_DELTA) must throwAn[IllegalArgumentException]
-    }
-    
-    "call reactions when ticking" in {
-      val reaction = mock[() => Any]
-      
-      clock.addReaction(reaction)
-      clock.tick(1d)
-      
-      reaction() was called
-    }
-    
-    "not call reactions when ticking zero seconds" in {
-      val reaction = mock[() => Any]
-      
-      clock.addReaction(reaction)
-      clock.tick(0d) must throwAn[IllegalArgumentException]
-      
-      reaction() wasnt called
-    }
-    
-    "not call any reactions when ticking negatively" in {
-      val reaction = mock[() => Any]
-      
-      clock.addReaction(reaction)
-      clock.tick(-1d) must throwAn[IllegalArgumentException]
-      
-      reaction() wasnt called
-    }
-    
-    "still provide microsecond accuracy after 100 years" in {
-      clock.tick(100d * 365d * 24d * 60d * 60d)
-      val before = clock.now
-      
-      clock.tick(1E-6)
-      val after = clock.now
-      
-      (after - before) must beLessThanOrEqualTo(1E-6)
-    } 
-  }
-}
+//
+//package ecidice.model
+//
+//import ecidice.SpecBase
+//
+///**
+// * Informally specifies the clock model.
+// * 
+// * @author Andreas Flierl
+// */
+//object ClockSpec extends ecidice.SpecBase {
+//  "A clock" should {
+//    val clock = new Clock
+//    
+//    "initially be set to 0" in {
+//      clock.now mustEqual 0d
+//    }
+//    
+//    "correctly tick forward" in {
+//      clock.tick(DOUBLE_DELTA)
+//      clock.now must beCloseTo(DOUBLE_DELTA, DOUBLE_DELTA)
+//    }
+//    
+//    "not tick zero seconds" in {
+//      clock.tick(0d) must throwAn[IllegalArgumentException]
+//    }
+//    
+//    "not tick negatively" in {
+//      clock.tick(-DOUBLE_DELTA) must throwAn[IllegalArgumentException]
+//    }
+//    
+//    "call reactions when ticking" in {
+//      val reaction = mock[() => Any]
+//      
+//      clock.addReaction(reaction)
+//      clock.tick(1d)
+//      
+//      reaction() was called
+//    }
+//    
+//    "not call reactions when ticking zero seconds" in {
+//      val reaction = mock[() => Any]
+//      
+//      clock.addReaction(reaction)
+//      clock.tick(0d) must throwAn[IllegalArgumentException]
+//      
+//      reaction() wasnt called
+//    }
+//    
+//    "not call any reactions when ticking negatively" in {
+//      val reaction = mock[() => Any]
+//      
+//      clock.addReaction(reaction)
+//      clock.tick(-1d) must throwAn[IllegalArgumentException]
+//      
+//      reaction() wasnt called
+//    }
+//    
+//    "still provide microsecond accuracy after 100 years" in {
+//      clock.tick(100d * 365d * 24d * 60d * 60d)
+//      val before = clock.now
+//      
+//      clock.tick(1E-6)
+//      val after = clock.now
+//      
+//      (after - before) must beLessThanOrEqualTo(1E-6)
+//    } 
+//  }
+//}

@@ -26,59 +26,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package ecidice.model
-
-import ecidice.SpecBase
-
-object DiceMatcherSpec extends SpecBase with GameContexts {
-  def matcher = new DiceMatcher(board)
-  
-  "A dice matcher" ->-(simpleGame) should {
-    
-    "correctly find a group of matching dice" in {
-      val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
-      dice(8).change(Transform.ROTATE_FORWARD)
-      dice(4).change(Transform.ROTATE_FORWARD)
-      
-      val inc = dice.filter(_.top == 6)
-      val exc = dice.filter(_.top != 6)
-      
-      val searchResult = matcher.find(dice(0), board(0, 0))
-      
-      inc.foreach(searchResult must contain(_))
-      exc.foreach(searchResult must not contain(_))
-    }
-    
-    "correctly find only one of two groups of matching dice" in {
-      val d00 = placeDice(0, 0)
-      val d10 = placeDice(1, 0)
-      val d02 = placeDice(0, 2)
-      val d12 = placeDice(1, 2)
-      val d11 = placeDice(1, 1).change(Transform.ROTATE_LEFT)
-      
-      val s = matcher.find(d12, board(1, 2))
-      
-      List(d02, d12) foreach (s must contain(_))
-      List(d00, d10, d11) foreach (s must not contain(_))
-    }
-    
-    "correctly find a board full of matching dice" in {
-      val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
-      
-      val s = matcher.find(dice(4), board(1, 1))
-      
-      dice foreach (s must contain(_))
-    }
-    
-    "correctly find no matches of an isolated dice" in {
-      List((1, 0), (0, 1), (2, 1), (1, 2)).foreach(placeDice(_))
-      val d = placeDice(1, 1)
-      d.change(Transform.ROTATE_FORWARD)
-      
-      val matches = matcher.find(d, board(1, 1))
-      
-      matches mustEqual Set(d)
-    }
-  }
-}
+//
+//package ecidice.model
+//
+//import ecidice.SpecBase
+//
+//object DiceMatcherSpec extends SpecBase with GameContexts {
+//  def matcher = new DiceMatcher(board)
+//  
+//  "A dice matcher" ->-(simpleGame) should {
+//    
+//    "correctly find a group of matching dice" in {
+//      val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+//      dice(8).change(Transform.ROTATE_FORWARD)
+//      dice(4).change(Transform.ROTATE_FORWARD)
+//      
+//      val inc = dice.filter(_.top == 6)
+//      val exc = dice.filter(_.top != 6)
+//      
+//      val searchResult = matcher.find(dice(0), board(0, 0))
+//      
+//      inc.foreach(searchResult must contain(_))
+//      exc.foreach(searchResult must not contain(_))
+//    }
+//    
+//    "correctly find only one of two groups of matching dice" in {
+//      val d00 = placeDice(0, 0)
+//      val d10 = placeDice(1, 0)
+//      val d02 = placeDice(0, 2)
+//      val d12 = placeDice(1, 2)
+//      val d11 = placeDice(1, 1).change(Transform.ROTATE_LEFT)
+//      
+//      val s = matcher.find(d12, board(1, 2))
+//      
+//      List(d02, d12) foreach (s must contain(_))
+//      List(d00, d10, d11) foreach (s must not contain(_))
+//    }
+//    
+//    "correctly find a board full of matching dice" in {
+//      val dice = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList
+//      
+//      val s = matcher.find(dice(4), board(1, 1))
+//      
+//      dice foreach (s must contain(_))
+//    }
+//    
+//    "correctly find no matches of an isolated dice" in {
+//      List((1, 0), (0, 1), (2, 1), (1, 2)).foreach(placeDice(_))
+//      val d = placeDice(1, 1)
+//      d.change(Transform.ROTATE_FORWARD)
+//      
+//      val matches = matcher.find(d, board(1, 1))
+//      
+//      matches mustEqual Set(d)
+//    }
+//  }
+//}

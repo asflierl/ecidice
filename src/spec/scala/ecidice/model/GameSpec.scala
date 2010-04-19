@@ -27,15 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
-
-import ecidice.SpecBase
-
-/**
- * Spec-based tests of the game model.
- * 
- * @author Andreas Flierl
- */
-object GameSpec extends SpecBase with GameContexts {
-  // TODO
-}
+//package ecidice.model
+//
+//import ecidice.SpecBase
+//
+///**
+// * Spec-based tests of the game model.
+// * 
+// * @author Andreas Flierl
+// */
+//object GameSpec extends SpecBase with GameContexts {
+//  // TODO
+//}

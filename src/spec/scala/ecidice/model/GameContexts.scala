@@ -26,66 +26,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package ecidice.model
-
-import org.specs.Specification
-import org.specs.specification.Context
-
-trait GameContexts extends Specification {
-  var board: Board = _
-  var game: Game = _
-  
-  val simpleGame = beforeContext {
-    board = new Board(3, 3)
-    game = new Game(2, board)
-  } 
-  
-  def p1 = game.players(0)
-  def p2 = game.players(1)
-  
-  def placePlayer(player: Player, pos: (Int, Int)): Unit =
-    player.stand(board(pos))
-  
-  /**
-   * Helper method that creates a new dice and places it at the topmost 
-   * available space at the specified position or throws an exception if this
-   * fails.
-   * 
-   * @param x the horizontal component of the position to place the dice
-   * @param y the depth component of the position to place the dice
-   * @return the newly created and placed dice
-   */
-  def placeDice(pos: (Int, Int)): Dice = {
-    val dice = new Dice
-    val destinationSpace = findDestinationSpace(board(pos))
-      
-    destinationSpace.occupy(dice)
-    dice.solidify(destinationSpace, None)
-    dice
-  }
-  
-  private def findDestinationSpace(destinationTile: Tile) =
-    if (destinationTile.floor.isEmpty) destinationTile.floor
-    else destinationTile.raised
-  
-  /**
-   * Builds a dice group with the specified dice that contains newly placed
-   * dice at the specified set of positions.
-   * 
-   * @param state the state of the new dice group
-   * @param positions the positions where dice should be placed and then added
-   *        to the new dice group
-   * @return the newly created dice group
-   */
-  def buildDiceGroup(positions: Set[(Int, Int)]) = {
-    val dice = positions.map(placeDice(_))
-    dice.foreach(_.change(Transform.ROTATE_RIGHT))
-    
-    val group = DiceGroup.createCharging(dice)
-    val activity = Activity.on(game.clock).diceLock(group)
-    dice.foreach(_.lock(activity, p1))
-    game.tracker.track(activity)
-    group
-  }
-}
+//
+//package ecidice.model
+//
+//import org.specs.Specification
+//import org.specs.specification.Context
+//
+//trait GameContexts extends Specification {
+//  var board: Board = _
+//  var game: Game = _
+//  
+//  val simpleGame = beforeContext {
+//    board = new Board(3, 3)
+//    game = new Game(2, board)
+//  } 
+//  
+//  def p1 = game.players(0)
+//  def p2 = game.players(1)
+//  
+//  def placePlayer(player: Player, pos: (Int, Int)): Unit =
+//    player.stand(board(pos))
+//  
+//  /**
+//   * Helper method that creates a new dice and places it at the topmost 
+//   * available space at the specified position or throws an exception if this
+//   * fails.
+//   * 
+//   * @param x the horizontal component of the position to place the dice
+//   * @param y the depth component of the position to place the dice
+//   * @return the newly created and placed dice
+//   */
+//  def placeDice(pos: (Int, Int)): Dice = {
+//    val dice = new Dice
+//    val destinationSpace = findDestinationSpace(board(pos))
+//      
+//    destinationSpace.occupy(dice)
+//    dice.solidify(destinationSpace, None)
+//    dice
+//  }
+//  
+//  private def findDestinationSpace(destinationTile: Tile) =
+//    if (destinationTile.floor.isEmpty) destinationTile.floor
+//    else destinationTile.raised
+//  
+//  /**
+//   * Builds a dice group with the specified dice that contains newly placed
+//   * dice at the specified set of positions.
+//   * 
+//   * @param state the state of the new dice group
+//   * @param positions the positions where dice should be placed and then added
+//   *        to the new dice group
+//   * @return the newly created dice group
+//   */
+//  def buildDiceGroup(positions: Set[(Int, Int)]) = {
+//    val dice = positions.map(placeDice(_))
+//    dice.foreach(_.change(Transform.ROTATE_RIGHT))
+//    
+//    val group = DiceGroup.createCharging(dice)
+//    val activity = Activity.on(game.clock).diceLock(group)
+//    dice.foreach(_.lock(activity, p1))
+//    game.tracker.track(activity)
+//    group
+//  }
+//}
