@@ -38,7 +38,7 @@ object HashCodeSpec extends SpecBase {
     }
     
     "calculate a good hash code for a single given parameter" in {
-      HashCode(25) mustEqual 42
+      HashCode(25) mustEqual 17 + 25
     }
     
     "calculate a good hash code for several given parameters" in {
