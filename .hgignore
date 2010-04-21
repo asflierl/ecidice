@@ -1,5 +1,8 @@
 syntax: regexp
-^target$
+^\.classpath$
+^\.project$
 ^bin$
+^\.settings$
+^target$
 ^reports$
 ^\.scala_dependencies$
