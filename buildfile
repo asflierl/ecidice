@@ -31,8 +31,6 @@ require :artifacts
 ENV['USE_FSC'] = 'yes'
 
 define 'ecidice' do
-  compile.options.debug = :vars
-  compile.options.deprecation = true
   compile.options.optimise = true
   compile.with JME
   
