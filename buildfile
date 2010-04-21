@@ -28,13 +28,14 @@
 require 'buildr/scala'
 require :artifacts
 
-Buildr::Scala::Scalac::REQUIRES.library = '2.8.0.Beta1'
-Buildr::Scala::Scalac::REQUIRES.compiler = '2.8.0.Beta1'
-
 ENV['USE_FSC'] = 'yes'
 
 define 'ecidice' do
+  compile.options.debug = :vars
+  compile.options.deprecation = true
+  compile.options.optimise = true
   compile.with JME
+  
   test.with SPECS
-  test.include 'ecidice.EcidiceJUnit4Suite'
+  test.include 'ecidice.CompositeSpec'
 end

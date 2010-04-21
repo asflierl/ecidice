@@ -1,4 +1,5 @@
 syntax: regexp
 ^target$
+^bin$
 ^reports$
 ^\.scala_dependencies$
