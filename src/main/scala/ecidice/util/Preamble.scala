@@ -36,5 +36,4 @@ package ecidice.util
  * scope.
  */
 object Preamble {
-  implicit def decorateFloat(f: Float) = new FloatDecorator(f)
 }
