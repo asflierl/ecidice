@@ -49,3 +49,6 @@ case class Rotation(top: Int, right: Int, front: Int) {
     case Transform.FLIP_LEFT_OR_RIGHT => Rotation(bottom, left, front)
   }
 }
+object Rotation {
+  def apply() = new Rotation(6, 5, 4)
+}

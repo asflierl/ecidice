@@ -84,7 +84,7 @@ object Dice {
   }
   
   def appear(emptyLocation: EmptySpace, now: Instant) = {
-    lazy val dice = new AppearingDice(activity, location, Rotation(6, 5, 4), nextSerial)
+    lazy val dice = new AppearingDice(activity, location, Rotation(), nextSerial)
     lazy val activity: DiceAppearing = new DiceAppearing(dice, now)
     lazy val location: OccupiedSpace = new OccupiedSpace(emptyLocation.tile, 
         emptyLocation.level, dice)

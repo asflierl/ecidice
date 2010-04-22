@@ -6,3 +6,4 @@ syntax: regexp
 ^target$
 ^reports$
 ^\.scala_dependencies$
+\.DS_Store$
