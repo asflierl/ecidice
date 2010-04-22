@@ -38,5 +38,5 @@ trait SpecBase extends Specification with DataTables with Mockito with ScalaChec
   val FLOAT_DELTA = 1E-6f
   val DOUBLE_DELTA = 1E-12d
   
-  //detailedDiffs
+  detailedDiffs
 }
