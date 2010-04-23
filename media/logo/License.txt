@@ -1,0 +1,15 @@
+Copyright (c) 2010 Andreas Flierl
+Derived from http://commons.wikimedia.org/wiki/File:2-Dice-Icon.svg
+Original author: Steaphan Greene
+Original license: Creative Commons Attribution-Share Alike 3.0 Unported
+All rights reserved.
+
+This work is licensed under the Creative Commons Attribution-Share Alike 3.0
+Unported License. To view a copy of this license, visit 
+http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
+ 
+Creative Commons, 
+171 Second Street, 
+Suite 300, 
+San Francisco, 
+California, 94105, USA.
