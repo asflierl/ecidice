@@ -29,7 +29,7 @@
 
 package ecidice.model
 
-import ecidice.model.space._
+import space._
 
 /**
  * Represents a tile in the game board. Each tile has an (inititally empty)

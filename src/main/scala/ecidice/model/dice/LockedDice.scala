@@ -27,11 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model
+package dice
 
-import ecidice.model._
-import ecidice.model.activity._
-import ecidice.model.space._
+import activity._, space._
 
 /**
  * The dice has been locked and is part of a dice group, i.e. it is either

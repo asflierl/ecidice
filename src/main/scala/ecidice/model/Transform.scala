@@ -29,7 +29,7 @@
 
 package ecidice.model
 
-import ecidice.model.space._
+import space._
 
 /**
  * Lists possible transformations of a dice.
@@ -46,7 +46,7 @@ object Transform extends Enumeration {
   val FLIP_UP_OR_DOWN = Value("flip up or down")
   val FLIP_LEFT_OR_RIGHT = Value("flip left or right")
   
-  def apply(from: BusySpace, to: BusySpace, dir: Direction.Value): Transform.Value = {
+  def apply(from: Space, to: Space, dir: Direction.Value): Transform.Value = {
     if (from.isFloor == to.isFloor) dir match {
       case Direction.BACKWARD => Transform.ROTATE_BACKWARD
       case Direction.FORWARD => Transform.ROTATE_FORWARD

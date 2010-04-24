@@ -27,11 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model
+package dice
 
-import ecidice.model._
-import ecidice.model.activity._
-import ecidice.model.space._
+import activity._, space._
 import ecidice.util._
 
 /**

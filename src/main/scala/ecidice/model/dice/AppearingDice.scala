@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model
+package dice
 
-import ecidice.model.activity.DiceAppearing
-import ecidice.model.space._
+import activity._, space._
 
 /**
  * A dice that is appearing that already occupies some space.

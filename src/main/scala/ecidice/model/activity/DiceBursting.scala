@@ -27,11 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.activity
+package ecidice.model
+package activity
 
-import ecidice.model._
-import ecidice.model.dice._
-import ecidice.model.player._
+import dice._
 
 class DiceBursting(
     groupByName: => Set[LockedDice[DiceBursting]],

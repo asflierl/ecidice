@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.space
+package ecidice.model
+package space
 
-import ecidice.model.dice._
-import ecidice.model._
+import dice._
 
 /**
  * Represents an area or space on the game board, either on the ground or on a

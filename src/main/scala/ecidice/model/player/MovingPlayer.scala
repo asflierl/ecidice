@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.player
+package ecidice.model
+package player
 
-import ecidice.model._
-import ecidice.model.activity._
+import activity._
 
 class MovingPlayer private[player] ( 
     movementByName: => PlayerMovement,

@@ -30,7 +30,7 @@
 package ecidice.model
 
 import ecidice.util.NotYetImplementedException
-import ecidice.model.dice._
+import dice._
 
 class UpdateMechanics(board: Board, now: Instant, tracker: ActivityTracker) {
 //  private val diceMatcher = new DiceMatcher(board)

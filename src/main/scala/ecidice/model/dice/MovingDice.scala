@@ -27,11 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model
+package dice
 
-import ecidice.model.activity.DiceMovement
-import ecidice.model.player.PlayerStandingWithDice
-import ecidice.model.space._
+import activity._, player._, space._
 
 /**
  * The dice is moving. During movement, it is always controlled by a player and 

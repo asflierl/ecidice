@@ -27,11 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.activity
+package ecidice.model
+package activity
 
-import ecidice.model._
-import ecidice.model.dice._
-import ecidice.model.player._
+import dice._
 
 trait DiceLock[A <: DiceLock[A]] extends Activity { this: A =>
   def group: Set[LockedDice[A]]

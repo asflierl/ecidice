@@ -27,11 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.space
+package ecidice.model
+package space
 
-import ecidice.model.activity._
-import ecidice.model.dice._
-import ecidice.model._
+import dice._
 
 class OccupiedSpace (
     val tile: Tile,

@@ -27,9 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
-
-import ecidice.model.Transform
+package ecidice.model
+package dice
 
 case class Rotation(top: Int, right: Int, front: Int) {
   def bottom = opposite(top)

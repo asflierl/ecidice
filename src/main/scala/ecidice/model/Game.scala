@@ -31,8 +31,7 @@ package ecidice.model
 
 import scala.collection.immutable._
 
-import ecidice.model.dice._
-import ecidice.model.player._
+import dice._, player._
 
 /**
  * Central mediator that manages the objects participating in a game and updates

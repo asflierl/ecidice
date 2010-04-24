@@ -27,9 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
-
-import ecidice.model.activity._
+package ecidice.model
+package dice
 
 class BurstDice(
     val rotation: Rotation,

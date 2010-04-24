@@ -27,9 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.player
-
-import ecidice.model._
+package ecidice.model
+package player
 
 trait Player {
   def id: Int

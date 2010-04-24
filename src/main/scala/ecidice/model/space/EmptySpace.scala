@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.space
+package ecidice.model
+package space
 
-import ecidice.model._
-import ecidice.model.dice._
+import dice._
 
 class EmptySpace(
     val tile: Tile,

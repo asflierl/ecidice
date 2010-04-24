@@ -29,9 +29,7 @@
 
 package ecidice.model
 
-import ecidice.model.activity._
-import ecidice.model.dice._
-import ecidice.model.player._
+import activity._, dice._, player._
 
 /**
  * Defines the rules for when and where a player is allowed to move.

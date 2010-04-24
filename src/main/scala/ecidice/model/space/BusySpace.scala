@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.space
+package ecidice.model
+package space
 
-import ecidice.model.activity._
-import ecidice.model._
+import activity._
 
 class BusySpace(
   val tile: Tile, 
