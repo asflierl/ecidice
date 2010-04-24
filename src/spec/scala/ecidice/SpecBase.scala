@@ -35,8 +35,8 @@ import org.specs.mock.Mockito
 import org.specs.ScalaCheck
 
 trait SpecBase extends Specification with DataTables with Mockito with ScalaCheck {
-  val FLOAT_DELTA = 1E-6f
-  val DOUBLE_DELTA = 1E-12d
+  val floatDelta = 1E-6f
+  val delta = 1E-12d
   
   detailedDiffs
 }

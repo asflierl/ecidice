@@ -59,7 +59,7 @@ object TimespanSpec extends SpecBase {
       val t = Timespan(Instant(0), Duration(1))
       
       for (x <- 0d to 1d by .001d) {
-        t.progress(Instant(x)) must be closeTo(x +/- DOUBLE_DELTA)
+        t.progress(Instant(x)) must be closeTo(x +/- delta)
       }
     }
     
@@ -87,7 +87,7 @@ object TimespanSpec extends SpecBase {
       val t = Timespan(start, Duration(4E-6d))
       val now = start + Duration(3E-6d)
 
-      t.progress(now) must be closeTo(.75 +/- DOUBLE_DELTA)
+      t.progress(now) must be closeTo(.75 +/- delta)
     }
   }
 }
