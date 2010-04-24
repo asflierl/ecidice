@@ -43,6 +43,10 @@ object CompositeSpec extends Specification {
 //    model.MovementRefereeSpec,
 //    model.TimespanSpec,
 //    model.UpdateMechanicsSpec,
+    model.DurationSpec,
+    model.InstantSpec,
+    model.TimespanSpec,
+    
     model.dice.RotationSpec,
     
     util.HashCodeSpec

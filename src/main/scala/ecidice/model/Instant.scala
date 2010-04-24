@@ -33,6 +33,8 @@ package ecidice.model
  * An instant in time.
  */
 case class Instant(time: Double = 0d) extends Ordered[Instant] {
-  def after(duration: Duration) = Instant(time + duration.seconds)
+  require(time >= 0d, "an instant may never be negative")
+  
+  def +(duration: Duration) = Instant(time + duration.seconds)
   def compare(other: Instant) = time.compare(other.time)
 }

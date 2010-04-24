@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model.dice
+package ecidice.model
+package dice
 
 import ecidice.SpecBase
-import ecidice.model._
 
 /**
  * Informal specification of a dice rotation.
