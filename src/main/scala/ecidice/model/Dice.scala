@@ -31,21 +31,7 @@ package ecidice.model
 
 /**
  * A single 6-side dice.
- * <p>
- * The dice layout is 
- * <pre>
- *  3
- *  6512
- *  4
- * </pre>
- * where 6 is on top, 5 on the right side, 4 on the front. 
- * This can alternatively be represented as
- * <pre>
- *  65
- *  4
- * </pre>
- * to sufficiently describe the rotation of the dice.
- * <p>
+ * 
  * This class is final because it is not designed for extension through 
  * inheritance (esp. considering equals(Any)).
  * 
@@ -53,53 +39,23 @@ package ecidice.model
  */
 final class Dice {
   private val serial = Dice.nextSerial
+  private var rota = Rotation.initial
   
-  private var topFace = 6
-  private var rightFace = 5
-  private var frontFace = 4
-  
-  /**
-   * Holds the state of this dice in respect to the game rules.
-   */
   private var state: State = _
   
-  def top = topFace  
-  def bottom = opposite(topFace)
-  def right = rightFace
-  def left = opposite(rightFace)
-  def front = frontFace
-  def back = opposite(frontFace)
-  
-  /**
-   * Returns the number on the opposite site of the specified face, i.e. 
-   * <code>7 - eyes</code>.
-   * 
-   * @param eyes the eyes on the face whose opposite to return
-   * @return the number of eyes on the opposite side
-   */
-  private def opposite(eyes: Int) = 7 - eyes
-  
-  private def set(top: Int, right: Int, front: Int) = {
-    topFace = top
-    rightFace = right
-    frontFace = front
-  }
+  def top = rota.top  
+  def bottom = rota.bottom
+  def right = rota.right
+  def left = rota.left
+  def front = rota.front
+  def back = rota.back
   
   /**
    * Changes this dice's rotation according to the specified transform.
    * 
    * @param how the transform to apply
    */
-  def change(how: Transform.Value) = how match {
-    case Transform.ROTATE_BACKWARD => set(front, right, bottom)
-    case Transform.ROTATE_FORWARD => set(back, right, top)
-    case Transform.ROTATE_RIGHT => set(left, top, front)
-    case Transform.ROTATE_LEFT => set(right, bottom, front)
-    case Transform.SPIN_CLOCKWISE => set(top, back, right)
-    case Transform.SPIN_COUNTERCLOCKWISE => set(top, front, left)
-    case Transform.FLIP_UP_OR_DOWN => set(bottom, right, back)
-    case Transform.FLIP_LEFT_OR_RIGHT => set(bottom, left, front)
-  }
+  def change(how: Transform.Value) = (rota = rota.transform(how))
   
   override def equals(obj: Any) = obj match {
     case other: Dice => other.serial == serial
@@ -108,8 +64,7 @@ final class Dice {
   
   override def hashCode = serial
   
-  override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, 
-                                                      right, front)
+  override def toString = "Dice[%d]-%s".format(serial, rota)
  
   def isAppearing = state.isInstanceOf[Appearing]
   def isSolid = state.isInstanceOf[Solid]
