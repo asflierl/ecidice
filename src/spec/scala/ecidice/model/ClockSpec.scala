@@ -88,10 +88,10 @@ object ClockSpec extends ecidice.SpecBase {
       clock.tick(100d * 365d * 24d * 60d * 60d)
       val before = clock.now
       
-      clock.tick(1E-6)
+      clock.tick(1E-6d)
       val after = clock.now
       
-      (after - before) must beLessThanOrEqualTo(1E-6)
+      (after - before) must be closeTo(1E-6d +/- 5E-7d)
     } 
   }
 }

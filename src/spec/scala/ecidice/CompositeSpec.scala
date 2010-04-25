@@ -44,10 +44,6 @@ object CompositeSpec extends Specification {
     model.TimespanSpec,
     model.UpdateMechanicsSpec,
     
-    util.DurationSpec,
-    util.InstantSpec,
-    util.TimespanSpec,
-    
     util.HashCodeSpec
   )
 }

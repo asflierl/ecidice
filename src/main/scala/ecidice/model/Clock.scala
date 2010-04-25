@@ -38,8 +38,7 @@ class Clock {
   def now = currentTime
     
   def tick(elapsedTime: Double) = {
-    if (elapsedTime <= 0d) throw new IllegalArgumentException(
-      "only positive time changes are allowed")
+    require(elapsedTime > 0, "only time changes > 0 are allowed")
     
     currentTime += elapsedTime
     reactions.foreach(_())

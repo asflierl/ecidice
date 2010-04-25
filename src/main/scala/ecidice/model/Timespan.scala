@@ -41,11 +41,8 @@ import ecidice.util.HashCode
  * @param ttl the initial time-to-live (aka duration)
  */
 class Timespan private (clock: Clock, val start: Double, private val ttl: Double) {
-  if (start < clock.now) throw new IllegalArgumentException(
-    "a timespan may not start in the past")
-  
-  if (ttl < 0d) throw new IllegalArgumentException(
-    "a timespan may not point backwards in time")
+  require(start >= clock.now, "a timespan may not start in the past")
+  require(ttl >= 0d, "a timespan may not point backwards in time")
   
   val end = start + ttl
 

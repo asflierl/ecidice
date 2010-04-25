@@ -40,6 +40,7 @@ import scala.collection.immutable._
 //TODO it probably should be possible to move onto charging dice!
 //TODO bursting dice should be ethereal
 //TODO falling dice must be modeled (probably linked to burst time?)
+//TODO if a bursting dice is ethereal, 2 dice can be in one space, this must be modeled somehow
 //TODO relinquish control must be modeled
 //TODO some kind of scoring system 
 //TODO when do new dice spawn?
