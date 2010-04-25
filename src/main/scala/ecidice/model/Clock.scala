@@ -28,29 +28,24 @@
  */
 
 package ecidice.model
-package dice
 
-import activity._, player._, space._
-
-/**
- * A solid dice that occupies some space, controlled by a player.
- */
-class SolidControlledDice private[dice] (
-    controllerByName: => PlayerStandingWithDice,
-    locationByName: => OccupiedSpace,
-    val rotation: Rotation,
-    val serial: Long
-) extends Dice with Stationary {
-  lazy val controller = controllerByName
-  lazy val location = locationByName
+class Clock {
+  type Reaction = () => Any
   
-  def makeUncontrolled = {
-    lazy val dice = new SolidDice(newLocation, rotation, serial)
-    lazy val newLocation: OccupiedSpace = new OccupiedSpace(location.tile, 
-        location.level, dice)
-    newLocation.tile.updateWith(newLocation)
-    dice
+  private var currentTime = 0d
+  private var reactions = Set.empty[Reaction]
+    
+  def now = currentTime
+    
+  def tick(elapsedTime: Double) = {
+    if (elapsedTime <= 0d) throw new IllegalArgumentException(
+      "only positive time changes are allowed")
+    
+    currentTime += elapsedTime
+    reactions.foreach(_())
   }
   
-  def move(activity: => DiceMovement) = new MovingDice(activity, rotation, serial)
+  def addReaction(r: Reaction) = (reactions += r)
+  
+  def removeReaction(r: Reaction) = (reactions -= r)
 }

@@ -26,228 +26,228 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-//
-//package ecidice.model
-//
-//import ecidice.SpecBase
-//
-///**
-// * 
-// * 
-// * @author Andreas Flierl
-// */
-//object MovementRefereeSpec extends SpecBase with GameContexts {
-//  def referee = game.movementReferee
-//  
-//  "The movement referee" ->-(simpleGame) should {
-// 
-//    "allow a player in the center to move in all directions" in {
-//      for (dir <- Direction.values) {
-//        "from the center " + dir >> {
-//          placePlayer(p1, (1, 1))
-//        
-//          val request = "movement request: " + dir
-//          game.movementReferee.requestMove(p1, dir) aka request must beTrue
-//          
-//          p1.isMoving must beTrue
-//        }
-//      }
-//    }
-//    
-//    "correctly handle player movement in the corners" in {
-//      
-//      simpleGame        |
-//      "corner position" | "allowed movement directions"           |>
-//      (0, 0)            ! (Direction.BACKWARD, Direction.RIGHT)   |
-//      (2, 0)            ! (Direction.BACKWARD, Direction.LEFT)    |
-//      (0, 2)            ! (Direction.FORWARD, Direction.RIGHT)    |
-//      (2, 2)            ! (Direction.FORWARD, Direction.LEFT)     | {  
-//        
-//      (corner, allowed) =>
-//        for (dir <- Direction.values) {
-//          "player moving " + dir in {
-//            placePlayer(p1, corner)
-//            val correct = (dir == allowed._1 || dir == allowed._2)
-//            (
-//              game.movementReferee.requestMove(p1, dir)
-//              aka "from " + corner
-//              must be (correct)
-//            )
-//          }
-//        }
-//      }
-//    }
-//    
-//    "correctly handle player movement at the board edge" in {
-//      
-//      "edge position" | "disallowed movement direction" |>
-//      (1, 0)          ! Direction.FORWARD               |
-//      (0, 1)          ! Direction.LEFT                  |
-//      (1, 2)          ! Direction.BACKWARD              |
-//      (2, 1)          ! Direction.RIGHT                 | {
-//        
-//      (pos, disallowed) =>
-//        for (dir <- Direction.values) {
-//          "player moving " + dir in {
-//            placePlayer(p1, pos)
-//            val correct = (dir != disallowed)
-//            (
-//              game.movementReferee.requestMove(p1, dir)
-//              aka "from " + pos 
-//              must be (correct)
-//            )
-//          }
-//        }
-//      }
-//      
-//    }
-//    
-//    "allow a player to move in any direction with a floor dice from the center" in {
-//      for (somewhere <- Direction.values) {
-//        "from the center " + somewhere >> {
-//          placePlayer(p1, (1, 1))
-//          val d1 = placeDice(1, 1)
-//          
-//          game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
-//          game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
-//          d1.movement.destination.isFloor must beTrue
-//        }
-//      }
-//    }
-//    
-//    "allow a player to move in any direction with an upper dice from the center" in {
-//      for (somewhere <- Direction.values) {
-//        "from the center " + somewhere >> {
-//          placePlayer(p1, (1, 1))
-//          placeDice(1, 1)
-//          val d1 = placeDice(1, 1)
-//          
-//          game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
-//          game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
-//        }
-//      }
-//    }
-//    
-//    "allow a player to move with a dice from the floor onto another dice" in {
-//      placePlayer(p1, (1, 1))
-//      val d1 = placeDice(1, 1)
-//      val d2 = placeDice(1, 2)
-//      
-//      game.controlReferee.requestControl(p1) mustEqual Some(d1)
-//      game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
-//      
-//      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).floor,
-//        board(1, 2).raised, Transform.FLIP_UP_OR_DOWN, p1)
-//      
-//      d1.isMoving must beTrue
-//      d1.movement mustEqual m
-//      board(1, 1).floor.movement mustEqual m
-//      board(1, 2).raised.movement mustEqual m
-//    }
-//    
-//    "allow a player to grab the upper of 2 dice and move onto another dice" in {
-//      placePlayer(p1, (1, 1))
-//      placeDice(1, 1)
-//      val d1 = placeDice(1, 1)
-//      val d2 = placeDice(0, 1)
-//      
-//      game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
-//      game.movementReferee.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
-//      
-//      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).raised,
-//        board(0, 1).raised, Transform.ROTATE_LEFT, p1)
-//
-//      d1.isMoving must beTrue
-//      d1.movement mustEqual m
-//      board(1, 1).raised.movement mustEqual m
-//      board(0, 1).raised.movement mustEqual m
-//    }
-//    
-//    "allow a player to grab the upper of 2 dice and move to an empty tile" in {
-//      placePlayer(p1, (1, 1))
-//      placeDice(1, 1)
-//      val d1 = placeDice(1, 1)
-//      
-//      game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
-//      game.movementReferee.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
-//      
-//      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).raised,
-//        board(2, 1).floor, Transform.FLIP_LEFT_OR_RIGHT, p1)
-//
-//      d1.movement mustEqual m
-//      board(1, 1).raised.movement mustEqual m
-//      board(2, 1).floor.movement mustEqual m
-//    }
-//    
-//    "not allow a player to move onto an appearing dice" in {
-//      placePlayer(p1, (2, 1))
-//      val d1 = placeDice(2, 1)
-//      
-//      game.spawnDice(1, 1) aka "spawning" must beSome[Dice]
-//      
-//      game.controlReferee.requestControl(p1) mustEqual Some(d1)
-//      game.movementReferee.requestMove(p1, Direction.LEFT) must beFalse
-//    }
-//    
-//    "not let a player move with a dice from the floor onto a " +
-//    "dice that is controlled by another player" in {
-//      placePlayer(p1, (1, 1))
-//      placePlayer(p2, (2, 1))
-//      
-//      val d1 = placeDice(1, 1)
-//      val d2 = placeDice(2, 1)
-//      
-//      game.controlReferee.requestControl(p1) mustEqual Some(d1)
-//      game.controlReferee.requestControl(p2) mustEqual Some(d2)
-//      
-//      game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
-//    }
-//    
-//    "not let a player move with a dice from the raised level " +
-//    "onto a dice that is controlled by another player" in {
-//      placePlayer(p1, (1, 1))
-//      placePlayer(p2, (2, 1))
-//      
-//      val d1 = placeDice(1, 1)
-//      placeDice(2, 1)
-//      val d2 = placeDice(2, 1)
-//      
-//      game.controlReferee.requestControl(p1) mustEqual Some(d1)
-//      game.controlReferee.requestControl(p2) mustEqual Some(d2)
-//      
-//      game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
-//    }
-//    
-//    "not let 2 players move onto the same floor space" in {
-//      placePlayer(p1, (0, 2))
-//      placePlayer(p2, (1, 1))
-//      
-//      placeDice(0, 2)
-//      val d1 = placeDice(0, 2)
-//      val d2 = placeDice(1, 1)
-//      
-//      game.controlReferee.requestControl(p1) mustEqual Some(d1)
-//      game.controlReferee.requestControl(p2) mustEqual Some(d2)
-//      
-//      game.movementReferee.requestMove(p1, Direction.RIGHT) must beTrue
-//      game.movementReferee.requestMove(p2, Direction.BACKWARD) must beFalse
-//    }
-//    
-//    "not let 2 players move onto the same raised space" in {
-//      placePlayer(p1, (0, 0))
-//      placePlayer(p2, (1, 1))
-//      
-//      val d1 = placeDice(0, 0)
-//      placeDice(1, 1)
-//      val d2 = placeDice(1, 1)
-//      
-//      placeDice(0, 1)
-//      
-//      game.controlReferee.requestControl(p1) mustEqual Some(d1)
-//      game.controlReferee.requestControl(p2) mustEqual Some(d2)
-//      
-//      game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
-//      game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
-//    }
-//  }
-//}
+
+package ecidice.model
+
+import ecidice.SpecBase
+
+/**
+ * 
+ * 
+ * @author Andreas Flierl
+ */
+object MovementRefereeSpec extends SpecBase with GameContexts {
+  def referee = game.movementReferee
+  
+  "The movement referee" ->-(simpleGame) should {
+ 
+    "allow a player in the center to move in all directions" in {
+      for (dir <- Direction.values) {
+        "from the center " + dir >> {
+          placePlayer(p1, (1, 1))
+        
+          val request = "movement request: " + dir
+          game.movementReferee.requestMove(p1, dir) aka request must beTrue
+          
+          p1.isMoving must beTrue
+        }
+      }
+    }
+    
+    "correctly handle player movement in the corners" in {
+      
+      simpleGame        |
+      "corner position" | "allowed movement directions"           |>
+      (0, 0)            ! (Direction.BACKWARD, Direction.RIGHT)   |
+      (2, 0)            ! (Direction.BACKWARD, Direction.LEFT)    |
+      (0, 2)            ! (Direction.FORWARD, Direction.RIGHT)    |
+      (2, 2)            ! (Direction.FORWARD, Direction.LEFT)     | {  
+        
+      (corner, allowed) =>
+        for (dir <- Direction.values) {
+          "player moving " + dir in {
+            placePlayer(p1, corner)
+            val correct = (dir == allowed._1 || dir == allowed._2)
+            (
+              game.movementReferee.requestMove(p1, dir)
+              aka "from " + corner
+              must be (correct)
+            )
+          }
+        }
+      }
+    }
+    
+    "correctly handle player movement at the board edge" in {
+      
+      "edge position" | "disallowed movement direction" |>
+      (1, 0)          ! Direction.FORWARD               |
+      (0, 1)          ! Direction.LEFT                  |
+      (1, 2)          ! Direction.BACKWARD              |
+      (2, 1)          ! Direction.RIGHT                 | {
+        
+      (pos, disallowed) =>
+        for (dir <- Direction.values) {
+          "player moving " + dir in {
+            placePlayer(p1, pos)
+            val correct = (dir != disallowed)
+            (
+              game.movementReferee.requestMove(p1, dir)
+              aka "from " + pos 
+              must be (correct)
+            )
+          }
+        }
+      }
+      
+    }
+    
+    "allow a player to move in any direction with a floor dice from the center" in {
+      for (somewhere <- Direction.values) {
+        "from the center " + somewhere >> {
+          placePlayer(p1, (1, 1))
+          val d1 = placeDice(1, 1)
+          
+          game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+          game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+          d1.movement.destination.isFloor must beTrue
+        }
+      }
+    }
+    
+    "allow a player to move in any direction with an upper dice from the center" in {
+      for (somewhere <- Direction.values) {
+        "from the center " + somewhere >> {
+          placePlayer(p1, (1, 1))
+          placeDice(1, 1)
+          val d1 = placeDice(1, 1)
+          
+          game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+          game.movementReferee.requestMove(p1, somewhere) aka "move " + somewhere must beTrue
+        }
+      }
+    }
+    
+    "allow a player to move with a dice from the floor onto another dice" in {
+      placePlayer(p1, (1, 1))
+      val d1 = placeDice(1, 1)
+      val d2 = placeDice(1, 2)
+      
+      game.controlReferee.requestControl(p1) mustEqual Some(d1)
+      game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
+      
+      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).floor,
+        board(1, 2).raised, Transform.FLIP_UP_OR_DOWN, p1)
+      
+      d1.isMoving must beTrue
+      d1.movement mustEqual m
+      board(1, 1).floor.movement mustEqual m
+      board(1, 2).raised.movement mustEqual m
+    }
+    
+    "allow a player to grab the upper of 2 dice and move onto another dice" in {
+      placePlayer(p1, (1, 1))
+      placeDice(1, 1)
+      val d1 = placeDice(1, 1)
+      val d2 = placeDice(0, 1)
+      
+      game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+      game.movementReferee.requestMove(p1, Direction.LEFT) aka "movement request" must beTrue
+      
+      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).raised,
+        board(0, 1).raised, Transform.ROTATE_LEFT, p1)
+
+      d1.isMoving must beTrue
+      d1.movement mustEqual m
+      board(1, 1).raised.movement mustEqual m
+      board(0, 1).raised.movement mustEqual m
+    }
+    
+    "allow a player to grab the upper of 2 dice and move to an empty tile" in {
+      placePlayer(p1, (1, 1))
+      placeDice(1, 1)
+      val d1 = placeDice(1, 1)
+      
+      game.controlReferee.requestControl(p1) aka "control request" mustEqual Some(d1)
+      game.movementReferee.requestMove(p1, Direction.RIGHT) aka "movement request" must beTrue
+      
+      val m = Activity.on(game.clock).diceMovement(d1, board(1, 1).raised,
+        board(2, 1).floor, Transform.FLIP_LEFT_OR_RIGHT, p1)
+
+      d1.movement mustEqual m
+      board(1, 1).raised.movement mustEqual m
+      board(2, 1).floor.movement mustEqual m
+    }
+    
+    "not allow a player to move onto an appearing dice" in {
+      placePlayer(p1, (2, 1))
+      val d1 = placeDice(2, 1)
+      
+      game.spawnDice(1, 1) aka "spawning" must beSome[Dice]
+      
+      game.controlReferee.requestControl(p1) mustEqual Some(d1)
+      game.movementReferee.requestMove(p1, Direction.LEFT) must beFalse
+    }
+    
+    "not let a player move with a dice from the floor onto a " +
+    "dice that is controlled by another player" in {
+      placePlayer(p1, (1, 1))
+      placePlayer(p2, (2, 1))
+      
+      val d1 = placeDice(1, 1)
+      val d2 = placeDice(2, 1)
+      
+      game.controlReferee.requestControl(p1) mustEqual Some(d1)
+      game.controlReferee.requestControl(p2) mustEqual Some(d2)
+      
+      game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
+    }
+    
+    "not let a player move with a dice from the raised level " +
+    "onto a dice that is controlled by another player" in {
+      placePlayer(p1, (1, 1))
+      placePlayer(p2, (2, 1))
+      
+      val d1 = placeDice(1, 1)
+      placeDice(2, 1)
+      val d2 = placeDice(2, 1)
+      
+      game.controlReferee.requestControl(p1) mustEqual Some(d1)
+      game.controlReferee.requestControl(p2) mustEqual Some(d2)
+      
+      game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
+    }
+    
+    "not let 2 players move onto the same floor space" in {
+      placePlayer(p1, (0, 2))
+      placePlayer(p2, (1, 1))
+      
+      placeDice(0, 2)
+      val d1 = placeDice(0, 2)
+      val d2 = placeDice(1, 1)
+      
+      game.controlReferee.requestControl(p1) mustEqual Some(d1)
+      game.controlReferee.requestControl(p2) mustEqual Some(d2)
+      
+      game.movementReferee.requestMove(p1, Direction.RIGHT) must beTrue
+      game.movementReferee.requestMove(p2, Direction.BACKWARD) must beFalse
+    }
+    
+    "not let 2 players move onto the same raised space" in {
+      placePlayer(p1, (0, 0))
+      placePlayer(p2, (1, 1))
+      
+      val d1 = placeDice(0, 0)
+      placeDice(1, 1)
+      val d2 = placeDice(1, 1)
+      
+      placeDice(0, 1)
+      
+      game.controlReferee.requestControl(p1) mustEqual Some(d1)
+      game.controlReferee.requestControl(p2) mustEqual Some(d2)
+      
+      game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
+      game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
+    }
+  }
+}

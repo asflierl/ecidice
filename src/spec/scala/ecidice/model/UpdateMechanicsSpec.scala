@@ -26,73 +26,73 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-//
-//package ecidice.model
-//
-//import ecidice.SpecBase
-//
-///**
-// * Spec-based tests of the game's update mechanics.
-// * 
-// * @author Andreas Flierl
-// */
-//object UpdateMechanicsSpec extends SpecBase with GameContexts {
-//  "The update mechanics" ->-(simpleGame) should {
-//    
-//    def updater = game.updateMechanics
-//    
-//    "make the activity tracker forget finished activities" in {
-//      val s = board(0, 0)
-//      val finished = Activity.on(game.clock).playerMovement(p1, s, s)
-//      game.clock.tick(Activity.MOVE_DURATION)
-//      val pending = Activity.on(game.clock).playerMovement(p1, s, s)
-//
-//      game.tracker.track(finished)
-//      game.tracker.track(pending)
-//      
-//      updater.update
-//      
-//      game.tracker.activities must contain(pending)
-//      game.tracker.activities must notContain(finished)
-//    }
-//    
-//    "make a dice solid that's finished appearing" in {
-//      val dice = game.spawnDice(1, 1).get
-//      game.clock.tick(Activity.APPEAR_DURATION)
-//      
-//      updater.update
-//      
-//      dice.isSolid must beTrue
-//      dice.location must be (board(1, 1).floor)
-//      dice.isControlled must beFalse
-//      dice.controller must throwAn[IllegalStateException]
-//      
-//      board(1, 1).floor.isOccupied must beTrue
-//      board(1, 1).floor.dice mustEqual dice
-//    }
-//    
-//    "update a player's state after she finished moving" in {
-//      placePlayer(p1, (0, 1))
-//      game.movementReferee.requestMove(p1, Direction.BACKWARD)
-//      game.clock.tick(Activity.MOVE_DURATION)
-//      
-//      updater.update
-//      
-//      p1.isStanding must beTrue
-//      p1.location must be (board(0, 2))
-//    }
-//    
-//    "make a group of dice burst when they're finished charging" in {
-//      val group = buildDiceGroup(Set((0, 0), (1, 0)))
-//      game.clock.tick(Activity.CHARGE_DURATION)
-//      
-//      updater.update
-//
-//      group.dice.foreach(dice => {
-//        dice.isLocked must beTrue
-//        dice.isBursting must beTrue
-//        dice.group.dice must contain (dice)
-//      })
-//    }
-//  }
-//}
+
+package ecidice.model
+
+import ecidice.SpecBase
+
+/**
+ * Spec-based tests of the game's update mechanics.
+ * 
+ * @author Andreas Flierl
+ */
+object UpdateMechanicsSpec extends SpecBase with GameContexts {
+  "The update mechanics" ->-(simpleGame) should {
+    
+    def updater = game.updateMechanics
+    
+    "make the activity tracker forget finished activities" in {
+      val s = board(0, 0)
+      val finished = Activity.on(game.clock).playerMovement(p1, s, s)
+      game.clock.tick(Activity.MOVE_DURATION)
+      val pending = Activity.on(game.clock).playerMovement(p1, s, s)
+
+      game.tracker.track(finished)
+      game.tracker.track(pending)
+      
+      updater.update
+      
+      game.tracker.activities must contain(pending)
+      game.tracker.activities must notContain(finished)
+    }
+    
+    "make a dice solid that's finished appearing" in {
+      val dice = game.spawnDice(1, 1).get
+      game.clock.tick(Activity.APPEAR_DURATION)
+      
+      updater.update
+      
+      dice.isSolid must beTrue
+      dice.location must be (board(1, 1).floor)
+      dice.isControlled must beFalse
+      dice.controller must throwAn[IllegalStateException]
+      
+      board(1, 1).floor.isOccupied must beTrue
+      board(1, 1).floor.dice mustEqual dice
+    }
+    
+    "update a player's state after she finished moving" in {
+      placePlayer(p1, (0, 1))
+      game.movementReferee.requestMove(p1, Direction.BACKWARD)
+      game.clock.tick(Activity.MOVE_DURATION)
+      
+      updater.update
+      
+      p1.isStanding must beTrue
+      p1.location must be (board(0, 2))
+    }
+    
+    "make a group of dice burst when they're finished charging" in {
+      val group = buildDiceGroup(Set((0, 0), (1, 0)))
+      game.clock.tick(Activity.CHARGE_DURATION)
+      
+      updater.update
+
+      group.dice.foreach(dice => {
+        dice.isLocked must beTrue
+        dice.isBursting must beTrue
+        dice.group.dice must contain (dice)
+      })
+    }
+  }
+}

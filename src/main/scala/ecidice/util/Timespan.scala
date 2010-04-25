@@ -27,14 +27,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
-package activity
+package ecidice.util
 
-import player._
+/**
+ * Represents a period of time, i.e. the time interval [start, end]
+ * 
+ * @author Andreas Flierl
+ * 
+ * @param start the instant this timespan starts
+ * @param duration this timespan's duration
+ */
+case class Timespan(start: Instant, duration: Duration) {
+  val end = start + duration
 
-abstract class PlayerMovement {
-  def player: Player
-  def origin: Tile
-  def destination: Tile
-  val duration = 0.25d
+  def isOver(now: Instant) = (now >= end)
+  
+  /**
+   * Returns where in this timespan the associated game is now as a number in
+   * the interval [0, 1].
+   */
+  def progress(now: Instant) =
+    if (now <= start) 0d
+    else if (now >= end) 1d
+    else (now.time - start.time) / (end.time - start.time)
 }
+

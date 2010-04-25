@@ -28,66 +28,60 @@
  */
 
 package ecidice.model
-package dice
-
-import activity._, space._
-import ecidice.util._
 
 /**
- * A single 6-side dice.
- * <p>
- * The dice layout is 
- * <pre>
- *  3
- *  6512
- *  4
- * </pre>
- * where 6 is on top, 5 on the right side, 4 on the front. 
- * This can alternatively be represented as
- * <pre>
- *  65
- *  4
- * </pre>
- * to sufficiently describe the rotation of the dice.
+ * Represents an area or space on the game board, either on the ground or on a
+ * raised level. Such a space can be empty, occupied by a dice or be the start
+ * or destination of a dice's movement.
  * 
  * @author Andreas Flierl
+ * 
+ * @param tile the tile that provides this space
+ * @param content what's in this space
  */
-trait Dice {
-  def rotation: Rotation
-  def serial: Long
+class Space(val tile: Tile) {
+  private var state: State = Empty
   
-  def top = rotation.top
-  def bottom = rotation.bottom
-  def right = rotation.right
-  def left = rotation.left
-  def front = rotation.front
-  def back = rotation.back
+  def isFloor = (this == tile.floor)  
+  def isRaised = (this == tile.raised)
+  def isEmpty = (state == Empty)
+  def isOccupied = state.isInstanceOf[Occupied]
+  def isBusy = state.isInstanceOf[Busy]
   
-  override final def equals(obj: Any) = obj match {
-    case other: Dice => other.serial == serial
-    case _ => false
+  def dice = state match {
+    case Occupied(dice) => dice
+    case _ => throw new IllegalStateException("space not occupied")
   }
   
-  override final lazy val hashCode = HashCode(serial)
+  def movement = state match {
+    case Busy(movement) => movement
+    case _ => throw new IllegalStateException("space not busy")
+  }
   
-  override def toString = "Dice[%d](%d-%d-%d)".format(serial, top, right, front)
-}
+  def empty() = (state = Empty)
+  def occupy(dice: Dice) = (state = Occupied(dice))
+  def involve(move: DiceMovement) = (state = Busy(move))
+  
+  override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
+    (if (isRaised) "raised" else "floor"))
+  
+  sealed abstract class State
 
-object Dice {
-  private var serial = 0L
-
-  private[dice] def nextSerial = {
-    val before = serial
-    serial += 1L
-    before
-  }
+  /**
+   * Denotes that a space is empty. A dice can move or appear here (if this is
+   * on the floor level).
+   */
+  case object Empty extends State
   
-  def appear(emptyLocation: EmptySpace, now: Instant) = {
-    lazy val dice = new AppearingDice(activity, location, Rotation(), nextSerial)
-    lazy val activity: DiceAppearing = new DiceAppearing(dice, now)
-    lazy val location: OccupiedSpace = new OccupiedSpace(emptyLocation.tile, 
-        emptyLocation.level, dice)
-    emptyLocation.tile.updateWith(location)
-    dice
-  }
+  /**
+   * This marks a space as occupied (by a dice). Other dice can not move or
+   * appear here.
+   */
+  case class Occupied(dice: Dice) extends State
+  
+  /**
+   * An instance of this class is present on the "from" and "to" spaces that are
+   * involved in a dice's movement during the movement.
+   */
+  case class Busy(activity: DiceMovement) extends State
 }

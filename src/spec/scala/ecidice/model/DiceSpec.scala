@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2009-2010, Andreas Flierl
- * All rights reserverota.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
  * 
  * - Redistributions of source code must retain the above copyright notice, this 
- *   list of conditions and the following disclaimerota.
+ *   list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *   this list of conditions and the following disclaimer in the documentation 
  *   and/or other materials provided with the distribution.
@@ -28,78 +28,77 @@
  */
 
 package ecidice.model
-package dice
 
 import ecidice.SpecBase
 
 /**
- * Informal specification of a dice rotation.
+ * Spec-based tests of the dice model.
  * 
  * @author Andreas Flierl
  */
-object RotationSpec extends SpecBase {
-  "A dice rotation" should {
-    val rota = Rotation()
+object DiceSpec extends SpecBase {
+  "A dice" should {
+    val d = new Dice
     
-    def check(changed: Rotation, top: Int, right: Int, front: Int) = {
-      changed.top mustEqual top
-      changed.right mustEqual right
-      changed.front mustEqual front
-      changed.bottom mustEqual (7 - top)
-      changed.left mustEqual (7 - right)
-      changed.back mustEqual (7 - front)
+    def checkDice(top: Int, right: Int, front: Int) = {
+      d.top mustEqual top
+      d.right mustEqual right
+      d.front mustEqual front
+      d.bottom mustEqual (7 - top)
+      d.left mustEqual (7 - right)
+      d.back mustEqual (7 - front)
     }
     
     "initially look like this: top = 6, right = 5, front = 4" in {
-      rota.top mustEqual 6
-      rota.right mustEqual 5
-      rota.front mustEqual 4
+      d.top mustEqual 6
+      d.right mustEqual 5
+      d.front mustEqual 4
     }
     
     "initially be consistent" in {
-      rota.top mustEqual (7 - rota.bottom)
-      rota.left mustEqual (7 - rota.right)
-      rota.front mustEqual (7 - rota.back)
+      d.top mustEqual (7 - d.bottom)
+      d.left mustEqual (7 - d.right)
+      d.front mustEqual (7 - d.back)
     }
 
     "correctly rotate backward" in {
-      val changed = rota.transform(Transform.ROTATE_BACKWARD)
-      check(changed, 4, 5, 1)
+      d.change(Transform.ROTATE_BACKWARD)
+      checkDice(4, 5, 1)
     }
     
     "correctly rotate forward" in {
-      val changed = rota.transform(Transform.ROTATE_FORWARD)
-      check(changed, 3, 5, 6)
+      d.change(Transform.ROTATE_FORWARD)
+      checkDice(3, 5, 6)
     }
     
     "correctly rotate to the right" in {
-      val changed = rota.transform(Transform.ROTATE_RIGHT)
-      check(changed, 2, 6, 4)
+      d.change(Transform.ROTATE_RIGHT)
+      checkDice(2, 6, 4)
     }
     
     "correctly rotate to the left" in {
-      val changed = rota.transform(Transform.ROTATE_LEFT)
-      check(changed, 5, 1, 4)
+      d.change(Transform.ROTATE_LEFT)
+      checkDice(5, 1, 4)
     }
     
     "correctly spin clockwise" in {
-      val changed = rota.transform(Transform.SPIN_CLOCKWISE)
-      check(changed, 6, 3, 5)
+      d.change(Transform.SPIN_CLOCKWISE)
+      checkDice(6, 3, 5)
     }
     
     "correctly spin counter-clockwise" in {
-      val changed = rota.transform(Transform.SPIN_COUNTERCLOCKWISE)
-      check(changed, 6, 4, 2)
+      d.change(Transform.SPIN_COUNTERCLOCKWISE)
+      checkDice(6, 4, 2)
     }
     
     "correctly flip up/down" in {
-      val changed = rota.transform(Transform.FLIP_UP_OR_DOWN)
-      check(changed, 1, 5, 3)
+      d.change(Transform.FLIP_UP_OR_DOWN)
+      checkDice(1, 5, 3)
     }
     
     "correctly flip left or right" in {
-      val changed = rota.transform(Transform.FLIP_LEFT_OR_RIGHT)
-      check(changed, 1, 2, 4)
+      d.change(Transform.FLIP_LEFT_OR_RIGHT)
+      checkDice(1, 2, 4)
     }
   }
 }

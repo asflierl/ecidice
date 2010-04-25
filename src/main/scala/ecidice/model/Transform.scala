@@ -29,8 +29,6 @@
 
 package ecidice.model
 
-import space._
-
 /**
  * Lists possible transformations of a dice.
  * 

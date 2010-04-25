@@ -27,79 +27,67 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice.util
 
-import org.specs._
 import ecidice.SpecBase
 import ecidice.util.Preamble._
 
 /**
- * Spec-based tests of the timespan model.
+ * Informal specification of a timespan.
  * 
  * @author Andreas Flierl
  */
 object TimespanSpec extends SpecBase {  
   "A timespan" should {
-    
-    val clock = new Clock
-    var ts = Timespan(clock, clock.now + 1d, 1d)
-    
-    "not start in the past, initially" in {
-      Timespan(clock, clock.now - delta, 1d) must throwAn[IllegalArgumentException]
+    "calculate a correct end instant if its duration is 0" in {
+      Timespan(Instant(42), Duration(0)).end mustEqual Instant(42)
     }
     
-    "not point backwards in time" in {
-      Timespan(clock, clock.now, - delta) must throwAn[IllegalArgumentException]
+    "calculate a correct end instant if its duration is > 0" in {
+      Timespan(Instant(1), Duration(41)).end mustEqual Instant(42)
     }
     
-    "be able to represent a zero-second duration" in {
-      val span = Timespan(clock, clock.now, 0)
-      span.end mustEqual clock.now
-    }
-    
-    "return the correct end time" in {
-      ts.end mustEqual 2d
-    }
-    
-    "display 0% progress right after initialisation" in {
-      ts.progress mustEqual 0d
+    "display 0% progress if the current time is the start instant" in {
+      Timespan(Instant(42), Duration(23)).progress(Instant(42)) mustEqual 0d
     }
   
     "report 0% progress if the current time is before the timespan start" in {
-      clock.tick(.5f)
-      ts.progress mustEqual 0f
-    }
-    
-    "report 0% progress if the current time equals the timespan start" in {
-      clock.tick(1d)
-      ts.progress mustEqual 0d
+      Timespan(Instant(42), Duration(23)).progress(Instant(7)) mustEqual 0d
     }
     
     "report the correct progress if the current time lies in the timespan" in {
-      clock.tick(1d)
+      val t = Timespan(Instant(0), Duration(1))
+      
       for (x <- 0d to 1d by .001d) {
-        ts.progress must be closeTo(x +/- delta)
-        clock.tick(.001d)
+        t.progress(Instant(x)) must be closeTo(x +/- delta)
       }
     }
     
     "report 100% progress if the current time equals the timespan end" in {
-      clock.tick(2d)
-      ts.progress mustEqual 1d
+      val t = Timespan(Instant(42), Duration(8))
+      t.progress(Instant(50)) mustEqual 1d
       
     }
     
     "report 100% progress if the current time is after the timespan end" in {
-      clock.tick(4d)
-      ts.progress mustEqual 1d
+      val t = Timespan(Instant(2), Duration(1))
+      t.progress(Instant(42)) mustEqual 1d
+    }
+    
+    "still be able to represent a microsecond duration after 100 years" in {
+      val start = Instant(100d * 365d * 24d * 60d * 60d)
+      val t = Timespan(start, Duration(1E-6d))
+      val real = Duration.between(start, t.end).seconds
+      
+      real must beCloseTo(1E-6d +/- 5E-7d)
     }
     
     "report an accurate progress with large clock times" in {
-      clock.tick(100d * 365d * 24d * 60d * 60d)
-      ts = Timespan(clock, 4E-6d)
-      clock.tick(3E-6d)
+      val start = Instant(100d * 365d * 24d * 60d * 60d)
+      val t = Timespan(start, Duration(4E-6d))
+      val now = start + Duration(3E-6d)
 
-      ts.progress must be closeTo(.75 +/- delta)
+      t.progress(now) must be closeTo(.75 +/- delta)
     }
   }
 }

@@ -28,19 +28,70 @@
  */
 
 package ecidice.model
-package player
 
-import dice._
+import ecidice.SpecBase
 
-class StandingPlayer private[player] (
-    val location: Tile, 
-    val id: Int
-) extends Player {
-  def control(dice: => SolidDice) = {
-    lazy val controller = new PlayerStandingWithDice(controlled, id)
-    lazy val controlled: SolidControlledDice = dice.makeControlled(controller)
+/**
+ * Informally specifies the clock model.
+ * 
+ * @author Andreas Flierl
+ */
+object ClockSpec extends ecidice.SpecBase {
+  "A clock" should {
+    val clock = new Clock
     
-    controller
+    "initially be set to 0" in {
+      clock.now mustEqual 0d
+    }
+    
+    "correctly tick forward" in {
+      clock.tick(delta)
+      clock.now must be closeTo(delta +/- delta)
+    }
+    
+    "not tick zero seconds" in {
+      clock.tick(0d) must throwAn[IllegalArgumentException]
+    }
+    
+    "not tick negatively" in {
+      clock.tick(-delta) must throwAn[IllegalArgumentException]
+    }
+    
+    "call reactions when ticking" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(1d)
+      
+      there was one(reaction)()
+    }
+    
+    "not call reactions when ticking zero seconds" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(0d) must throwAn[IllegalArgumentException]
+      
+      there was no(reaction)()
+    }
+    
+    "not call any reactions when ticking negatively" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(-1d) must throwAn[IllegalArgumentException]
+      
+      there was no(reaction)()
+    }
+    
+    "still provide microsecond accuracy after 100 years" in {
+      clock.tick(100d * 365d * 24d * 60d * 60d)
+      val before = clock.now
+      
+      clock.tick(1E-6)
+      val after = clock.now
+      
+      (after - before) must beLessThanOrEqualTo(1E-6)
+    } 
   }
 }
-

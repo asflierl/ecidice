@@ -1,4 +1,4 @@
-package ecidice.model
+package ecidice.util
 
 import ecidice.SpecBase
 

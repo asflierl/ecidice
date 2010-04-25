@@ -28,22 +28,33 @@
  */
 
 package ecidice.model
-package activity
 
-import dice._, player._, space._
-
-class DiceMovement(
-    diceByName: => MovingDice,
-    playerByName: => PlayerMovingWithDice,
-    originByName: => BusySpace,
-    destinationByName: => BusySpace,
-    val transform: Transform.Value,
-    now: Instant
-) extends Activity {
-  val duration = Duration(0.25d)
-  lazy val time = Timespan(now, duration)
-  lazy val dice = diceByName
-  lazy val controller = playerByName
-  lazy val origin = originByName
-  lazy val destination = destinationByName
+final class DiceGroup private {
+  private var state: DiceGroup.State = _
+  private var diceSet: Set[Dice] = Set.empty[Dice]
+  
+  private def init(state: DiceGroup.State, dice: Set[Dice]) = {
+    this.state = state
+    diceSet ++= dice
+    this
+  }
+  
+  def isCharging = (state == DiceGroup.Charging)
+  def isBursting = (state == DiceGroup.Bursting)
+  def cloneAsBursting = new DiceGroup().init(DiceGroup.Bursting, diceSet)
+  
+  def +=(d: Dice) = (diceSet += d)
+  def ++(otherGroup: DiceGroup) = (diceSet ++ otherGroup.dice)
+  def dice = diceSet
+  def contains(d: Dice) = diceSet.contains(d)
+  
+  
+}
+object DiceGroup {
+  def createCharging(dice: Set[Dice]) = new DiceGroup().init(Charging, dice)
+  def createBursting(dice: Set[Dice]) = new DiceGroup().init(Bursting, dice)
+  
+  private sealed abstract class State
+  private object Charging extends State
+  private object Bursting extends State
 }

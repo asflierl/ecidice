@@ -26,71 +26,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
-//
-//package ecidice.model
-//
-//import ecidice.SpecBase
-//
-///**
-// * Spec-based tests of the board model.
-// * 
-// * @author Andreas Flierl
-// */
-//object BoardSpec extends SpecBase {
-//  private val width = 5
-//  private val depth = 3
-//  
-//  var board: Board = _
-//  def center = board(2, 1)
-//    
-//  val newlyCreatedBoard = beforeContext {
-//    board = new Board(width, depth)
-//  }
-//  
-//  "The game board" when newlyCreatedBoard should {
-//    "return its tiles in the right order" in {
-//      val iter = board.tiles
-//      
-//      for (x <- 0 until width; y <- 0 until depth) {
-//        iter.hasNext must beTrue
-//        iter.next mustEqual board(x, y)
-//      }
-//      
-//      iter.hasNext must beFalse
-//    }
-//    
-//    "predict the correct position that results from a move from its center" in {
-//      
-//      newlyCreatedBoard   |
-//      "direction of move" | "result position" |>
-//      Direction.BACKWARD  ! (2, 2)            |
-//      Direction.FORWARD   ! (2, 0)            |
-//      Direction.LEFT      ! (1, 1)            |  
-//      Direction.RIGHT     ! (3, 1)            | { 
-//        
-//      (dir, result) =>
-//        board.positionInDir(center, dir) mustEqual(result)
-//      }
-//    }
-//    
-//    "correctly indicate board bounds" in {
-//      
-//      newlyCreatedBoard |
-//      "position" | "within bounds" |>
-//      (0, 0)     ! true            |
-//      (4, 2)     ! true            |
-//      (1, 2)     ! true            |
-//      (4, 1)     ! true            |
-//      (5, 0)     ! false           |
-//      (0, 3)     ! false           |
-//      (-1, 1)    ! false           |
-//      (2, -1)    ! false           |
-//      (-1, -1)   ! false           |
-//      (5, 3)     ! false           | { 
-//        
-//      (pos, result) =>
-//        board.isWithinBounds(pos) mustEqual(result)
-//      }
-//    }
-//  }
-//}
+
+package ecidice.model
+
+import ecidice.SpecBase
+
+/**
+ * Spec-based tests of the board model.
+ * 
+ * @author Andreas Flierl
+ */
+object BoardSpec extends SpecBase {
+  private val width = 5
+  private val depth = 3
+  
+  var board: Board = _
+  def center = board(2, 1)
+    
+  val newlyCreatedBoard = beforeContext {
+    board = new Board(width, depth)
+  }
+  
+  "The game board" when newlyCreatedBoard should {
+    "return its tiles in the right order" in {
+      val iter = board.tiles
+      
+      for (x <- 0 until width; y <- 0 until depth) {
+        iter.hasNext must beTrue
+        iter.next mustEqual board(x, y)
+      }
+      
+      iter.hasNext must beFalse
+    }
+    
+    "predict the correct position that results from a move from its center" in {
+      
+      newlyCreatedBoard   |
+      "direction of move" | "result position" |>
+      Direction.BACKWARD  ! (2, 2)            |
+      Direction.FORWARD   ! (2, 0)            |
+      Direction.LEFT      ! (1, 1)            |  
+      Direction.RIGHT     ! (3, 1)            | { 
+        
+      (dir, result) =>
+        board.positionInDir(center, dir) mustEqual(result)
+      }
+    }
+    
+    "correctly indicate board bounds" in {
+      
+      newlyCreatedBoard |
+      "position" | "within bounds" |>
+      (0, 0)     ! true            |
+      (4, 2)     ! true            |
+      (1, 2)     ! true            |
+      (4, 1)     ! true            |
+      (5, 0)     ! false           |
+      (0, 3)     ! false           |
+      (-1, 1)    ! false           |
+      (2, -1)    ! false           |
+      (-1, -1)   ! false           |
+      (5, 3)     ! false           | { 
+        
+      (pos, result) =>
+        board.isWithinBounds(pos) mustEqual(result)
+      }
+    }
+  }
+}

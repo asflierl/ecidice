@@ -33,21 +33,20 @@ import org.specs.Specification
 
 object CompositeSpec extends Specification {
   "ecidice".isSpecifiedBy(
-//    model.BoardSpec,
-//    model.ClockSpec,
-//    model.ControlRefereeSpec,
-//    model.DiceGroupSpec,
-//    model.DiceMatcherSpec,
-//    model.DiceSpec,
-//    model.GameSpec,
-//    model.MovementRefereeSpec,
-//    model.TimespanSpec,
-//    model.UpdateMechanicsSpec,
-    model.DurationSpec,
-    model.InstantSpec,
+    model.BoardSpec,
+    model.ClockSpec,
+    model.ControlRefereeSpec,
+    model.DiceGroupSpec,
+    model.DiceMatcherSpec,
+    model.DiceSpec,
+    model.GameSpec,
+    model.MovementRefereeSpec,
     model.TimespanSpec,
+    model.UpdateMechanicsSpec,
     
-    model.dice.RotationSpec,
+    util.DurationSpec,
+    util.InstantSpec,
+    util.TimespanSpec,
     
     util.HashCodeSpec
   )

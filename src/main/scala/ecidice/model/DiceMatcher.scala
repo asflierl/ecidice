@@ -29,14 +29,11 @@
 
 package ecidice.model
 
-import ecidice.model.dice._
-
 /**
  * Finds and returns all dice (including <code>src</code>) that show the same 
  * top face as <code>src</code> and that are reachable from <code>src</code>
  * via other such dice (by only moving up, down, left or right once or 
- * several times). Only solid dice that are uncontrolled and on the floor
- * level are considered.
+ * several times). Only solid dice that are uncontrolled are considered.
  * <p>
  * As an example consider the following 3 x 3 board:
  * <pre>
@@ -53,31 +50,31 @@ import ecidice.model.dice._
  * and BZ.
  */
 class DiceMatcher(board: Board) {
-//  var src: SolidDice = _
-//  
-//  def find(src: SolidDice, start: Tile): Set[SolidDice] = {
-//    this.src = src
-//    findFromTile(start, Set(src))
-//  }
-//  
-//  private def findFromTile(t: Tile, g: Set[SolidDice]) = {
-//    var res = g
-//    Direction.values.foreach(
-//      diceInDir(t, _, Tile.Level.FLOOR).partialMap { 
-//        case next: SolidDice => res = findFromDice(next, res)
-//      }
-//    )
-//    res
-//  }
-//  
-//  private def findFromDice(dice: SolidDice, group: Set[SolidDice]): Set[SolidDice] =
-//    if (dice.top != src.top || group.contains(dice)) group
-//    else findFromTile(dice.location.tile, group + dice)
-//  
-//  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
-//    val pos = board.positionInDir(t, dir)
-//    if (board.isWithinBounds(pos) && board(pos).floor.isOccupied)
-//      Some(board(pos).floor.dice)
-//    else None
-//  }
+  var src: Dice = _
+  
+  def find(src: Dice, start: Tile): Set[Dice] = {
+    this.src = src
+    findFromTile(start, Set(src))
+  }
+  
+  private def findFromTile(t: Tile, g: Set[Dice]) = {
+    var res = g
+    Direction.values.foreach(
+      diceInDir(t, _, Tile.Level.FLOOR).foreach( 
+        (next) => res = findFromDice(next, res)))
+    res
+  }
+  
+  private def findFromDice(dice: Dice, group: Set[Dice]): Set[Dice] =
+    if (dice.top != src.top || group.contains(dice)) group
+    else if (dice.isSolid && !dice.isControlled)
+      findFromTile(dice.location.tile, group + dice)
+    else group
+  
+  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
+    val pos = board.positionInDir(t, dir)
+    if (board.isWithinBounds(pos) && board(pos).floor.isOccupied)
+      Some(board(pos).floor.dice)
+    else None
+  }
 }

@@ -38,7 +38,8 @@ package ecidice.model
  * @param depth the number of tiles from front to back
  */
 class Board(val width: Int, val depth: Int) {
-  private val tileArr = Array.tabulate(width, depth)(new Tile(_, _)) 
+  private val tileArr = Array.tabulate(width, depth)(
+    (x, y) => new Tile(x, y)) 
   
   /**
    * Returns an iterator that traverses over all tiles of this board. The tiles
@@ -58,7 +59,7 @@ class Board(val width: Int, val depth: Int) {
   }
   
   /**
-   * TODO Currently hard-coded for 4 players.
+   * Currently hard-coded for 4 players.
    */
   val spawnPoints = tileArr(0)(0) :: tileArr(width - 1)(0) :: 
     tileArr(width - 1)(depth - 1) :: tileArr(0)(depth - 1) :: Nil
@@ -70,7 +71,9 @@ class Board(val width: Int, val depth: Int) {
    * @param y the depth position (front to back)
    * @return the tile at the specified coordinates
    */
-  def apply(x: Int, y: Int): Tile = tileArr(x)(y)
+  def apply(x: Int, y: Int): Tile = {
+    tileArr(x)(y)
+  }
   
   /**
    * Returns the tile at the specified position.

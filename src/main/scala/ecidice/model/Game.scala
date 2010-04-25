@@ -31,8 +31,6 @@ package ecidice.model
 
 import scala.collection.immutable._
 
-import dice._, player._
-
 /**
  * Central mediator that manages the objects participating in a game and updates
  * their state according to requested actions within the game rules.
@@ -47,12 +45,12 @@ import dice._, player._
 //TODO when do new dice spawn?
 //TODO take tile visibility into account
 class Game(numPlayers: Int, val board: Board) {
-  private[model] lazy val players = createPlayers(0)
-  private[model] val now = Instant()
-  private[model] val tracker = new ActivityTracker
-  private[model] val updateMechanics = new UpdateMechanics(board, now, tracker)
-  private[model] val movementReferee = new MovementReferee(board, now, tracker)
-  private[model] val controlReferee = new ControlReferee
+  lazy val players = createPlayers(0)
+  val clock = new Clock
+  val tracker = new ActivityTracker
+  val updateMechanics = new UpdateMechanics(board, clock, tracker)
+  val movementReferee = new MovementReferee(board, clock, tracker)
+  val controlReferee = new ControlReferee
   
   /**
    * Creates <code>num</code> players in this game, starting at the board's 
@@ -60,7 +58,7 @@ class Game(numPlayers: Int, val board: Board) {
    */
   private def createPlayers(num: Int): List[Player] =
     if (num == numPlayers) Nil
-    else Player.spawn(board.spawnPoints(num), num) :: createPlayers(num + 1)
+    else new Player(board.spawnPoints(num)) :: createPlayers(num + 1)
   
   /**
    * Spawns a dice at the specified position on the board and updates the
@@ -70,14 +68,16 @@ class Game(numPlayers: Int, val board: Board) {
    * @param y the depth position on the board
    * @return optionally the new dice
    */
-//  def spawnDice(x: Int, y: Int) = {
-//    val space = board(x, y).floor
-//    
-//    if (space.isEmpty) {
-//      val dice = Dice.appear(now, space)
-//      space.occupy(dice)
-//      tracker.track(dice.appearing)
-//      Some(dice)
-//    } else None
-//  }
+  def spawnDice(x: Int, y: Int) = {
+    val space = board(x, y).floor
+    
+    if (space.isEmpty) {
+      val dice = new Dice
+      space.occupy(dice)
+      val activity = Activity.on(clock).diceAppearing(dice, space)
+      dice.appear(activity)
+      tracker.track(activity)
+      Some(dice)
+    } else None
+  }
 }

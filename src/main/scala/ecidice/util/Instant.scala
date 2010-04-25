@@ -27,23 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
-package activity
+package ecidice.util
 
-import dice._
-
-class DiceCharging(
-    dice: Set[SolidDice],
-    now: Instant
-) extends DiceLock[DiceCharging] {
-  val duration = Duration(10d)
-  lazy val time = Timespan(now, duration)
-  lazy val group: Set[LockedDice[DiceCharging]] = dice.map(_.lock(this))
+/**
+ * An instant in time.
+ */
+case class Instant(time: Double = 0d) extends Ordered[Instant] {
+  require(time >= 0d, "an instant may never be negative")
   
-  def burst(now: Instant) = {
-    lazy val activity = new DiceBursting(regrouped, now)
-    lazy val regrouped: Set[LockedDice[DiceBursting]] = group.map(_.regroup(activity))
-    
-    activity
-  }
+  def +(duration: Duration) = Instant(time + duration.seconds)
+  def compare(other: Instant) = time.compare(other.time)
 }

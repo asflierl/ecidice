@@ -1,4 +1,4 @@
-package ecidice.model
+package ecidice.util
 
 /**
  * A duration in seconds.

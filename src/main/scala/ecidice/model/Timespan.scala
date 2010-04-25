@@ -36,21 +36,40 @@ import ecidice.util.HashCode
  * 
  * @author Andreas Flierl
  * 
+ * @param clock the clock whose time this timespan is relative to
  * @param start the instant this timespan starts
- * @param duration this timespan's duration
+ * @param ttl the initial time-to-live (aka duration)
  */
-case class Timespan(start: Instant, duration: Duration) {
-  val end = start + duration
+class Timespan private (clock: Clock, val start: Double, private val ttl: Double) {
+  if (start < clock.now) throw new IllegalArgumentException(
+    "a timespan may not start in the past")
+  
+  if (ttl < 0d) throw new IllegalArgumentException(
+    "a timespan may not point backwards in time")
+  
+  val end = start + ttl
 
-  def isOver(now: Instant) = (now >= end)
+  def isOver = (clock.now >= start + ttl)
   
   /**
    * Returns where in this timespan the associated game is now as a number in
    * the interval [0, 1].
    */
-  def progress(now: Instant) =
-    if (now <= start) 0d
-    else if (now >= end) 1d
-    else (now.time - start.time) / (end.time - start.time)
-}
+  def progress =
+    if (clock.now <= start) 0d
+    else if (clock.now >= end) 1d
+    else (clock.now - start) / (end - start)
+  
+  override def equals(obj: Any) = obj match {
+    case x: Timespan => (x.start == start) && (x.ttl == ttl)
+    case _ => false
+  }
 
+  override def hashCode = HashCode(start, ttl)
+}
+object Timespan {
+  def apply(clock: Clock, start: Double, ttl: Double) =
+    new Timespan(clock, start, ttl)
+  
+  def apply(clock: Clock, ttl: Double) = new Timespan(clock, clock.now, ttl)
+}
