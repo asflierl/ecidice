@@ -44,5 +44,11 @@ object HashCodeSpec extends SpecBase {
     "calculate a good hash code for several given parameters" in {
       HashCode(1, 2L, " ") mustEqual (((17 + 1) * 41 + 2) * 41 + 32)
     }
+    
+    "be equal if the objects passed to it are equal" in {
+      def hash = HashCode(42, " ", Some(new String("x")))
+      
+      hash mustEqual hash
+    }
   }
 }

@@ -41,5 +41,5 @@ object HashCode {
     else (start(args: _*) /: args.tail)(combine)
     
   private def start(args: Any*): Int = 17 + args.head.hashCode
-  private def combine(left: Int, right: Any): Int = left * 41 + right.hashCode 
+  private def combine(left: Int, right: Any): Int = left * 41 + right.hashCode
 }
