@@ -117,7 +117,7 @@ final class Dice {
   def isLocked = state.isInstanceOf[Locked]
   def isCharging = isLocked && group.isCharging
   def isBursting = isLocked && group.isBursting
-  def isBurst = state == Burst
+  def isBurst = (state == Burst)
   
   def isControlled = state match {
     case Solid(_, controller) if (controller != None) => true

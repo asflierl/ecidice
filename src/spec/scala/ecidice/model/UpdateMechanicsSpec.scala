@@ -93,6 +93,24 @@ object UpdateMechanicsSpec extends SpecBase with GameContexts {
         dice.isBursting must beTrue
         dice.group.dice must contain (dice)
       })
+      
+      game.tracker.activities must notContain (group)
+    }
+    
+    "remove burst dice from the board" in {
+      val group = buildDiceGroup(Set((0, 0), (1, 0)))
+      val locations = group.dice.map(_.location)
+      
+      game.clock.tick(Activity.CHARGE_DURATION)
+      updater.update
+      
+      game.clock.tick(Activity.BURST_DURATION)
+      updater.update
+
+      group.dice.foreach(dice => dice.isBurst aka "isBurst: " + dice must beTrue)
+      locations.foreach(loc => loc.isEmpty aka "isEmpty: " + loc must beTrue)
+      
+      game.tracker.activities must notContain (group)
     }
   }
 }

@@ -62,10 +62,14 @@ trait PlayerMovement extends Activity {
 }
 
 object Activity {
-  val MOVE_DURATION = 0.25f
-  val APPEAR_DURATION = 5f
-  val CHARGE_DURATION = 10f
-  val BURST_DURATION = 1f 
+  val MOVE_DURATION = 0.25d
+  val APPEAR_DURATION = 5d
+  val CHARGE_DURATION = 10d
+  val BURST_DURATION = 1d 
+  
+  private def durationFor(group: DiceGroup) = 
+    if (group.isCharging) CHARGE_DURATION
+    else BURST_DURATION
   
   private case class DiceAppearingImpl(dice: Dice, location: Space, 
     time: Timespan) extends DiceAppearing
@@ -91,7 +95,7 @@ object Activity {
           Timespan(clock, MOVE_DURATION))
       
       def diceLock(group: DiceGroup): DiceLock =
-        DiceLockImpl(group, Timespan(clock, CHARGE_DURATION))
+        DiceLockImpl(group, Timespan(clock, durationFor(group)))
       
       def playerMovement(player: Player, origin: Tile, destination: Tile)
          : PlayerMovement =
