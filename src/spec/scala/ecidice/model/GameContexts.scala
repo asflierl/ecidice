@@ -52,8 +52,7 @@ trait GameContexts extends Specification {
    * available space at the specified position or throws an exception if this
    * fails.
    * 
-   * @param x the horizontal component of the position to place the dice
-   * @param y the depth component of the position to place the dice
+   * @param pos the position as tuple (x, y)
    * @return the newly created and placed dice
    */
   def placeDice(pos: (Int, Int)): Dice = {

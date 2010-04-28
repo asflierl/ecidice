@@ -62,9 +62,12 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
       board.tiles filter (_.floor.isOccupied)
     }
         
-    val group = diceMatcher.find(move.dice, move.destination.tile)    
+    val group = diceMatcher.find(move.dice, move.destination.tile)
+    // TODO after dice move ended, matching dice must be locked and made charging
     
-    throw new NotYetImplementedException
+    move.dice.solidify(move.destination, Some(move.dice.controller))
+    move.destination.occupy(move.dice)
+    // TODO relenquishing control comes into play here
   }
   
   private def playerMovementEnded(affected: PlayerMovement) =
@@ -76,13 +79,16 @@ class UpdateMechanics(board: Board, clock: Clock, tracker: ActivityTracker) {
   
   private def diceCharged(affected: DiceLock) = {
     val burst = Activity.on(clock).diceLock(affected.group.cloneAsBursting)
-    burst.group.dice.foreach(dice => dice.lock(burst, dice.initiator))
+    burst.group.dice.foreach(dice => {
+      dice.lock(burst, dice.initiator)
+      dice.location.convertToBursting()
+    })
     tracker.track(burst)
   }
   
   private def diceBurst(affected: DiceLock) = {
     affected.group.dice.foreach(dice => {
-      dice.location.empty()
+      dice.location.forgetBursting()
       dice.burst()
     })
   }

@@ -249,5 +249,29 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
       game.movementReferee.requestMove(p1, Direction.BACKWARD) must beTrue
       game.movementReferee.requestMove(p2, Direction.LEFT) must beFalse
     }
+    
+    "allow a player to move into a space with a bursting dice" in {
+      val group = buildDiceGroup(Set((0, 0), (1, 0)))
+      val locations = group.dice.map(_.location)
+      val dice = placeDice(1, 1)
+      placePlayer(p1, (1, 1))
+      game.controlReferee.requestControl(p1)
+      
+      game.clock.tick(Activity.CHARGE_DURATION)
+      game.updateMechanics.update
+      
+      game.movementReferee.requestMove(p1, Direction.FORWARD) must beTrue
+      dice.movement.destination.isBusy must beTrue
+      dice.movement.destination.hasBursting must beTrue
+      
+      game.clock.tick(Activity.BURST_DURATION)
+      game.updateMechanics.update
+
+      dice.location.tile mustEqual board(1, 0)
+      dice.location.isFloor must beTrue
+      dice.location.isBusy must beFalse
+      dice.location.isOccupied must beTrue
+      dice.location.hasBursting must beFalse
+    }
   }
 }

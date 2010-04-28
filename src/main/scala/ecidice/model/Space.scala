@@ -44,34 +44,92 @@ class Space(val tile: Tile) {
   
   def isFloor = (this == tile.floor)  
   def isRaised = (this == tile.raised)
-  def isEmpty = (state == Empty)
-  def isOccupied = state.isInstanceOf[Occupied]
-  def isBusy = state.isInstanceOf[Busy]
+  
+  def isEmpty = state match {
+    case Empty => true
+    case EmptyAndBursting(_) => true
+    case _ => false
+  }
+  
+  def isOccupied = state match {
+    case Occupied(_) => true
+    case OccupiedAndBursting(_,_) => true
+    case _ => false
+  }
+  
+  def isBusy = state match {
+    case Busy(_) => true
+    case BusyAndBursting(_,_) => true
+    case _ => false
+  }
+  
+  def hasBursting = state match {
+    case EmptyAndBursting(_) => true
+    case OccupiedAndBursting(_,_) => true
+    case BusyAndBursting(_,_) => true
+    case _ => false
+  }
   
   def dice = state match {
     case Occupied(dice) => dice
+    case OccupiedAndBursting(dice,_) => dice
     case _ => throw new IllegalStateException("space not occupied")
   }
   
   def movement = state match {
     case Busy(movement) => movement
+    case BusyAndBursting(movement,_) => movement
     case _ => throw new IllegalStateException("space not busy")
   }
   
-  def empty() = (state = Empty)
-  def occupy(dice: Dice) = (state = Occupied(dice))
-  def involve(move: DiceMovement) = (state = Busy(move))
+  def burstingDice = state match {
+    case EmptyAndBursting(d) => d
+    case OccupiedAndBursting(_,d) => d
+    case BusyAndBursting(_,d) => d
+    case _ => throw new IllegalStateException("no bursting dice in space")
+  }
+  
+  def empty() = 
+    if (hasBursting) state = EmptyAndBursting(burstingDice)
+    else state = Empty
+    
+  def occupy(dice: Dice) =
+    if (hasBursting) state = OccupiedAndBursting(dice, burstingDice)
+    else state = Occupied(dice)
+    
+  def involve(move: DiceMovement) =
+    if (hasBursting) state = BusyAndBursting(move, burstingDice)
+    else state = Busy(move)
+    
+  def convertToBursting() = state match {
+    case Occupied(dice) => state = EmptyAndBursting(dice)
+    case OccupiedAndBursting(dice, _) => state = EmptyAndBursting(dice)
+    case _ => throw new IllegalStateException("no occupying dice to convert")
+  }
+  
+  def forgetBursting() = state match {
+    case EmptyAndBursting(_) => state = Empty
+    case OccupiedAndBursting(d,_) => state = Occupied(d)
+    case BusyAndBursting(m,_) => state = Busy(m)
+    case _ => // NOP
+  }
   
   override def toString = "Space(%d, %d, %s)".format(tile.x, tile.y,
     (if (isRaised) "raised" else "floor"))
   
-  sealed abstract class State
+  sealed trait State
 
   /**
    * Denotes that a space is empty. A dice can move or appear here (if this is
    * on the floor level).
    */
-  case object Empty extends State
+  case object Empty extends State 
+  
+  /**
+   * Denotes that a space is empty, a dice can move or appear here (if this is
+   * on the floor level), but there's still a dice burst going on at this space.
+   */
+  case class EmptyAndBursting(bursting: Dice) extends State
   
   /**
    * This marks a space as occupied (by a dice). Other dice can not move or
@@ -80,8 +138,20 @@ class Space(val tile: Tile) {
   case class Occupied(dice: Dice) extends State
   
   /**
+   * A space in this state holds a dice that occupies it (just like the Occupied
+   * state) and a dice that is currently bursting.
+   */
+  case class OccupiedAndBursting(dice: Dice, bursting: Dice) extends State
+  
+  /**
    * An instance of this class is present on the "from" and "to" spaces that are
    * involved in a dice's movement during the movement.
    */
   case class Busy(activity: DiceMovement) extends State
+  
+  /**
+   * A space in this state is involved in dice movemnt (just like the Busy 
+   * state) and a dice that is currently bursting.
+   */
+  case class BusyAndBursting(activity: DiceMovement, bursting: Dice) extends State
 }

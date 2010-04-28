@@ -92,6 +92,7 @@ object UpdateMechanicsSpec extends SpecBase with GameContexts {
         dice.isLocked must beTrue
         dice.isBursting must beTrue
         dice.group.dice must contain (dice)
+        dice.location.hasBursting must beTrue
       })
       
       game.tracker.activities must notContain (group)
@@ -109,6 +110,7 @@ object UpdateMechanicsSpec extends SpecBase with GameContexts {
 
       group.dice.foreach(dice => dice.isBurst aka "isBurst: " + dice must beTrue)
       locations.foreach(loc => loc.isEmpty aka "isEmpty: " + loc must beTrue)
+      locations.foreach(loc => loc.hasBursting aka "hasBursting: " + loc must beFalse)
       
       game.tracker.activities must notContain (group)
     }
