@@ -56,11 +56,11 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
     
     "correctly handle player movement in the corners" in {
       simpleGame        |
-      "corner position" | "allowed movement directions"               |>
-      (0, 0)            ! List(Direction.BACKWARD, Direction.RIGHT)   |
-      (2, 0)            ! List(Direction.BACKWARD, Direction.LEFT)    |
-      (0, 2)            ! List(Direction.FORWARD, Direction.RIGHT)    |
-      (2, 2)            ! List(Direction.FORWARD, Direction.LEFT)     | {  
+      "corner position" | "allowed movement directions"              |>
+      (0, 0)            ! Set(Direction.BACKWARD, Direction.RIGHT)   |
+      (2, 0)            ! Set(Direction.BACKWARD, Direction.LEFT)    |
+      (0, 2)            ! Set(Direction.FORWARD, Direction.RIGHT)    |
+      (2, 2)            ! Set(Direction.FORWARD, Direction.LEFT)     | {  
         
       (corner, allowed) =>
         for (dir <- Direction.values) {
