@@ -55,24 +55,19 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
     }
     
     "correctly handle player movement in the corners" in {
-      
       simpleGame        |
-      "corner position" | "allowed movement directions"           |>
-      (0, 0)            ! (Direction.BACKWARD, Direction.RIGHT)   |
-      (2, 0)            ! (Direction.BACKWARD, Direction.LEFT)    |
-      (0, 2)            ! (Direction.FORWARD, Direction.RIGHT)    |
-      (2, 2)            ! (Direction.FORWARD, Direction.LEFT)     | {  
+      "corner position" | "allowed movement directions"               |>
+      (0, 0)            ! List(Direction.BACKWARD, Direction.RIGHT)   |
+      (2, 0)            ! List(Direction.BACKWARD, Direction.LEFT)    |
+      (0, 2)            ! List(Direction.FORWARD, Direction.RIGHT)    |
+      (2, 2)            ! List(Direction.FORWARD, Direction.LEFT)     | {  
         
       (corner, allowed) =>
         for (dir <- Direction.values) {
           "player moving " + dir in {
             placePlayer(p1, corner)
-            val correct = (dir == allowed._1 || dir == allowed._2)
-            (
-              game.movementReferee.requestMove(p1, dir)
-              aka "from " + corner
-              must be (correct)
-            )
+            val correct = allowed.contains(dir)
+            game.movementReferee.requestMove(p1, dir) must be (correct)
           }
         }
       }
@@ -91,11 +86,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
           "player moving " + dir in {
             placePlayer(p1, pos)
             val correct = (dir != disallowed)
-            (
-              game.movementReferee.requestMove(p1, dir)
-              aka "from " + pos 
-              must be (correct)
-            )
+            game.movementReferee.requestMove(p1, dir) must be (correct)
           }
         }
       }
