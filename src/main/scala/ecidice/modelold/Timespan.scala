@@ -27,24 +27,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
+import ecidice.util.HashCode
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-    
-    util.HashCodeSpec
-  )
+/**
+ * Represents a period of time, i.e. the time interval [start, end]
+ * 
+ * @author Andreas Flierl
+ * 
+ * @param clock the clock whose time this timespan is relative to
+ * @param start the instant this timespan starts
+ * @param ttl the initial time-to-live (aka duration)
+ */
+class Timespan private (clock: Clock, val start: Double, private val ttl: Double) {
+  require(start >= clock.now, "a timespan may not start in the past")
+  require(ttl >= 0d, "a timespan may not point backwards in time")
+  
+  val end = start + ttl
+
+  def isOver = (clock.now >= start + ttl)
+  
+  /**
+   * Returns where in this timespan the associated game is now as a number in
+   * the interval [0, 1].
+   */
+  def progress =
+    if (clock.now <= start) 0d
+    else if (clock.now >= end) 1d
+    else (clock.now - start) / (end - start)
+  
+  override def equals(obj: Any) = obj match {
+    case x: Timespan => (x.start == start) && (x.ttl == ttl)
+    case _ => false
+  }
+
+  override def hashCode = HashCode(start, ttl)
+}
+object Timespan {
+  def apply(clock: Clock, start: Double, ttl: Double) =
+    new Timespan(clock, start, ttl)
+  
+  def apply(clock: Clock, ttl: Double) = new Timespan(clock, clock.now, ttl)
 }

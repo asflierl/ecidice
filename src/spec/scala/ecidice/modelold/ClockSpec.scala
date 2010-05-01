@@ -27,24 +27,71 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
+import ecidice.SpecBase
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
+/**
+ * Informally specifies the clock model.
+ * 
+ * @author Andreas Flierl
+ */
+object ClockSpec extends ecidice.SpecBase {
+  "A clock" should {
+    val clock = new Clock
     
-    util.HashCodeSpec
-  )
+    "initially be set to 0" in {
+      clock.now mustEqual 0d
+    }
+    
+    "correctly tick forward" in {
+      clock.tick(delta)
+      clock.now must be closeTo(delta +/- delta)
+    }
+    
+    "not tick zero seconds" in {
+      clock.tick(0d) must throwAn[IllegalArgumentException]
+    }
+    
+    "not tick negatively" in {
+      clock.tick(-delta) must throwAn[IllegalArgumentException]
+    }
+    
+    "call reactions when ticking" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(1d)
+      
+      there was one(reaction)()
+    }
+    
+    "not call reactions when ticking zero seconds" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(0d) must throwAn[IllegalArgumentException]
+      
+      there was no(reaction)()
+    }
+    
+    "not call any reactions when ticking negatively" in {
+      val reaction = mock[() => Any]
+      
+      clock.addReaction(reaction)
+      clock.tick(-1d) must throwAn[IllegalArgumentException]
+      
+      there was no(reaction)()
+    }
+    
+    "still provide microsecond accuracy after 100 years" in {
+      clock.tick(100d * 365d * 24d * 60d * 60d)
+      val before = clock.now
+      
+      clock.tick(1E-6d)
+      val after = clock.now
+      
+      (after - before) must be closeTo(1E-6d +/- 5E-7d)
+    } 
+  }
 }

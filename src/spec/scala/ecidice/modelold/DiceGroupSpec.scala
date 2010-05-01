@@ -27,24 +27,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
+import ecidice.SpecBase
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
+object DiceGroupSpec extends SpecBase {
+  "A dice group" should {
+    val clock = new Clock
+    val group = DiceGroup.createCharging(Set.empty)
     
-    util.HashCodeSpec
-  )
+    "contain the dice previously added to it" in {
+      val d1 = new Dice
+      val d2 = new Dice
+      
+      group += d1
+      group += d2
+      
+      group.dice mustEqual Set(d1, d2)
+    }
+    
+    "be able to clone itself, resulting in a similar group that is bursting" in {
+      val d1 = new Dice
+      group += d1
+      
+      val cloned = group.cloneAsBursting
+      
+      cloned.dice mustEqual group.dice
+      cloned.isBursting must beTrue
+    }
+  }
 }

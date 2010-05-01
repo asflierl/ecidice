@@ -27,24 +27,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-    
-    util.HashCodeSpec
-  )
+/**
+ * Finds and returns all dice (including <code>src</code>) that show the same 
+ * top face as <code>src</code> and that are reachable from <code>src</code>
+ * via other such dice (by only moving up, down, left or right once or 
+ * several times). Only solid dice that are uncontrolled are considered.
+ * <p>
+ * As an example consider the following 3 x 3 board:
+ * <pre>
+ *     X Y Z
+ *   ---------
+ * A | 6 4 6 |
+ * B | 6 3 6 |
+ * C | 6 6 3 |
+ *   ---------
+ * </pre>
+ * 
+ * Starting from CX, the find method would return AX, BX, CX and CY. Starting
+ * from BY, it would only return BY. Starting from BZ, it would return AZ 
+ * and BZ.
+ */
+class DiceMatcher(board: Board) {
+  var src: Dice = _
+  
+  def find(src: Dice, start: Tile): Set[Dice] = {
+    this.src = src
+    findFromTile(start, Set(src))
+  }
+  
+  private def findFromTile(t: Tile, g: Set[Dice]) = {
+    var res = g
+    Direction.values.foreach(
+      diceInDir(t, _, Tile.Level.FLOOR).foreach( 
+        (next) => res = findFromDice(next, res)))
+    res
+  }
+  
+  private def findFromDice(dice: Dice, group: Set[Dice]): Set[Dice] =
+    if (dice.top != src.top || group.contains(dice)) group
+    else if (dice.isSolid && !dice.isControlled)
+      findFromTile(dice.location.tile, group + dice)
+    else group
+  
+  private def diceInDir(t: Tile, dir: Direction.Value, level: Tile.Level.Value) = {
+    val pos = board.positionInDir(t, dir)
+    if (board.isWithinBounds(pos) && board(pos).floor.isOccupied)
+      Some(board(pos).floor.dice)
+    else None
+  }
 }

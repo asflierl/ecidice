@@ -27,24 +27,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-    
-    util.HashCodeSpec
-  )
+class Player(spawnPoint: Tile) {
+  private var state: State = Standing(spawnPoint)
+  
+  def isStanding = state.isInstanceOf[Standing]
+  def isController = state.isInstanceOf[Controlling]
+  def isMoving = state.isInstanceOf[Moving]
+  
+  def location = state match {
+    case Standing(somewhere) => somewhere
+    case Controlling(dice) => dice.location.tile
+    case _ => throw new IllegalStateException("player location undetermined")
+  }
+  
+  def dice = state match {
+    case Controlling(dice) => dice
+    case _ => throw new IllegalStateException("player not controlling a dice")
+  }
+  
+  def movement = state match {
+    case Moving(activity) => activity
+    case _ => throw new IllegalStateException("player not moving")
+  }
+  
+  def stand(location: Tile) = (state = Standing(location))
+  def control(dice: Dice) = (state = Controlling(dice))
+  def move(move: PlayerMovement) = (state = Moving(move))
+  
+  sealed abstract class State
+  case class Standing(where: Tile) extends State
+  case class Controlling(dice: Dice) extends State
+  case class Moving(activity: PlayerMovement) extends State
 }

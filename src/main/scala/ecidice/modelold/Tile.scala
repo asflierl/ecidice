@@ -27,24 +27,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-    
-    util.HashCodeSpec
-  )
+/**
+ * Represents a tile in the game board. Each tile has an (inititally empty)
+ * space on the floor and on the raised level (i.e. on top of another dice).
+ * 
+ * @author Andreas Flierl
+ */
+case class Tile(x: Int, y: Int) {
+  var visibility = Tile.Visibility.VISIBLE
+  lazy val floor = new Space(this)
+  lazy val raised = new Space(this)
+  
+  def pos = (x, y)
+}
+object Tile {
+  object Visibility extends Enumeration {
+    val VISIBLE, HIDDEN = Value
+  }
+  
+  object Level extends Enumeration {
+    val FLOOR, RAISED = Value
+  }
 }

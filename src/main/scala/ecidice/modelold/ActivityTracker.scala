@@ -27,24 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-    
-    util.HashCodeSpec
-  )
+class ActivityTracker {
+  private var trackedActivities = Set.empty[Activity]
+  
+  def activities = trackedActivities
+  
+  def track(some: Activity) = (trackedActivities += some)
+  
+  def forget(some: Activity) = (trackedActivities -= some)
 }

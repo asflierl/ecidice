@@ -27,24 +27,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
+import ecidice.SpecBase
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
+/**
+ * Spec-based tests of the dice model.
+ * 
+ * @author Andreas Flierl
+ */
+object DiceSpec extends SpecBase {
+  "A dice" should {
+    val d = new Dice
     
-    util.HashCodeSpec
-  )
+    "initially look like this: top = 6, right = 5, front = 4" in {
+      d.top mustEqual 6
+      d.right mustEqual 5
+      d.front mustEqual 4
+    }
+  }
 }

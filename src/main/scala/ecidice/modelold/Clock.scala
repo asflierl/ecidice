@@ -27,24 +27,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.modelold
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.RotationSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
+class Clock {
+  type Reaction = () => Any
+  
+  private var currentTime = 0d
+  private var reactions = Set.empty[Reaction]
     
-    util.HashCodeSpec
-  )
+  def now = currentTime
+    
+  def tick(elapsedTime: Double) = {
+    require(elapsedTime > 0, "only time changes > 0 are allowed")
+    
+    currentTime += elapsedTime
+    reactions.foreach(_())
+  }
+  
+  def addReaction(r: Reaction) = (reactions += r)
+  
+  def removeReaction(r: Reaction) = (reactions -= r)
 }
