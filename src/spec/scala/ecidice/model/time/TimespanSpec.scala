@@ -27,7 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.util
+package ecidice.model
+package time
 
 import ecidice.SpecBase
 import ecidice.util.Preamble._

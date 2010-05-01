@@ -34,7 +34,11 @@ import org.specs.Specification
 object CompositeSpec extends Specification {
   "ecidice".isSpecifiedBy(
     model.dice.RotationSpec,
-      
+
+    model.time.DurationSpec,
+    model.time.TimespanSpec,
+    model.time.InstantSpec,
+    
     modelold.BoardSpec,
     modelold.ClockSpec,
     modelold.ControlRefereeSpec,
@@ -46,9 +50,6 @@ object CompositeSpec extends Specification {
     modelold.TimespanSpec,
     modelold.UpdateMechanicsSpec,
 
-    util.DurationSpec,
-    util.HashCodeSpec,
-    util.InstantSpec,
-    util.TimespanSpec
+    util.HashCodeSpec
   )
 }

@@ -27,28 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.util
+package ecidice.model
+package time
 
 /**
- * Represents a period of time, i.e. the time interval [start, end]
- * 
- * @author Andreas Flierl
- * 
- * @param start the instant this timespan starts
- * @param duration this timespan's duration
+ * An instant in time.
  */
-case class Timespan(start: Instant, duration: Duration) {
-  val end = start + duration
-
-  def isOver(now: Instant) = (now >= end)
+case class Instant(time: Double = 0d) extends Ordered[Instant] {
+  require(time >= 0d, "an instant may never be negative")
   
-  /**
-   * Returns where in this timespan the associated game is now as a number in
-   * the interval [0, 1].
-   */
-  def progress(now: Instant) =
-    if (now <= start) 0d
-    else if (now >= end) 1d
-    else (now.time - start.time) / (end.time - start.time)
+  def +(duration: Duration) = Instant(time + duration.seconds)
+  def compare(other: Instant) = time.compare(other.time)
 }
-
