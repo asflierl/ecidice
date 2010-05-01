@@ -27,28 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.model
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    model.dice.RotationSpec,
-      
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-
-    util.DurationSpec,
-    util.HashCodeSpec,
-    util.InstantSpec,
-    util.TimespanSpec
-  )
+object Direction extends Enumeration {
+  val BACKWARD = Value("backward")
+  val FORWARD = Value("forward")
+  val LEFT = Value("left")
+  val RIGHT = Value("right")
 }

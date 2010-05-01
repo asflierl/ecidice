@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2009-2010, Andreas Flierl
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
  * 
@@ -10,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *   this list of conditions and the following disclaimer in the documentation 
  *   and/or other materials provided with the distribution.
- * - Neither the names of the copyright holders nor the names of the
+ * - Neither the names of the copyright holders nor the names of its 
  *   contributors may be used to endorse or promote products derived from this 
  *   software without specific prior written permission.
  * 
@@ -27,28 +27,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.util
 
-import org.specs.Specification
+/**
+ * Represents a period of time, i.e. the time interval [start, end]
+ * 
+ * @author Andreas Flierl
+ * 
+ * @param start the instant this timespan starts
+ * @param duration this timespan's duration
+ */
+case class Timespan(start: Instant, duration: Duration) {
+  val end = start + duration
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    model.dice.RotationSpec,
-      
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-
-    util.DurationSpec,
-    util.HashCodeSpec,
-    util.InstantSpec,
-    util.TimespanSpec
-  )
+  def isOver(now: Instant) = (now >= end)
+  
+  /**
+   * Returns where in this timespan the associated game is now as a number in
+   * the interval [0, 1].
+   */
+  def progress(now: Instant) =
+    if (now <= start) 0d
+    else if (now >= end) 1d
+    else (now.time - start.time) / (end.time - start.time)
 }
+

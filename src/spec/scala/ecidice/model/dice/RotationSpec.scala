@@ -27,7 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.modelold
+package ecidice.model
+package dice
 
 import ecidice.SpecBase
 

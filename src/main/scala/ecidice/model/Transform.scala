@@ -27,28 +27,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.model
 
-import org.specs.Specification
-
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    model.dice.RotationSpec,
-      
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-
-    util.DurationSpec,
-    util.HashCodeSpec,
-    util.InstantSpec,
-    util.TimespanSpec
-  )
+/**
+ * Lists possible transformations of a dice.
+ * 
+ * @author Andreas Flierl
+ */
+object Transform extends Enumeration {
+  val ROTATE_BACKWARD = Value("rotate backward")
+  val ROTATE_FORWARD = Value("rotate forward")
+  val ROTATE_LEFT = Value("rotate left")
+  val ROTATE_RIGHT = Value("rotate right")
+  val SPIN_CLOCKWISE = Value("spin clockwise")
+  val SPIN_COUNTERCLOCKWISE = Value("spin counterclockwise")
+  val FLIP_UP_OR_DOWN = Value("flip up or down")
+  val FLIP_LEFT_OR_RIGHT = Value("flip left or right")
+  
+  def apply(from: Space, to: Space, dir: Direction.Value): Transform.Value = {
+    if (from.isFloor == to.isFloor) dir match {
+      case Direction.BACKWARD => Transform.ROTATE_BACKWARD
+      case Direction.FORWARD => Transform.ROTATE_FORWARD
+      case Direction.RIGHT => Transform.ROTATE_RIGHT
+      case Direction.LEFT => Transform.ROTATE_LEFT
+    } else dir match {
+      case Direction.BACKWARD | Direction.FORWARD => Transform.FLIP_UP_OR_DOWN
+      case Direction.LEFT | Direction.RIGHT => Transform.FLIP_LEFT_OR_RIGHT
+    }
+  }
 }
