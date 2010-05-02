@@ -29,11 +29,39 @@
 
 package ecidice.model
 
-case class Tile(column: Int, row: Int) extends Ordered[Tile] {
-  require(column >= 0, "column must be >= 0")
-  require(row >= 0, "row must be >= 0")
+import ecidice.SpecBase
+import org.scalacheck._
+import Prop.forAll
+import Arbitrary.arbitrary
+
+/**
+ * Informal specification of a tile. 
+ */
+object TileSpec extends SpecBase {
+  "A tile" should {
+    "be consistent in equivalence and ordering" in {
+      val consistency = forAll((a: Tile, b: Tile) =>
+        (a == b) mustEqual ((a compare b) == 0))
+      
+      consistency must pass
+    }
+    
+    "not allow negative rows or columns" in {
+      "column" | "row" | "legal" |>
+       8       !  42   ! true    |
+      -7       !  3    ! false   |
+       1       ! -100  ! false   |
+      -1       !  0    ! false   |
+       0       !  0    ! true    | {
+        
+      (col, row, legal) =>
+        if (! legal) Tile(col, row) must throwAn[IllegalArgumentException]
+        else Tile(col, row) mustNot beNull
+      }
+    }
+  }
   
-  def compare(other: Tile) =
-    if (row == other.row) column compare other.column
-    else row compare other.row
+  def positive = arbitrary[Int] suchThat (_ >= 0)
+  def tile = for (col <- positive; row <- positive) yield Tile(col, row)
+  implicit def arbTile: Arbitrary[Tile] = Arbitrary(tile)
 }
