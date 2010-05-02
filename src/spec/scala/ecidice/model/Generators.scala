@@ -29,43 +29,29 @@
 
 package ecidice.model
 
-import ecidice.SpecBase
 import org.scalacheck._
 import Prop.forAll
-import Generators._
+import Arbitrary.arbitrary
+import Gen._
 
 /**
- * Informal specification of a tile. 
+ * Defines generators for various model classes to be used with ScalaCheck
+ * specifications.
  */
-object TileSpec extends SpecBase {
-  "A tile" should {
-    "be consistent in equivalence and ordering" in {
-      val consistency = forAll((a: Tile, b: Tile) =>
-        (a == b) mustEqual ((a compare b) == 0))
-      
-      consistency must pass
-    }
-    
-    "not allow negative rows or columns" in {
-      "column" | "row" | "legal" |>
-       8       !  42   ! true    |
-      -7       !  3    ! false   |
-       1       ! -100  ! false   |
-      -1       !  0    ! false   |
-       0       !  0    ! true    | {
-        
-      (col, row, legal) =>
-        if (! legal) Tile(col, row) must throwAn[IllegalArgumentException]
-        else Tile(col, row) mustNot beNull
-      }
-    }
-    
-    "have correct ordering behaviour" in {
-      val tiles = List(Tile(3, 1), Tile(4, 0), Tile(0, 1), Tile(3, 5), Tile(2, 0))
-      
-      tiles.sortWith(_ < _) aka "the ordered tiles" mustEqual (
-          List(Tile(2, 0), Tile(4, 0), Tile(0, 1), Tile(3, 1), Tile(3, 5))
-      )
-    }
-  }
+object Generators {
+  def positive = arbitrary[Int] suchThat (_ >= 0)
+  
+  def tile = for (
+    col <- positive; 
+    row <- positive
+  ) yield Tile(col, row)
+  
+  implicit def arbTile: Arbitrary[Tile] = Arbitrary(tile)
+  
+  def space = for (
+    t <- arbitrary[Tile];
+    l <- oneOf(Level.values.toSeq)
+  ) yield Space(t, l)
+  
+  implicit def arbSpace: Arbitrary[Space] = Arbitrary(space)
 }

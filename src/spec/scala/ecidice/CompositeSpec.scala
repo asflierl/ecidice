@@ -33,6 +33,7 @@ import org.specs.Specification
 
 object CompositeSpec extends Specification {
   "ecidice".isSpecifiedBy(
+    model.SpaceSpec,
     model.TileSpec,
       
     model.dice.RotationSpec,

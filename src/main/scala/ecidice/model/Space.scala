@@ -29,7 +29,19 @@
 
 package ecidice.model
 
-case class Space(tile: Tile, level: Level.Value) {
+case class Space(tile: Tile, level: Level.Value) extends Ordered[Space] {
   def isFloor = level equals Level.Floor 
   def isRaised = level equals Level.Raised
+  
+  def floor =
+    if (isFloor) this
+    else Space(tile, Level.Floor)
+    
+  def raised =
+    if (isRaised) this
+    else Space(tile, Level.Raised)
+    
+  def compare(other: Space) =
+    if (level == other.level) tile compare other.tile
+    else level compare other.level
 }

@@ -33,39 +33,48 @@ import ecidice.SpecBase
 import org.scalacheck._
 import Prop.forAll
 import Generators._
+import Level._
 
 /**
- * Informal specification of a tile. 
+ * Informal specification of a space. 
  */
-object TileSpec extends SpecBase {
-  "A tile" should {
+object SpaceSpec extends SpecBase {
+  "A space on the game board" should {
     "be consistent in equivalence and ordering" in {
-      val consistency = forAll((a: Tile, b: Tile) =>
+      val consistency = forAll((a: Space, b: Space) =>
         (a == b) mustEqual ((a compare b) == 0))
       
       consistency must pass
     }
     
-    "not allow negative rows or columns" in {
-      "column" | "row" | "legal" |>
-       8       !  42   ! true    |
-      -7       !  3    ! false   |
-       1       ! -100  ! false   |
-      -1       !  0    ! false   |
-       0       !  0    ! true    | {
-        
-      (col, row, legal) =>
-        if (! legal) Tile(col, row) must throwAn[IllegalArgumentException]
-        else Tile(col, row) mustNot beNull
-      }
+    "have correct ordering behaviour" in {
+      val spaces = List(Space(Tile(3, 1), Raised),
+                        Space(Tile(5, 0), Floor),
+                        Space(Tile(0, 1), Raised),
+                        Space(Tile(3, 0), Floor))
+      
+      spaces.sortWith(_ < _) aka "the ordered spaces" mustEqual (
+          List(Space(Tile(3, 0), Floor),
+               Space(Tile(5, 0), Floor),
+               Space(Tile(0, 1), Raised),
+               Space(Tile(3, 1), Raised))
+      )
     }
     
-    "have correct ordering behaviour" in {
-      val tiles = List(Tile(3, 1), Tile(4, 0), Tile(0, 1), Tile(3, 5), Tile(2, 0))
+    "indicate its level correctly" in {
+      val tile = Tile(0, 0)
       
-      tiles.sortWith(_ < _) aka "the ordered tiles" mustEqual (
-          List(Tile(2, 0), Tile(4, 0), Tile(0, 1), Tile(3, 1), Tile(3, 5))
-      )
+      "when on the floor" >> {
+        val space = Space(tile, Floor)
+        space.isFloor aka "is floor" must beTrue
+        space.isRaised aka "is raised" must beFalse
+      }
+      
+      "when on the raised level" >> {
+        val space = Space(tile, Raised)
+        space.isFloor aka "is floor" must beFalse
+        space.isRaised aka "is raised" must beTrue
+      }
     }
   }
 }
