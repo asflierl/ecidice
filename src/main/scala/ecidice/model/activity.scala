@@ -29,6 +29,53 @@
 
 package ecidice.model
 
-class Board private (spaces: Map[Space, Contents]) {
+import time._
+
+/**
+ * Indicates that a game event is timed and needs to be tracked/managed.
+ * 
+ * @author Andreas Flierl
+ */
+sealed abstract class Activity {
+  def start: Instant
+  def duration: Duration
   
+  val time = Timespan(start, duration)
+}
+
+case class DiceAppearing(
+  dice: Dice,
+  location: Space,
+  start: Instant
+) extends Activity {
+  def duration = Duration(5d)
+}
+  
+case class DiceMovement(
+  dice: Dice,
+  origin: Space,
+  destination: Space, 
+  transform: Transform.Value,
+  controller: Player,
+  start: Instant
+) extends Activity {
+  def duration = Duration(.25d)
+}
+                        
+case class DiceLock(
+  group: DiceGroup,
+  start: Instant
+) extends Activity {
+  def duration =
+    if (group.isCharging) Duration(10d)
+    else Duration(1d)
+}
+
+case class PlayerMovement(
+  player: Player,
+  origin: Tile,
+  destination: Tile,
+  start: Instant
+) extends Activity {
+  def duration = Duration(.25d)
 }

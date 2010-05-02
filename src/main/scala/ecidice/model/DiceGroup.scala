@@ -29,6 +29,36 @@
 
 package ecidice.model
 
-class Board private (spaces: Map[Space, Contents]) {
+//FIXME this has just been copied over and needs to be reworked!
+final class DiceGroup private {
+  private var state: DiceGroup.State = _
+  private var diceSet: Set[Dice] = Set.empty[Dice]
   
+  private def init(state: DiceGroup.State, dice: Set[Dice]) = {
+    this.state = state
+    diceSet ++= dice
+    this
+  }
+  
+  def isCharging = (state == DiceGroup.Charging)
+  def isBursting = (state == DiceGroup.Bursting)
+  
+  def cloneAsBursting = new DiceGroup().init(DiceGroup.Bursting, diceSet)
+  
+  def +=(d: Dice) = (diceSet += d)
+  def ++(otherGroup: DiceGroup) = (diceSet ++ otherGroup.dice)
+  def dice = diceSet
+  def contains(d: Dice) = diceSet.contains(d)
+  
+  override def toString = "DiceGroup(%s, %s)".format(state, diceSet)
+}
+object DiceGroup {
+  def createCharging(dice: Set[Dice]) = new DiceGroup().init(Charging, dice)
+  def createBursting(dice: Set[Dice]) = new DiceGroup().init(Bursting, dice)
+  
+  private sealed abstract class State(desc: String) {
+    override def toString = desc
+  }
+  private object Charging extends State("charging")
+  private object Bursting extends State("bursting")
 }

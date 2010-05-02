@@ -29,6 +29,4 @@
 
 package ecidice.model
 
-class Board private (spaces: Map[Space, Contents]) {
-  
-}
+case class Player(id: Int)
