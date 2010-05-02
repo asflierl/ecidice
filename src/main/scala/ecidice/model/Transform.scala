@@ -41,20 +41,20 @@ object Transform extends Enumeration {
   val RotateForward = Value("rotate forward")
   val RotateLeft = Value("rotate left")
   val RotateRight = Value("rotate right")
-  val SpinClockwise = Value("spin clockwise") //TODO is this needed?
-  val SpinCounterclockwise = Value("spin counterclockwise") //TODO is this needed?
+  val SpinClockwise = Value("spin clockwise")
+  val SpinCounterclockwise = Value("spin counterclockwise")
   val FlipUpOrDown = Value("flip up or down")
   val FlipLeftOrRight = Value("flip left or right")
   
   def apply(from: Space, to: Space, dir: Direction.Value): Transform.Value = {
     if (from.isFloor == to.isFloor) dir match {
-      case BACKWARD => RotateBackward
-      case FORWARD => RotateForward
-      case RIGHT => RotateRight
-      case LEFT => RotateLeft
+      case Backward => RotateBackward
+      case Forward => RotateForward
+      case Right => RotateRight
+      case Left => RotateLeft
     } else dir match {
-      case BACKWARD | FORWARD => FlipUpOrDown
-      case LEFT | RIGHT => FlipLeftOrRight
+      case Backward | Forward => FlipUpOrDown
+      case Left | Right => FlipLeftOrRight
     }
   }
 }
