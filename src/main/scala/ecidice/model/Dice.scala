@@ -28,10 +28,9 @@
  */
 
 package ecidice.model
-package dice
 
 /**
- * Describes the rotation state of a 6-side dice.
+ * Describes a 6-side dice.
  *
  * The dice layout is 
  *  3
@@ -47,7 +46,7 @@ package dice
  * 
  * @author Andreas Flierl
  */
-case class Rotation(top: Int, right: Int, front: Int) {
+case class Dice(top: Int, right: Int, front: Int) {
   def bottom = opposite(top)
   def left = opposite(right)
   def back = opposite(front)
@@ -55,16 +54,16 @@ case class Rotation(top: Int, right: Int, front: Int) {
   private def opposite(eyes: Int) = 7 - eyes
   
   def transform(how: Transform.Value) = how match {
-    case Transform.ROTATE_BACKWARD => Rotation(front, right, bottom)
-    case Transform.ROTATE_FORWARD => Rotation(back, right, top)
-    case Transform.ROTATE_RIGHT => Rotation(left, top, front)
-    case Transform.ROTATE_LEFT => Rotation(right, bottom, front)
-    case Transform.SPIN_CLOCKWISE => Rotation(top, back, right)
-    case Transform.SPIN_COUNTERCLOCKWISE => Rotation(top, front, left)
-    case Transform.FLIP_UP_OR_DOWN => Rotation(bottom, right, back)
-    case Transform.FLIP_LEFT_OR_RIGHT => Rotation(bottom, left, front)
+    case Transform.ROTATE_BACKWARD => Dice(front, right, bottom)
+    case Transform.ROTATE_FORWARD => Dice(back, right, top)
+    case Transform.ROTATE_RIGHT => Dice(left, top, front)
+    case Transform.ROTATE_LEFT => Dice(right, bottom, front)
+    case Transform.SPIN_CLOCKWISE => Dice(top, back, right)
+    case Transform.SPIN_COUNTERCLOCKWISE => Dice(top, front, left)
+    case Transform.FLIP_UP_OR_DOWN => Dice(bottom, right, back)
+    case Transform.FLIP_LEFT_OR_RIGHT => Dice(bottom, left, front)
   }
 }
-object Rotation {
-  def initial = new Rotation(6, 5, 4)
+object Dice {
+  def initial = Dice(6, 5, 4)
 }

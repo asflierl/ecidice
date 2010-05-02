@@ -28,20 +28,19 @@
  */
 
 package ecidice.model
-package dice
 
 import ecidice.SpecBase
 
 /**
- * Informal specification of a dice rotation.
+ * Informal specification of a dice.
  * 
  * @author Andreas Flierl
  */
-object RotationSpec extends SpecBase {
-  "A dice rotation" should {
-    val rota = Rotation.initial
+object DiceSpec extends SpecBase {
+  "A dice" should {
+    val dice = Dice.initial
     
-    def check(changed: Rotation, top: Int, right: Int, front: Int) = {
+    def check(changed: Dice, top: Int, right: Int, front: Int) = {
       changed.top mustEqual top
       changed.right mustEqual right
       changed.front mustEqual front
@@ -51,54 +50,54 @@ object RotationSpec extends SpecBase {
     }
     
     "initially look like this: top = 6, right = 5, front = 4" in {
-      rota.top mustEqual 6
-      rota.right mustEqual 5
-      rota.front mustEqual 4
+      dice.top mustEqual 6
+      dice.right mustEqual 5
+      dice.front mustEqual 4
     }
     
     "initially be consistent" in {
-      rota.top mustEqual (7 - rota.bottom)
-      rota.left mustEqual (7 - rota.right)
-      rota.front mustEqual (7 - rota.back)
+      dice.top mustEqual (7 - dice.bottom)
+      dice.left mustEqual (7 - dice.right)
+      dice.front mustEqual (7 - dice.back)
     }
 
     "correctly rotate backward" in {
-      val changed = rota.transform(Transform.ROTATE_BACKWARD)
+      val changed = dice.transform(Transform.ROTATE_BACKWARD)
       check(changed, 4, 5, 1)
     }
     
     "correctly rotate forward" in {
-      val changed = rota.transform(Transform.ROTATE_FORWARD)
+      val changed = dice.transform(Transform.ROTATE_FORWARD)
       check(changed, 3, 5, 6)
     }
     
     "correctly rotate to the right" in {
-      val changed = rota.transform(Transform.ROTATE_RIGHT)
+      val changed = dice.transform(Transform.ROTATE_RIGHT)
       check(changed, 2, 6, 4)
     }
     
     "correctly rotate to the left" in {
-      val changed = rota.transform(Transform.ROTATE_LEFT)
+      val changed = dice.transform(Transform.ROTATE_LEFT)
       check(changed, 5, 1, 4)
     }
     
     "correctly spin clockwise" in {
-      val changed = rota.transform(Transform.SPIN_CLOCKWISE)
+      val changed = dice.transform(Transform.SPIN_CLOCKWISE)
       check(changed, 6, 3, 5)
     }
     
     "correctly spin counter-clockwise" in {
-      val changed = rota.transform(Transform.SPIN_COUNTERCLOCKWISE)
+      val changed = dice.transform(Transform.SPIN_COUNTERCLOCKWISE)
       check(changed, 6, 4, 2)
     }
     
     "correctly flip up/down" in {
-      val changed = rota.transform(Transform.FLIP_UP_OR_DOWN)
+      val changed = dice.transform(Transform.FLIP_UP_OR_DOWN)
       check(changed, 1, 5, 3)
     }
     
     "correctly flip left or right" in {
-      val changed = rota.transform(Transform.FLIP_LEFT_OR_RIGHT)
+      val changed = dice.transform(Transform.FLIP_LEFT_OR_RIGHT)
       check(changed, 1, 2, 4)
     }
   }
