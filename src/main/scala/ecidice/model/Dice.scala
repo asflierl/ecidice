@@ -29,6 +29,8 @@
 
 package ecidice.model
 
+import Transform._
+
 /**
  * Describes a 6-side dice.
  *
@@ -54,14 +56,14 @@ case class Dice(top: Int, right: Int, front: Int) {
   private def opposite(eyes: Int) = 7 - eyes
   
   def transform(how: Transform.Value) = how match {
-    case Transform.ROTATE_BACKWARD => Dice(front, right, bottom)
-    case Transform.ROTATE_FORWARD => Dice(back, right, top)
-    case Transform.ROTATE_RIGHT => Dice(left, top, front)
-    case Transform.ROTATE_LEFT => Dice(right, bottom, front)
-    case Transform.SPIN_CLOCKWISE => Dice(top, back, right)
-    case Transform.SPIN_COUNTERCLOCKWISE => Dice(top, front, left)
-    case Transform.FLIP_UP_OR_DOWN => Dice(bottom, right, back)
-    case Transform.FLIP_LEFT_OR_RIGHT => Dice(bottom, left, front)
+    case RotateBackward => Dice(front, right, bottom)
+    case RotateForward => Dice(back, right, top)
+    case RotateRight => Dice(left, top, front)
+    case RotateLeft => Dice(right, bottom, front)
+    case SpinClockwise => Dice(top, back, right)
+    case SpinCounterclockwise => Dice(top, front, left)
+    case FlipUpOrDown => Dice(bottom, right, back)
+    case FlipLeftOrRight => Dice(bottom, left, front)
   }
 }
 object Dice {

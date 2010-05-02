@@ -30,6 +30,7 @@
 package ecidice.model
 
 import ecidice.SpecBase
+import Transform._
 
 /**
  * Informal specification of a dice.
@@ -62,42 +63,42 @@ object DiceSpec extends SpecBase {
     }
 
     "correctly rotate backward" in {
-      val changed = dice.transform(Transform.ROTATE_BACKWARD)
+      val changed = dice.transform(RotateBackward)
       check(changed, 4, 5, 1)
     }
     
     "correctly rotate forward" in {
-      val changed = dice.transform(Transform.ROTATE_FORWARD)
+      val changed = dice.transform(RotateForward)
       check(changed, 3, 5, 6)
     }
     
     "correctly rotate to the right" in {
-      val changed = dice.transform(Transform.ROTATE_RIGHT)
+      val changed = dice.transform(RotateRight)
       check(changed, 2, 6, 4)
     }
     
     "correctly rotate to the left" in {
-      val changed = dice.transform(Transform.ROTATE_LEFT)
+      val changed = dice.transform(RotateLeft)
       check(changed, 5, 1, 4)
     }
     
     "correctly spin clockwise" in {
-      val changed = dice.transform(Transform.SPIN_CLOCKWISE)
+      val changed = dice.transform(SpinClockwise)
       check(changed, 6, 3, 5)
     }
     
     "correctly spin counter-clockwise" in {
-      val changed = dice.transform(Transform.SPIN_COUNTERCLOCKWISE)
+      val changed = dice.transform(SpinCounterclockwise)
       check(changed, 6, 4, 2)
     }
     
     "correctly flip up/down" in {
-      val changed = dice.transform(Transform.FLIP_UP_OR_DOWN)
+      val changed = dice.transform(FlipUpOrDown)
       check(changed, 1, 5, 3)
     }
     
     "correctly flip left or right" in {
-      val changed = dice.transform(Transform.FLIP_LEFT_OR_RIGHT)
+      val changed = dice.transform(FlipLeftOrRight)
       check(changed, 1, 2, 4)
     }
   }
