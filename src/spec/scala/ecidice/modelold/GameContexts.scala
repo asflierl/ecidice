@@ -36,7 +36,7 @@ trait GameContexts extends Specification {
   var board: Board = _
   var game: Game = _
   
-  val simpleGame = beforeContext {
+  val inASimpleGame = beforeContext {
     board = new Board(3, 3)
     game = new Game(2, board)
   } 

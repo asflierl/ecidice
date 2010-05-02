@@ -40,7 +40,7 @@ import org.specs.ScalaCheck
 object ControlRefereeSpec extends SpecBase with GameContexts with ScalaCheck {
   def referee = game.controlReferee
   
-  "A control referee" ->-(simpleGame) should {  
+  "A control referee" when inASimpleGame should {  
     
     "not grant control on any tile when the board is empty" in {
       for (x <- 0 to 2; y <- 0 to 2) {

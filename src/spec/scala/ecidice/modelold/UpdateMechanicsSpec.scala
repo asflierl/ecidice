@@ -37,7 +37,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 object UpdateMechanicsSpec extends SpecBase with GameContexts {
-  "The update mechanics" ->-(simpleGame) should {
+  "The update mechanics" when inASimpleGame should {
     
     def updater = game.updateMechanics
     

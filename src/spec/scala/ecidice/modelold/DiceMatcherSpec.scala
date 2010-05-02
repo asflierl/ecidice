@@ -34,7 +34,7 @@ import ecidice.SpecBase
 object DiceMatcherSpec extends SpecBase with GameContexts {
   def matcher = new DiceMatcher(board)
   
-  "A dice matcher" ->-(simpleGame) should {
+  "A dice matcher" when inASimpleGame should {
     
     "correctly find a group of matching dice" in {
       val d = (for (x <- 0 to 2; y <- 0 to 2) yield placeDice(x, y)).toList

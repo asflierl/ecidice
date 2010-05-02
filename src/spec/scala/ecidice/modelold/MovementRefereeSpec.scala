@@ -39,7 +39,7 @@ import ecidice.SpecBase
 object MovementRefereeSpec extends SpecBase with GameContexts {
   def referee = game.movementReferee
   
-  "The movement referee" ->-(simpleGame) should {
+  "The movement referee" when inASimpleGame should {
  
     "allow a player in the center to move in all directions" in {
       for (dir <- Direction.values) {
@@ -55,7 +55,7 @@ object MovementRefereeSpec extends SpecBase with GameContexts {
     }
     
     "correctly handle player movement in the corners" in {
-      simpleGame        |
+      inASimpleGame     |
       "corner position" | "allowed movement directions"              |>
       (0, 0)            ! Set(Direction.BACKWARD, Direction.RIGHT)   |
       (2, 0)            ! Set(Direction.BACKWARD, Direction.LEFT)    |

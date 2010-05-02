@@ -43,11 +43,11 @@ object BoardSpec extends SpecBase {
   var board: Board = _
   def center = board(2, 1)
     
-  val newlyCreatedBoard = beforeContext {
+  val newlyCreated = beforeContext {
     board = new Board(width, depth)
   }
   
-  "The game board" when newlyCreatedBoard should {
+  "The game board" when newlyCreated should {
     "return its tiles in the right order" in {
       val iter = board.tiles
       
@@ -61,7 +61,7 @@ object BoardSpec extends SpecBase {
     
     "predict the correct position that results from a move from its center" in {
       
-      newlyCreatedBoard   |
+      newlyCreated        |
       "direction of move" | "result position" |>
       Direction.BACKWARD  ! (2, 2)            |
       Direction.FORWARD   ! (2, 0)            |
@@ -75,18 +75,18 @@ object BoardSpec extends SpecBase {
     
     "correctly indicate board bounds" in {
       
-      newlyCreatedBoard |
-      "position" | "within bounds" |>
-      (0, 0)     ! true            |
-      (4, 2)     ! true            |
-      (1, 2)     ! true            |
-      (4, 1)     ! true            |
-      (5, 0)     ! false           |
-      (0, 3)     ! false           |
-      (-1, 1)    ! false           |
-      (2, -1)    ! false           |
-      (-1, -1)   ! false           |
-      (5, 3)     ! false           | { 
+      newlyCreated |
+      "position"   | "within bounds" |>
+      (0, 0)       ! true            |
+      (4, 2)       ! true            |
+      (1, 2)       ! true            |
+      (4, 1)       ! true            |
+      (5, 0)       ! false           |
+      (0, 3)       ! false           |
+      (-1, 1)      ! false           |
+      (2, -1)      ! false           |
+      (-1, -1)     ! false           |
+      (5, 3)       ! false           | { 
         
       (pos, result) =>
         board.isWithinBounds(pos) mustEqual(result)
