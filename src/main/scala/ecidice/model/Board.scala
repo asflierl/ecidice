@@ -31,6 +31,6 @@
 
 package ecidice.model
 
-class Board private (spaces: Map[Space, Contents]) {
+class Board(spaces: Map[Space, Contents]) {
   
 }
