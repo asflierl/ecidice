@@ -11,7 +11,6 @@ define 'ecidice' do
   compile.options.optimise = true
   compile.with JME
   
-  test.with artifacts(:specs, :scalacheck, :mockito, :cglib, :asm,
-                      :objenesis, :hamcrest)
+  test.with artifacts(:specs, :scalacheck, :mockito, :cglib, :asm, :objenesis, :hamcrest)
   test.include 'ecidice.CompositeSpec'
 end
