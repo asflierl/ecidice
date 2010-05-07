@@ -32,5 +32,6 @@
 package ecidice.model
 
 object Visibility extends Enumeration {
-  val Visible, Hidden = Value
+  val Visible = Value("visible")
+  val Hidden = Value("hidden")
 }

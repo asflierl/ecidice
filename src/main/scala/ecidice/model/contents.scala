@@ -63,5 +63,5 @@ case class Moving(
   maybeBursting: Option[Bursting]
 ) extends Contents
 
-case class Charging(dice: Dice) // FIXME dice locks/groups should be managed globally
-case class Bursting(dice: Dice) // FIXME same here
+case class Charging(dice: Dice)
+case class Bursting(dice: Dice)

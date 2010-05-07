@@ -32,5 +32,6 @@
 package ecidice.model
 
 object Level extends Enumeration {
-  val Floor, Raised = Value
+  val Floor = Value("floor")
+  val Raised = Value("raised")
 }
