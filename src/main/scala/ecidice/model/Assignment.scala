@@ -31,6 +31,12 @@
 
 package ecidice.model
 
-case class Board(spaces: Map[Space, Contents]) {
-  
-}
+/**
+ * Things a player can do. 
+ */
+sealed trait Assignment
+
+case object Standing extends Assignment
+case class MovingAlone(activity: PlayerMovement) extends Assignment
+case class ControllingADice(location: Space) extends Assignment
+case class MovingWithADice(activity: DiceMovement) extends Assignment

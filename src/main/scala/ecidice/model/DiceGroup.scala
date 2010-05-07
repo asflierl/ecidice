@@ -31,36 +31,19 @@
 
 package ecidice.model
 
-//FIXME this has just been copied over and needs to be reworked!
-final class DiceGroup private {
-  private var state: DiceGroup.State = _
-  private var diceSet: Set[Dice] = Set.empty[Dice]
-  
-  private def init(state: DiceGroup.State, dice: Set[Dice]) = {
-    this.state = state
-    diceSet ++= dice
-    this
-  }
-  
-  def isCharging = (state == DiceGroup.Charging)
-  def isBursting = (state == DiceGroup.Bursting)
-  
-  def cloneAsBursting = new DiceGroup().init(DiceGroup.Bursting, diceSet)
-  
-  def +=(d: Dice) = (diceSet += d)
-  def ++(otherGroup: DiceGroup) = (diceSet ++ otherGroup.dice)
-  def dice = diceSet
-  def contains(d: Dice) = diceSet.contains(d)
-  
-  override def toString = "DiceGroup(%s, %s)".format(state, diceSet)
+sealed trait DiceGroup[T <: DiceGroup[T]] { this: T =>
+  def dice: Set[Dice]
+  protected def create(dice: Set[Dice]): T
+
+  def +(d: Dice) = create(dice = dice + d)
+  def ++(otherGroup: DiceGroup[_]) = create(dice = dice ++ otherGroup.dice)
+  def contains(d: Dice) = dice.contains(d)
 }
-object DiceGroup {
-  def createCharging(dice: Set[Dice]) = new DiceGroup().init(Charging, dice)
-  def createBursting(dice: Set[Dice]) = new DiceGroup().init(Bursting, dice)
-  
-  private sealed abstract class State(desc: String) {
-    override def toString = desc
-  }
-  private object Charging extends State("charging")
-  private object Bursting extends State("bursting")
+
+case class ChargeGroup(dice: Set[Dice]) extends DiceGroup[ChargeGroup] {
+  def create(d: Set[Dice]) = copy(d)
+}
+
+case class BurstGroup(dice: Set[Dice]) extends DiceGroup[BurstGroup] {
+  def create(d: Set[Dice]) = copy(d)
 }

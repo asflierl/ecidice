@@ -50,7 +50,7 @@ case class DiceAppearing(
   location: Space,
   start: Instant
 ) extends Activity {
-  def duration = Duration(5d)
+  val duration = Duration(5d)
 }
   
 case class DiceMovement(
@@ -61,16 +61,25 @@ case class DiceMovement(
   controller: Player,
   start: Instant
 ) extends Activity {
-  def duration = Duration(.25d)
+  val duration = Duration(.25d)
 }
-                        
-case class DiceLock(
-  group: DiceGroup,
+
+sealed trait DiceLock[T <: DiceGroup[T]] extends Activity {
+  def group: T
+}
+
+case class ChargeLock(
+  group: ChargeGroup,
   start: Instant
-) extends Activity {
-  def duration =
-    if (group.isCharging) Duration(10d)
-    else Duration(1d)
+) extends DiceLock[ChargeGroup] {
+  val duration = Duration(10d)
+}
+
+case class BurstLock(
+  group: BurstGroup,
+  start: Instant
+) extends DiceLock[BurstGroup] {
+  val duration = Duration(1d)
 }
 
 case class PlayerMovement(
@@ -79,5 +88,5 @@ case class PlayerMovement(
   destination: Tile,
   start: Instant
 ) extends Activity {
-  def duration = Duration(.25d)
+  val duration = Duration(.25d)
 }
