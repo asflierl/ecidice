@@ -50,7 +50,7 @@ import Transform._
  * 
  * @author Andreas Flierl
  */
-case class Dice(top: Int, right: Int, front: Int) {
+case class Dice(top: Int, right: Int, front: Int) extends Contents {
   def bottom = opposite(top)
   def left = opposite(right)
   def back = opposite(front)

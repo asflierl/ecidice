@@ -39,7 +39,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 object BoardSpec extends SpecBase {
-  val board = Board(5, 3) 
+  val board = Board.sized(5, 3) 
     
   "The game board" should {
     "correctly indicate board bounds" in {

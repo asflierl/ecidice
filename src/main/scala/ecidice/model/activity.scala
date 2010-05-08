@@ -49,7 +49,7 @@ case class DiceAppearing(
   dice: Dice,
   location: Space,
   start: Instant
-) extends Activity {
+) extends Activity with Contents {
   val duration = Duration(5d)
 }
   
@@ -60,7 +60,7 @@ case class DiceMovement(
   transform: Transform.Value,
   controller: Player,
   start: Instant
-) extends Activity {
+) extends Activity with Contents {
   val duration = Duration(.25d)
 }
 

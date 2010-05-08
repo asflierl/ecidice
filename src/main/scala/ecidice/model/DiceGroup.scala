@@ -32,18 +32,18 @@
 package ecidice.model
 
 sealed trait DiceGroup[T <: DiceGroup[T]] { this: T =>
-  def dice: Set[Dice]
-  protected def create(dice: Set[Dice]): T
+  def dice: Map[Space, Dice]
+  protected def create(dice: Map[Space, Dice]): T
 
-  def +(d: Dice) = create(dice = dice + d)
+  def +(kv: (Space, Dice)) = create(dice = dice + kv)
   def ++(otherGroup: DiceGroup[_]) = create(dice = dice ++ otherGroup.dice)
-  def contains(d: Dice) = dice.contains(d)
+  def contains(s: Space) = dice.contains(s)
 }
 
-case class ChargeGroup(dice: Set[Dice]) extends DiceGroup[ChargeGroup] {
-  def create(d: Set[Dice]) = copy(d)
+case class ChargeGroup(dice: Map[Space, Dice]) extends DiceGroup[ChargeGroup] {
+  def create(m: Map[Space, Dice]) = copy(m)
 }
 
-case class BurstGroup(dice: Set[Dice]) extends DiceGroup[BurstGroup] {
-  def create(d: Set[Dice]) = copy(d)
+case class BurstGroup(dice: Map[Space, Dice]) extends DiceGroup[BurstGroup] {
+  def create(m: Map[Space, Dice]) = copy(m)
 }

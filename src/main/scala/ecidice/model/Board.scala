@@ -36,16 +36,20 @@ case class Board(
   rows: Int,
   spaces: Map[Space, Contents]
 ) {
+  def apply(space: Space) = spaces(space)
+  
   def contains(tile: Tile): Boolean = 
     (tile.column >= 0 && tile.column < columns) && 
     (tile.row >= 0 && tile.row < rows)
+    
+  def put(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
 }
 object Board {
-  def apply(columns: Int, rows: Int): Board =
+  def sized(columns: Int, rows: Int): Board =
     Board(columns, rows, Map.empty ++ contentMappings(columns, rows))
     
   private def contentMappings(columns: Int, rows: Int) =
-    spaces(columns, rows).map(_ -> Empty(None))
+    spaces(columns, rows).map(_ -> Empty)
     
   private def spaces(columns: Int, rows: Int) = 
     for (

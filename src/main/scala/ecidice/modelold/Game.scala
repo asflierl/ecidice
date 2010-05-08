@@ -39,16 +39,6 @@ import scala.collection.immutable._
  * 
  * @author Andreas Flierl
  */
-//TODO it probably should be possible to move onto charging dice!
-// 2-player race condition: player 1 upon a charging dice, dice bursts, player 2
-// wants to move where the dice burst
-//TODO falling dice must be modeled (probably linked to burst time?)
-//TODO it also should probably be possible to move onto an appearing dice
-
-//TODO relinquish control must be modeled
-//TODO some kind of scoring system 
-//TODO when do new dice spawn?
-//TODO take tile visibility into account
 class Game(numPlayers: Int, val board: Board) {
   lazy val players = createPlayers(0)
   val clock = new Clock

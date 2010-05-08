@@ -31,10 +31,34 @@
 
 package ecidice.model
 
+import Level._
+import time._
+
+//TODO it probably should be possible to move onto charging dice!
+// 2-player race condition: player 1 upon a charging dice, dice bursts, player 2
+// wants to move where the dice burst
+//TODO falling dice must be modeled (probably linked to burst time?)
+//TODO it also should probably be possible to move onto an appearing dice
+
+//TODO relinquish control must be modeled
+//TODO some kind of scoring system 
+//TODO when do new dice spawn?
+//TODO take tile visibility into account
 case class Game(
   board: Board,
   locks: Set[DiceLock[_]],
   players: Map[Player, Assignment]
 ) {
-  
+  def spawnDice(tile: Tile, now: Instant) = {
+    val free = Level.values.forall(l => board(Space(tile, l)) match {
+      case Empty => true
+      case _ => false
+    })
+    
+    if (free) {
+      val space = Space(tile, Floor)
+      val activity = DiceAppearing(Dice.initial, space, now)
+      copy(board = board.put(space -> activity))
+    } else this
+  }
 }

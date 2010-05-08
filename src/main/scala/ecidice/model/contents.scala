@@ -31,35 +31,16 @@
 
 package ecidice.model
 
-/** Marker trait for things that can occupy a space. */
-sealed trait Contents {
-  protected def maybeBursting: Option[Bursting]
-  def remembersBursting: Boolean = maybeBursting isDefined
-  def bursting = maybeBursting.getOrElse(() => throw new IllegalStateException)
-}
+/**
+ * Marker trait for things that can occupy a space.
+ */
+trait Contents
 
-case class Empty(maybeBursting: Option[Bursting]) extends Contents
-
-case class Appearing(
-  activity: DiceAppearing,
-  maybeBursting: Option[Bursting]
-) extends Contents
-
-case class Solid(
-  dice: Dice,
-  maybeBursting: Option[Bursting]
-) extends Contents
+case object Empty extends Contents
 
 case class SolidControlled(
   dice: Dice,
-  controller: Player,
-  maybeBursting: Option[Bursting]
+  controller: Player
 ) extends Contents
 
-case class Moving(
-  activity: DiceMovement,
-  maybeBursting: Option[Bursting]
-) extends Contents
-
-case class Charging(dice: Dice)
-case class Bursting(dice: Dice)
+case object Charging extends Contents
