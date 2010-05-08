@@ -31,6 +31,26 @@
 
 package ecidice.model
 
-case class Board(spaces: Map[Space, Contents]) {
-  
+case class Board(
+  columns: Int,
+  rows: Int,
+  spaces: Map[Space, Contents]
+) {
+  def contains(tile: Tile): Boolean = 
+    (tile.column >= 0 && tile.column < columns) && 
+    (tile.row >= 0 && tile.row < rows)
+}
+object Board {
+  def apply(columns: Int, rows: Int): Board =
+    Board(columns, rows, Map.empty ++ contentMappings(columns, rows))
+    
+  private def contentMappings(columns: Int, rows: Int) =
+    spaces(columns, rows).map(_ -> Empty(None))
+    
+  private def spaces(columns: Int, rows: Int) = 
+    for (
+      x <- 0 until columns;
+      y <- 0 until rows;
+      l <- Level.values
+    ) yield Space(Tile(x, y), l)
 }

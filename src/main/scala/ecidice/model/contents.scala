@@ -31,9 +31,7 @@
 
 package ecidice.model
 
-/**
- * Marker trait for things that can occupy a space. 
- */
+/** Marker trait for things that can occupy a space. */
 sealed trait Contents {
   protected def maybeBursting: Option[Bursting]
   def remembersBursting: Boolean = maybeBursting isDefined

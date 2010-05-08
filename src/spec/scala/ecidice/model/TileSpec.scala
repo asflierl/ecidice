@@ -69,5 +69,18 @@ object TileSpec extends SpecBase {
           List(Tile(2, 0), Tile(4, 0), Tile(0, 1), Tile(3, 1), Tile(3, 5))
       )
     }
+    
+    "return the correct tile when going in all directions" in {
+      
+      "direction of move" | "result position" |>
+      Direction.Backward  ! Tile(2, 2)        |
+      Direction.Forward   ! Tile(2, 0)        |
+      Direction.Left      ! Tile(1, 1)        |  
+      Direction.Right     ! Tile(3, 1)        | { 
+        
+      (dir, result) =>
+        Tile(2, 1).go(dir) mustEqual(result)
+      }
+    }
   }
 }

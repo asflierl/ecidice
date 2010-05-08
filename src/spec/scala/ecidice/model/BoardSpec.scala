@@ -31,10 +31,31 @@
 
 package ecidice.model
 
-case class Game(
-  board: Board,
-  locks: Set[DiceLock[_]],
-  players: Map[Player, Assignment]
-) {
-  
+import ecidice.SpecBase
+
+/**
+ * Informal specification of the game board.
+ * 
+ * @author Andreas Flierl
+ */
+object BoardSpec extends SpecBase {
+  val board = Board(5, 3) 
+    
+  "The game board" should {
+    "correctly indicate board bounds" in {
+      
+      "tile"     | "within bounds" |>
+      Tile(0, 0) ! true            |
+      Tile(4, 2) ! true            |
+      Tile(1, 2) ! true            |
+      Tile(4, 1) ! true            |
+      Tile(5, 0) ! false           |
+      Tile(0, 3) ! false           |
+      Tile(5, 3) ! false           | { 
+        
+      (tile, result) =>
+        board.contains(tile) mustEqual(result)
+      }
+    }
+  }
 }
