@@ -30,9 +30,7 @@
  */
 
 package ecidice.model
-
-import Level._
-import time._
+package game
 
 //TODO it probably should be possible to move onto charging dice!
 // 2-player race condition: player 1 upon a charging dice, dice bursts, player 2
@@ -44,21 +42,12 @@ import time._
 //TODO some kind of scoring system 
 //TODO when do new dice spawn?
 //TODO take tile visibility into account
-case class Game(
-  board: Board,
-  locks: Set[DiceLock[_]],
-  players: Map[Player, Assignment]
-) {
-  def spawnDice(tile: Tile, now: Instant) = {
-    val free = Level.values.forall(l => board(Space(tile, l)) match {
-      case Empty => true
-      case _ => false
-    })
-    
-    if (free) {
-      val space = Space(tile, Floor)
-      val activity = DiceAppearing(Dice.initial, space, now)
-      copy(board = board.put(space -> activity))
-    } else this
-  }
+trait Game[T <: Game[T]] { this: T =>
+  def board: Board
+  def locks: Set[DiceLock[_]]
+  def players: Map[Player, Assignment]
+  
+  def copy(board: Board = board, 
+           locks: Set[DiceLock[_]] = locks,
+           players: Map[Player, Assignment] = players): T
 }
