@@ -70,7 +70,7 @@ object TileSpec extends SpecBase {
       )
     }
     
-    "return the correct tile when going in all directions" in {
+    "return the correct tile when going in any direction" in {
       
       "direction of move" | "result position" |>
       Direction.Backward  ! Tile(2, 2)        |

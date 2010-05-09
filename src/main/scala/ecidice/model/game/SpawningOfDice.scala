@@ -36,16 +36,18 @@ import time._
 import Level._
 
 trait SpawningOfDice { this: Game[_] =>
-  def spawnDice(tile: Tile, now: Instant) = {
-    val free = Level.values.forall(l => board(Space(tile, l)) match {
-      case Empty => true
-      case _ => false
-    })
+  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random) = {
+    val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
     
     if (free) {
       val space = Space(tile, Floor)
       val activity = DiceAppearing(Dice.initial, space, now)
       copy(board = board.put(space -> activity))
     } else this
+  }
+  
+  private def isEmpty(c: Contents) = c match {
+    case Empty => true
+    case _ => false
   }
 }

@@ -42,6 +42,7 @@ import Transform._
 object DiceSpec extends SpecBase {
   "A dice" should {
     val dice = Dice.initial
+    val all = Dice.allRotations.toSet
     
     def check(changed: Dice, top: Int, right: Int, front: Int) = {
       changed.top mustEqual top
@@ -50,6 +51,7 @@ object DiceSpec extends SpecBase {
       changed.bottom mustEqual (7 - top)
       changed.left mustEqual (7 - right)
       changed.back mustEqual (7 - front)
+      all mustContain changed
     }
     
     "initially look like this: top = 6, right = 5, front = 4" in {
@@ -62,6 +64,10 @@ object DiceSpec extends SpecBase {
       dice.top mustEqual (7 - dice.bottom)
       dice.left mustEqual (7 - dice.right)
       dice.front mustEqual (7 - dice.back)
+    }
+    
+    "know about all different dice rotations" in {
+      all.size mustEqual 24
     }
 
     "correctly rotate backward" in {

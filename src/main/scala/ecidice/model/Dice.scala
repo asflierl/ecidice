@@ -32,6 +32,7 @@
 package ecidice.model
 
 import Transform._
+import scala.util.Random
 
 /**
  * Describes a 6-side dice.
@@ -70,4 +71,27 @@ case class Dice(top: Int, right: Int, front: Int) extends Contents {
 }
 object Dice {
   def initial = Dice(6, 5, 4)
+  
+  val allRotations = next(initial, 0, 0, List.empty)
+  
+  /**
+   * Calculates all possible dice rotations in the following order where
+   * `sc = SpinClockwise`, `rl = RotateLeft` and `rb = RotateBackward`, starting
+   * with the initial `Dice(6, 5, 4)`.
+   *
+   * (6) sc, sc, sc, sc-rl, (5) sc, sc, sc, sc-rb,
+   * (4) sc, sc, sc, sc-rl, (1) sc, sc, sc, sc-rb,
+   * (2) sc, sc, sc, sc-rl, (3) sc, sc, sc, (sc-rb)
+   */
+  private def next(cur: Dice, spins: Int, rotas: Int, accu: List[Dice]): List[Dice] =
+    if (spins < 3) next(spin(cur), spins + 1, rotas, cur :: accu)
+    else if (spins == 3 && rotas == 5) (cur :: accu).reverse
+    else next(spinrota(cur, rotas), 0, rotas + 1, cur :: accu)
+  
+  private def spin(d: Dice) = d.transform(SpinClockwise)
+  
+  private def spinrota(d: Dice, num: Int) =
+    spin(d).transform(if (num % 2 == 0) RotateLeft else RotateBackward)
+    
+  def random = allRotations(Random.nextInt(allRotations.size))
 }
