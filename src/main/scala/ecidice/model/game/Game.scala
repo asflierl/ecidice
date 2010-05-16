@@ -42,12 +42,12 @@ package game
 //TODO some kind of scoring system 
 //TODO when do new dice spawn?
 //TODO take tile visibility into account
-trait Game[T <: Game[T]] { this: T =>
+trait Game[G <: Game[G]] { this: G =>
   def board: Board
   def locks: Set[DiceLock[_]]
   def players: Map[Player, Assignment]
   
   def dupe(board: Board = board, 
            locks: Set[DiceLock[_]] = locks,
-           players: Map[Player, Assignment] = players): T
+           players: Map[Player, Assignment] = players): G
 }
