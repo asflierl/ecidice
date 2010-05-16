@@ -41,7 +41,7 @@ case class Gauntlet(
   board: Board,
   locks: Set[DiceLock[_]],
   players: Map[Player, Assignment]
-) extends Game[Gauntlet] with SpawningOfDice {
+) extends Game[Gauntlet] with SpawningOfDice[Gauntlet] {
   def dupe(board: Board, locks: Set[DiceLock[_]], players: Map[Player, Assignment]) = 
     Gauntlet(board, locks, players)
 }

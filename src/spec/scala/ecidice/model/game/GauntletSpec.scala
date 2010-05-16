@@ -33,6 +33,7 @@ package ecidice.model
 package game
 
 import ecidice.SpecBase
+import time._
 
 /**
  * Informal specification of the "Gauntlet" game mode.
@@ -41,9 +42,21 @@ import ecidice.SpecBase
  */
 object GauntletSpec extends SpecBase {
   "A gauntlet game" should {
-    "correctly dupe itself" in {
-      val game = Gauntlet.create(10, 2)
+    val game = Gauntlet.create(3, 1)
+    
+    "dupe itself" in {
       game.dupe() mustEqual game
+    }
+    
+    "spawn a new dice" in {
+      val tile = Tile(1, 2)
+      val dice = Dice(6, 5, 4)
+      val now = Instant()
+      val gameWithDice = game.spawnDice(tile, now, dice)
+      
+      val location = Space(Tile(1, 2), Level.Floor)
+      val contents = gameWithDice.board(location) 
+      contents aka "contents" mustEqual DiceAppearing(dice, location, now)
     }
   }
 }

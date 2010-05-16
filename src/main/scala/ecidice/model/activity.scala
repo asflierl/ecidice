@@ -50,6 +50,9 @@ case class DiceAppearing(
   location: Space,
   start: Instant
 ) extends Activity with Contents {
+  def duration = DiceAppearing.duration
+}
+object DiceAppearing {
   val duration = Duration(5d)
 }
   
@@ -61,6 +64,9 @@ case class DiceMovement(
   controller: Player,
   start: Instant
 ) extends Activity with Contents {
+  def duration = DiceMovement.duration
+}
+object DiceMovement {
   val duration = Duration(.25d)
 }
 
@@ -72,6 +78,9 @@ case class ChargeLock(
   group: ChargeGroup,
   start: Instant
 ) extends DiceLock[ChargeGroup] {
+  def duration = ChargeLock.duration
+}
+object ChargeLock {
   val duration = Duration(10d)
 }
 
@@ -79,6 +88,9 @@ case class BurstLock(
   group: BurstGroup,
   start: Instant
 ) extends DiceLock[BurstGroup] {
+  def duration = BurstLock.duration
+}
+object BurstLock {
   val duration = Duration(1d)
 }
 
@@ -88,5 +100,8 @@ case class PlayerMovement(
   destination: Tile,
   start: Instant
 ) extends Activity {
+  def duration = PlayerMovement.duration
+}
+object PlayerMovement {
   val duration = Duration(.25d)
 }

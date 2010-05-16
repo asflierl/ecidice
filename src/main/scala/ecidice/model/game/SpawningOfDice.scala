@@ -35,7 +35,7 @@ package game
 import time._
 import Level._
 
-trait SpawningOfDice { this: Game[_] =>
+trait SpawningOfDice[T <: Game[T]] { this: T =>
   def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random) = {
     val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
     
