@@ -36,7 +36,7 @@ package ecidice.model
  */
 sealed trait Assignment
 
-case object Standing extends Assignment
+case class Standing(location: Tile) extends Assignment
 case class MovingAlone(activity: PlayerMovement) extends Assignment
 case class ControllingADice(location: Space) extends Assignment
 case class MovingWithADice(activity: DiceMovement) extends Assignment

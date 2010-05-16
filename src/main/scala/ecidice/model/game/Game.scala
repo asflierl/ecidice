@@ -47,7 +47,7 @@ trait Game[T <: Game[T]] { this: T =>
   def locks: Set[DiceLock[_]]
   def players: Map[Player, Assignment]
   
-  def copy(board: Board = board, 
+  def dupe(board: Board = board, 
            locks: Set[DiceLock[_]] = locks,
            players: Map[Player, Assignment] = players): T
 }

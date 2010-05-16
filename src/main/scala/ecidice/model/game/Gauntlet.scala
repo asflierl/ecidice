@@ -42,7 +42,12 @@ case class Gauntlet(
   locks: Set[DiceLock[_]],
   players: Map[Player, Assignment]
 ) extends Game[Gauntlet] with SpawningOfDice {
-  def copy(board: Board = board, 
-           locks: Set[DiceLock[_]] = locks,
-           players: Map[Player, Assignment] = players) = copy(board, locks, players)
+  def dupe(board: Board, locks: Set[DiceLock[_]], players: Map[Player, Assignment]) = 
+    Gauntlet(board, locks, players)
+}
+object Gauntlet {
+  def create(d: Int, n: Int) = {
+    val players = Map((0 until n).map(p => Player(p) -> Standing(Tile(0, 0))):_*)
+    Gauntlet(Board.sized(d, d), Set.empty, players)
+  }
 }

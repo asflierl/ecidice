@@ -42,7 +42,7 @@ trait SpawningOfDice { this: Game[_] =>
     if (free) {
       val space = Space(tile, Floor)
       val activity = DiceAppearing(Dice.initial, space, now)
-      copy(board = board.put(space -> activity))
+      dupe(board = board.put(space -> activity))
     } else this
   }
   

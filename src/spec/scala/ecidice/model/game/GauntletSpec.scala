@@ -29,34 +29,21 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
+package ecidice.model
+package game
 
-import org.specs.Specification
+import ecidice.SpecBase
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    model.BoardSpec,
-    model.DiceSpec,
-    model.SpaceSpec,
-    model.TileSpec,
-    
-    model.game.GauntletSpec,
-      
-    model.time.DurationSpec,
-    model.time.TimespanSpec,
-    model.time.InstantSpec,
-    
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
-
-    util.HashCodeSpec
-  )
+/**
+ * Informal specification of the "Gauntlet" game mode.
+ * 
+ * @author Andreas Flierl
+ */
+object GauntletSpec extends SpecBase {
+  "A gauntlet game" should {
+    "correctly dupe itself" in {
+      val game = Gauntlet.create(10, 2)
+      game.dupe() mustEqual game
+    }
+  }
 }
