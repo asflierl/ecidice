@@ -38,7 +38,7 @@ import time._
  * 
  * @author Andreas Flierl
  */
-sealed abstract class Activity {
+sealed trait Activity {
   def start: Instant
   def duration: Duration
   
