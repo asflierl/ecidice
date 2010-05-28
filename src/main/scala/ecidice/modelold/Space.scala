@@ -96,25 +96,27 @@ class Space(val tile: Tile) {
     override val isEmpty = true
   }
   
-  case class EmptyAndBursting(override bursting: Dice) extends State {
+  case class EmptyAndBursting(override val bursting: Dice) extends State {
     override val isEmpty = true
     override val hasBursting = true
   }
   
-  case class Occupied(override dice: Dice) extends State {
+  case class Occupied(override val dice: Dice) extends State {
     override val isOccupied = true
   }
   
-  case class OccupiedAndBursting(override dice: Dice, override bursting: Dice) extends State {
+  case class OccupiedAndBursting(override val dice: Dice, 
+                                 override val bursting: Dice) extends State {
     override val isOccupied = true
     override val hasBursting = true
   }
   
-  case class Busy(override movement: DiceMovement) extends State {
+  case class Busy(override val movement: DiceMovement) extends State {
     override val isBusy = true
   }
   
-  case class BusyAndBursting(override movement: DiceMovement, override bursting: Dice) extends State {
+  case class BusyAndBursting(override val movement: DiceMovement, 
+                             override val bursting: Dice) extends State {
     override val isBusy = true
     override val hasBursting = true
   }

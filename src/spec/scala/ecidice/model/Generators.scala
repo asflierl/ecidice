@@ -41,7 +41,7 @@ import Gen._
  * specifications.
  */
 object Generators {
-  def positive = arbitrary[Int] suchThat (_ >= 0)
+  def positive = Gen.choose(0, Int.MaxValue)
   
   def tile = for (
     col <- positive; 
