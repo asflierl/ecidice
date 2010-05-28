@@ -30,33 +30,24 @@
  */
 
 package ecidice.model
-package game
+package mode
 
-import ecidice.SpecBase
 import time._
+import Level._
 
-/**
- * Informal specification of the "Gauntlet" game mode.
- * 
- * @author Andreas Flierl
- */
-object GauntletSpec extends SpecBase {
-  "A gauntlet game" should {
-    val game = Gauntlet.create(3, 1)
+trait SpawningOfDice[A <: Mode[A]] { this: A =>
+  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random) = {
+    val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
     
-    "dupe itself" in {
-      game.dupe() mustEqual game
-    }
-    
-    "spawn a new dice" in {
-      val tile = Tile(1, 2)
-      val dice = Dice(6, 5, 4)
-      val now = Instant()
-      val gameWithDice = game.spawnDice(tile, now, dice)
-      
-      val location = Space(Tile(1, 2), Level.Floor)
-      val contents = gameWithDice.board(location) 
-      contents aka "contents" mustEqual DiceAppearing(dice, location, now)
-    }
+    if (free) {
+      val space = Space(tile, Floor)
+      val activity = DiceAppearing(Dice.initial, space, now)
+      dupe(board = board.put(space -> activity))
+    } else this
+  }
+  
+  private def isEmpty(c: Contents) = c match {
+    case Empty => true
+    case _ => false
   }
 }

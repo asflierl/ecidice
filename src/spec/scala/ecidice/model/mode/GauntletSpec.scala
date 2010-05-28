@@ -30,24 +30,33 @@
  */
 
 package ecidice.model
-package game
+package mode
 
-//TODO it probably should be possible to move onto charging dice!
-// 2-player race condition: player 1 upon a charging dice, dice bursts, player 2
-// wants to move where the dice burst
-//TODO falling dice must be modeled (probably linked to burst time?)
-//TODO it also should probably be possible to move onto an appearing dice
+import ecidice.SpecBase
+import time._
 
-//TODO relinquish control must be modeled
-//TODO some kind of scoring system 
-//TODO when do new dice spawn?
-//TODO take tile visibility into account
-trait Game[G <: Game[G]] { this: G =>
-  def board: Board
-  def locks: Set[DiceLock[_]]
-  def players: Map[Player, Assignment]
-  
-  def dupe(board: Board = board, 
-           locks: Set[DiceLock[_]] = locks,
-           players: Map[Player, Assignment] = players): G
+/**
+ * Informal specification of the "Gauntlet" game mode.
+ * 
+ * @author Andreas Flierl
+ */
+object GauntletSpec extends SpecBase {
+  "A gauntlet game" should {
+    val game = Gauntlet.create(3, 1)
+    
+    "dupe itself" in {
+      game.dupe() mustEqual game
+    }
+    
+    "spawn a new dice" in {
+      val tile = Tile(1, 2)
+      val dice = Dice(6, 5, 4)
+      val now = Instant()
+      val gameWithDice = game.spawnDice(tile, now, dice)
+      
+      val location = Space(Tile(1, 2), Level.Floor)
+      val contents = gameWithDice.board(location) 
+      contents aka "contents" mustEqual DiceAppearing(dice, location, now)
+    }
+  }
 }

@@ -30,7 +30,7 @@
  */
 
 package ecidice.model
-package game
+package mode
 
 /**
  * Game mode "gauntlet": players have to keep the board free against dice
@@ -41,7 +41,7 @@ case class Gauntlet(
   board: Board,
   locks: Set[DiceLock[_]],
   players: Map[Player, Assignment]
-) extends Game[Gauntlet] with SpawningOfDice[Gauntlet] {
+) extends Mode[Gauntlet] with SpawningOfDice[Gauntlet] {
   def dupe(board: Board, locks: Set[DiceLock[_]], players: Map[Player, Assignment]) = 
     Gauntlet(board, locks, players)
 }

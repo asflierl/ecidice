@@ -40,7 +40,7 @@ object CompositeSpec extends Specification {
     model.SpaceSpec,
     model.TileSpec,
     
-    model.game.GauntletSpec,
+    model.mode.GauntletSpec,
       
     model.time.DurationSpec,
     model.time.TimespanSpec,
