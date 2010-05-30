@@ -41,16 +41,16 @@ import Gen._
  * specifications.
  */
 object Generators {
-  def positive = Gen.choose(0, Int.MaxValue)
+  private def positive = Gen.choose(0, Int.MaxValue)
   
-  def tile = for (
+  private def tile = for (
     col <- positive; 
     row <- positive
   ) yield Tile(col, row)
   
   implicit def arbTile: Arbitrary[Tile] = Arbitrary(tile)
   
-  def space = for (
+  private def space = for (
     t <- arbitrary[Tile];
     l <- oneOf(Level.values.toSeq)
   ) yield Space(t, l)
