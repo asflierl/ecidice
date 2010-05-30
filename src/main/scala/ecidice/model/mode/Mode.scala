@@ -32,6 +32,8 @@
 package ecidice.model
 package mode
 
+import time._
+
 //TODO it probably should be possible to move onto charging dice!
 // 2-player race condition: player 1 upon a charging dice, dice bursts, player 2
 // wants to move where the dice burst
@@ -50,6 +52,8 @@ trait Mode[A <: Mode[A]] { this: A =>
   def board: Board
   def locks: Set[DiceLock[_]]
   def players: Map[Player, Assignment]
+  
+  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random): A
   
   def dupe(board: Board = board, 
            locks: Set[DiceLock[_]] = locks,

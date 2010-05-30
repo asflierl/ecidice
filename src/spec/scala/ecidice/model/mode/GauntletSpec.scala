@@ -42,7 +42,7 @@ import time._
  */
 object GauntletSpec extends SpecBase {
   "A gauntlet game" should {
-    val game = Gauntlet.create(3, 1)
+    val game = Gauntlet.create(3)
     
     "dupe itself" in {
       game.dupe() mustEqual game

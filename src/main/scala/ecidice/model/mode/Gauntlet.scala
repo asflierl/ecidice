@@ -46,8 +46,7 @@ case class Gauntlet(
     Gauntlet(board, locks, players)
 }
 object Gauntlet {
-  def create(d: Int, n: Int) = {
-    val players = Map((0 until n).map(p => Player(p) -> Standing(Tile(0, 0))):_*)
-    Gauntlet(Board.sized(d, d), Set.empty, players)
+  def create(d: Int) = {
+    Gauntlet(Board.sized(d, d), Set.empty, Map.empty)
   }
 }
