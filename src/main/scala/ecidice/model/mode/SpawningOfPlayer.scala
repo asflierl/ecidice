@@ -32,22 +32,11 @@
 package ecidice.model
 package mode
 
-/**
- * Game mode "gauntlet": players have to keep the board free against dice
- * spawning. After a certain amount of points gained the level (or difficulty)
- * increases which increases the spawn rate of dice.
- */
-case class Gauntlet(
-  board: Board,
-  locks: Set[DiceLock[_]],
-  players: Map[Player, Assignment]
-) extends Mode[Gauntlet] with SpawningOfDice[Gauntlet]
-                         with SpawningOfPlayer[Gauntlet] {
-  def dupe(board: Board, locks: Set[DiceLock[_]], players: Map[Player, Assignment]) = 
-    Gauntlet(board, locks, players)
-}
-object Gauntlet {
-  def create(d: Int) = {
-    Gauntlet(Board.sized(d, d), Set.empty, Map.empty)
-  }
+trait SpawningOfPlayer[A <: Mode[A]] { this: A =>
+  def spawnPlayer(there: Tile) =
+    dupe(players = players + (Player(nextPlayerID) -> Standing(there))) 
+  
+  private def nextPlayerID = 
+    if (players isEmpty) 0
+    else players.keys.max.id + 1
 }

@@ -53,6 +53,8 @@ trait Mode[A <: Mode[A]] { this: A =>
   def locks: Set[DiceLock[_]]
   def players: Map[Player, Assignment]
   
+  def spawnPlayer(tile: Tile): A
+  
   def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random): A
   
   def dupe(board: Board = board, 

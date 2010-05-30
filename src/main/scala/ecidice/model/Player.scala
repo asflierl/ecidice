@@ -31,4 +31,6 @@
 
 package ecidice.model
 
-case class Player(id: Int)
+case class Player(id: Int) extends Ordered[Player] {
+  def compare(other: Player) = id compare(other id)
+}

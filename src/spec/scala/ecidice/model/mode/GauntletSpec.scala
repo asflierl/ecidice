@@ -44,11 +44,11 @@ object GauntletSpec extends SpecBase {
   "A gauntlet game" should {
     val game = Gauntlet.create(3)
     
-    "dupe itself" in {
+    "correctly dupe itself" in {
       game.dupe() mustEqual game
     }
     
-    "spawn a new dice" in {
+    "correctly spawn a new dice" in {
       val tile = Tile(1, 2)
       val dice = Dice(6, 5, 4)
       val now = Instant()
@@ -57,6 +57,14 @@ object GauntletSpec extends SpecBase {
       val location = Space(Tile(1, 2), Level.Floor)
       val contents = gameWithDice.board(location) 
       contents aka "contents" mustEqual DiceAppearing(dice, location, now)
+    }
+    
+    "correctly spawn new players" in {
+      val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
+      val gameWithTwoPlayers = gameWithOnePlayer.spawnPlayer(Tile(2, 1))
+      
+      gameWithTwoPlayers.players mustEqual Map(Player(0) -> Standing(Tile(0, 0)),
+                                               Player(1) -> Standing(Tile(2, 1)))
     }
   }
 }
