@@ -80,7 +80,7 @@ object TimespanSpec extends SpecBase {
     "still be able to represent a microsecond duration after 100 years" in {
       val start = Instant(100d * 365d * 24d * 60d * 60d)
       val t = Timespan(start, Duration(1E-6d))
-      val real = Duration.between(start, t.end).seconds
+      val real = (t.end - start).seconds
       
       real must beCloseTo(1E-6d +/- 5E-7d)
     }

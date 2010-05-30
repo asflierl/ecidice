@@ -59,5 +59,22 @@ object InstantSpec extends SpecBase {
     "result in a new instant when a duration is added to it" in {
       Instant(42) + Duration(23) mustEqual Instant(65)
     }
+    
+    "result in a new instant when a duration is subtracted from it" in {
+      Instant(42) - Duration(23) mustEqual Instant(19)
+    }
+    
+    "not allow to subtract a duration greater than the instant" in {
+      Instant(19) - Duration(23) must throwAn[IllegalArgumentException]
+    }
+    
+    "correctly calculate the duration between 2 instants" in {
+      "instant a" | "instant b" | "result"     |>
+      Instant(42) ! Instant(23) ! Duration(19) |
+      Instant(11) ! Instant(42) ! Duration(31) |
+      Instant(5)  ! Instant(5)  ! Duration(0)  | {
+        (a, b, result) => a - b mustEqual result
+      }
+    }
   }
 }

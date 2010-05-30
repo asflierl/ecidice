@@ -42,6 +42,3 @@ case class Duration(seconds: Double = 0d) extends Ordered[Duration] {
   def +(instant: Instant) = instant + this 
   def compare(other: Duration) = seconds.compare(other.seconds)
 }
-object Duration {
-  def between(a: Instant, b: Instant): Duration = Duration((a.time - b.time).abs)
-}

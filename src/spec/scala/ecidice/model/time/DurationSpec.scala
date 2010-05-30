@@ -55,15 +55,6 @@ object DurationSpec extends SpecBase {
       Duration(42) + Instant(23) mustEqual Instant(65)
     }
     
-    "correctly represent the duration between 2 instants" in {
-      "instant a" | "instant b" | "result"     |>
-      Instant(42) ! Instant(23) ! Duration(19) |
-      Instant(11) ! Instant(42) ! Duration(31) |
-      Instant(5)  ! Instant(5)  ! Duration(0)  | {
-        (a, b, result) => Duration.between(a, b) mustEqual result
-      }
-    }
-    
     "be comparable" in {
       "duration a" | "duration b" | "result" |>
       Duration(1)  ! Duration(0)  ! 1        |
