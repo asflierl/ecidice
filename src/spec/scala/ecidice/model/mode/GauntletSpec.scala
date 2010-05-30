@@ -64,8 +64,8 @@ object GauntletSpec extends SpecBase {
       val gameWithTwoPlayers = gameWithOnePlayer.spawnPlayer(Tile(2, 1))
       
       gameWithTwoPlayers.players mustEqual 
-        Map(Player(0) -> Standing(Tile(0, 0)),
-            Player(1) -> Standing(Tile(2, 1)))
+        Map(Player(1) -> Standing(Tile(0, 0)),
+            Player(2) -> Standing(Tile(2, 1)))
     }
   }
 }

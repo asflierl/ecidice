@@ -37,6 +37,6 @@ trait SpawningOfPlayer[A <: Mode[A]] { this: A =>
     dupe(players = players + (Player(nextPlayerID) -> Standing(there))) 
   
   private def nextPlayerID = 
-    if (players isEmpty) 0
+    if (players isEmpty) 1
     else players.keys.max.id + 1
 }
