@@ -32,34 +32,24 @@
 package ecidice.model
 package mode
 
-import time._
-
-//TODO it probably should be possible to move onto charging dice!
-// 2-player race condition: player 1 upon a charging dice, dice bursts, player 2
-// wants to move where the dice burst
-//TODO falling dice must be modeled (probably linked to burst time?)
-//TODO it also should probably be possible to move onto an appearing dice
-
-//TODO relinquish control must be modeled
-//TODO some kind of scoring system 
-//TODO when do new dice spawn?
-//TODO take tile visibility into account
-
-/**
- * Common interface for game modes.
- */
-trait Mode[A <: Mode[A]] { this: A =>
-  def board: Board
-  def locks: Set[DiceLock[_]]
-  def players: Map[Player, Assignment]
-  
-  def spawnPlayer(tile: Tile): A
-  
-  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random): A
-  
-  def control(player: Player): A
-  
-  def dupe(board: Board = board, 
-           locks: Set[DiceLock[_]] = locks,
-           players: Map[Player, Assignment] = players): A
+trait ControlRequest[A <: Mode[A]] extends Helpers { this: A =>
+  def control(player: Player) = {
+    def controlTile(loc: Tile) = 
+      if (! isEmpty(board(Space(loc, Level.Raised)))) this  
+      else controlFloor(Space(loc, Level.Floor))
+    
+    def controlFloor(space: Space) = board(space) match {
+      case d : Dice => createResult(space, d)
+      case _ => this
+    }
+    
+    def createResult(space: Space, dice: Dice) =
+      dupe(board = board.put(space -> SolidControlled(dice, player)),
+           players = players + (player -> ControllingADice(space)))
+    
+    players(player) match {
+      case Standing(t) => controlTile(t)
+      case _ => this
+    }
+  }
 }

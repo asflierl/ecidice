@@ -35,7 +35,7 @@ package mode
 import time._
 import Level._
 
-trait SpawningOfDice[A <: Mode[A]] { this: A =>
+trait SpawningOfDice[A <: Mode[A]] extends Helpers { this: A =>
   def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random) = {
     val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
     
@@ -44,10 +44,5 @@ trait SpawningOfDice[A <: Mode[A]] { this: A =>
       val activity = DiceAppearing(Dice.initial, space, now)
       dupe(board = board.put(space -> activity))
     } else this
-  }
-  
-  private def isEmpty(c: Contents) = c match {
-    case Empty => true
-    case _ => false
   }
 }

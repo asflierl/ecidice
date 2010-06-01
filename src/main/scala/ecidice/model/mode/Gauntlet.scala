@@ -41,13 +41,14 @@ case class Gauntlet(
   board: Board,
   locks: Set[DiceLock[_]],
   players: Map[Player, Assignment]
-) extends Mode[Gauntlet] with SpawningOfDice[Gauntlet]
-                         with SpawningOfPlayer[Gauntlet] {
+) extends Mode[Gauntlet]
+     with SpawningOfDice[Gauntlet]
+     with SpawningOfPlayer[Gauntlet]
+     with ControlRequest[Gauntlet] {
+  
   def dupe(board: Board, locks: Set[DiceLock[_]], players: Map[Player, Assignment]) = 
     Gauntlet(board, locks, players)
 }
 object Gauntlet {
-  def create(d: Int) = {
-    Gauntlet(Board.sized(d, d), Set.empty, Map.empty)
-  }
+  def create(d: Int) = Gauntlet(Board.sized(d, d), Set.empty, Map.empty)
 }

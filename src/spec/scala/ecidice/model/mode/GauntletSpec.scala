@@ -43,6 +43,7 @@ import time._
 object GauntletSpec extends SpecBase {
   "A gauntlet game" should {
     val game = Gauntlet.create(3)
+    val now = Instant()
     
     "correctly dupe itself" in {
       game.dupe() mustEqual game
@@ -51,7 +52,7 @@ object GauntletSpec extends SpecBase {
     "correctly spawn a new dice" in {
       val tile = Tile(1, 2)
       val dice = Dice(6, 5, 4)
-      val now = Instant()
+      
       val gameWithDice = game.spawnDice(tile, now, dice)
       
       val location = Space(Tile(1, 2), Level.Floor)
@@ -66,6 +67,29 @@ object GauntletSpec extends SpecBase {
       gameWithTwoPlayers.players mustEqual 
         Map(Player(1) -> Standing(Tile(0, 0)),
             Player(2) -> Standing(Tile(2, 1)))
+    }
+    
+    "not grant control when player stands on an empty tile" in {
+      val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
+      
+      val assignment = gameWithOnePlayer.control(Player(1)).players(Player(1))
+      
+      assignment mustEqual Standing(Tile(0, 0))
+    }
+    
+    "grant control over a single dice on the floor" in {
+      val dice = Dice.random
+      val location = Space(Tile(0, 0), Level.Floor)
+      
+      val testGame = game.spawnPlayer(location.tile)
+                         .dupe(board = game.board.put(location -> dice))
+                         .control(Player(1))
+      
+      testGame.players(Player(1)) aka 
+        "assignment of player 1" mustEqual ControllingADice(location)
+      
+      testGame.board(location) aka
+        "contents of dice space" mustEqual SolidControlled(dice, Player(1))
     }
   }
 }
