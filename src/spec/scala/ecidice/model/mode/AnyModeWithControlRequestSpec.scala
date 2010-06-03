@@ -35,11 +35,11 @@ package mode
 import ecidice.SpecBase
 
 /**
- * Informal specification of any game mode that supports control requests.
+ * Informal specification of any game mode that supports dice spawning.
  * 
  * @author Andreas Flierl
  */
-class AnyModeWithControlRequestSpec[A <: Mode[A]](game: Mode[A] with ControlRequest[A]) 
+class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) 
 extends SpecBase with TestHelpers {
   
   "Any mode that supports control requests" should {
@@ -63,7 +63,7 @@ extends SpecBase with TestHelpers {
     "grant control over a single dice on the floor" in {
       val dice = Dice.random
       val location = Tile(0, 0).floor
-      
+
       val testGame = game.spawnPlayer(location.tile)
                          .addSolidDice(location -> dice)
                          .control(Player(1))
@@ -109,6 +109,6 @@ extends SpecBase with TestHelpers {
   }
 }
 object AnyModeWithControlRequestSpec {
-  def apply[A <: Mode[A]](game: Mode[A] with ControlRequest[A]) = 
+  def apply[A <: Mode[A] with ControlRequest[A]](game: A) = 
     new AnyModeWithControlRequestSpec(game)
 }

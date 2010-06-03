@@ -35,7 +35,7 @@ package mode
 import ecidice.SpecBase
 
 /**
- * Informal specification of any game mode that supports control requests.
+ * Informal specification of basic stuff in any game mode.
  * 
  * @author Andreas Flierl
  */
@@ -43,6 +43,15 @@ class AnyModeSpec[A <: Mode[A]](game: A) extends SpecBase with TestHelpers {
   "Any mode" should {
     "correctly dupe itself" in {
       game.dupe() aka "the duped game" mustEqual game
+    }
+    
+    "correctly spawn new players" in {
+      val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
+      val gameWithTwoPlayers = gameWithOnePlayer.spawnPlayer(Tile(2, 1))
+      
+      gameWithTwoPlayers.players mustEqual 
+        Map(Player(1) -> Standing(Tile(0, 0)),
+            Player(2) -> Standing(Tile(2, 1)))
     }
   }
 }

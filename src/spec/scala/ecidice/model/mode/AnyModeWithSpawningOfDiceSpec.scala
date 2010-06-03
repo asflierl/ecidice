@@ -33,21 +33,54 @@ package ecidice.model
 package mode
 
 import ecidice.SpecBase
-import time._
 
 /**
- * Informal specification of the "Gauntlet" game mode.
+ * Informal specification of any game mode that supports control requests.
  * 
  * @author Andreas Flierl
  */
-object GauntletSpec extends SpecBase with TestHelpers {
-  implicit val game = Gauntlet.create(3)
+class AnyModeWithSpawningOfDiceSpec[A <: Mode[A] with SpawningOfDice[A]](game: A) 
+extends SpecBase with TestHelpers {
   
-  "A gauntlet game" should {
+  "Any mode that supports the spawning of dice" should {
+
+    "spawn a new dice on an empty tile" in {
+      val tile = Tile(1, 2)
+      val dice = Dice(6, 5, 4)
+      
+      val contents = game.spawnDice(tile, now, dice)
+                         .board(tile.floor)
+                         
+      contents aka "contents" mustEqual DiceAppearing(dice, tile.floor, now)
+    }
     
-    behave like AnyModeSpec(game)
-    behave like AnyModeWithControlRequestSpec(game)
-    behave like AnyModeWithSpawningOfDiceSpec(game)
+    "not spawn a dice on a tile with an appearing dice" in {
+      val tile = Tile(1, 0)
+      val before = game.spawnDice(tile, now)
+      val after = before.spawnDice(tile, now)
+      
+      after mustEqual before
+    }
     
+    "not spawn a dice on a tile with a solid dice" in {
+      val tile = Tile(1, 0)
+      val before = game.addSolidDice(tile.floor)
+      val after = before.spawnDice(tile, now)
+      
+      after mustEqual before
+    }
+    
+    "not spawn a dice on a tile with two solid dice" in {
+      val tile = Tile(1, 0)
+      val before = game.addSolidDice(tile.floor)
+                       .addSolidDice(tile.raised)
+      val after = before.spawnDice(tile, now)
+      
+      after mustEqual before
+    }
   }
+}
+object AnyModeWithSpawningOfDiceSpec {
+  def apply[A <: Mode[A] with SpawningOfDice[A]](game: A) = 
+    new AnyModeWithSpawningOfDiceSpec(game)
 }
