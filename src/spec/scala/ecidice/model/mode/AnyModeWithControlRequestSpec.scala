@@ -75,7 +75,7 @@ extends SpecBase with TestHelpers {
         "contents of dice space" mustEqual SolidControlled(dice, Player(1))
     }
     
-    "not grant control over dice already controlled by another player" in {
+    "not grant control over dice on the floor level already controlled by another player" in {
       val dice = Dice.random
       val location = Tile(0, 0).floor
       
@@ -95,17 +95,47 @@ extends SpecBase with TestHelpers {
         "contents of dice space" mustEqual SolidControlled(dice, Player(1))
     }
     
-    "not grant control over any of 2 stacked dice" in {
+    "grant control over the upper of 2 stacked dice" in {
+      val lowerDice, upperDice = Dice.random
       val tile = Tile(0, 0)
       
-      val before = game.spawnPlayer(tile)
-                       .addSolidDice(tile.floor -> Dice.random)
-                       .addSolidDice(tile.raised -> Dice.random)
-            
-      val after = before.control(Player(1))
+      val testGame = game.spawnPlayer(tile)
+                         .addSolidDice(tile.floor -> lowerDice)
+                         .addSolidDice(tile.raised -> upperDice)
+                         .control(Player(1))
       
-      after mustEqual before
+      testGame.players(Player(1)) aka 
+        "assignment of player 1" mustEqual ControllingADice(tile.raised)
+      
+      testGame.board(tile.floor) aka
+        "contents of floor space" mustEqual lowerDice
+      
+      testGame.board(tile.raised) aka
+        "contents of raised space" mustEqual SolidControlled(upperDice, Player(1))
     }
+    
+    "not grant control over dice on the raised level already controlled by another player" in {
+      val dice = Dice.random
+      val location = Tile(0, 0).raised
+      
+      val testGame = game.spawnPlayer(location.tile)
+                         .spawnPlayer(location.tile)
+                         .addSolidDice(location.floor -> Dice.random)
+                         .addSolidDice(location -> dice)
+                         .control(Player(2))
+                         .control(Player(1))
+      
+      testGame.players(Player(1)) aka
+        "assignment of player 1" mustEqual Standing(location.tile)
+                         
+      testGame.players(Player(2)) aka 
+        "assignment of player 2" mustEqual ControllingADice(location)
+      
+      testGame.board(location) aka
+        "contents of dice space" mustEqual SolidControlled(dice, Player(2))
+    }
+    
+    //TODO specifiy movement cases
   }
 }
 object AnyModeWithControlRequestSpec {

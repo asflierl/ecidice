@@ -78,6 +78,8 @@ extends SpecBase with TestHelpers {
       
       after mustEqual before
     }
+    
+    //TODO specify interaction with movement
   }
 }
 object AnyModeWithSpawningOfDiceSpec {
