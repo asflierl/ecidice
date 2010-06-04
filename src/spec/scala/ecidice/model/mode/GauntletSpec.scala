@@ -44,10 +44,8 @@ object GauntletSpec extends SpecBase with TestHelpers {
   implicit val game = Gauntlet.create(3)
   
   "A gauntlet game" should {
-    
-    behave like AnyModeSpec(game)
-    behave like AnyModeWithControlRequestSpec(game)
-    behave like AnyModeWithSpawningOfDiceSpec(game)
-    
+    behave like AnyModeSpec()
+    behave like AnyModeWithControlRequestSpec()
+    behave like AnyModeWithSpawningOfDiceSpec()
   }
 }

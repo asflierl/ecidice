@@ -109,6 +109,6 @@ extends SpecBase with TestHelpers {
   }
 }
 object AnyModeWithControlRequestSpec {
-  def apply[A <: Mode[A] with ControlRequest[A]](game: A) = 
+  def apply[A <: Mode[A] with ControlRequest[A]]()(implicit game: A) = 
     new AnyModeWithControlRequestSpec(game)
 }

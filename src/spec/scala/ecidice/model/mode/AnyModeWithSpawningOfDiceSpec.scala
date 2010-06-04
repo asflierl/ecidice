@@ -81,6 +81,6 @@ extends SpecBase with TestHelpers {
   }
 }
 object AnyModeWithSpawningOfDiceSpec {
-  def apply[A <: Mode[A] with SpawningOfDice[A]](game: A) = 
+  def apply[A <: Mode[A] with SpawningOfDice[A]]()(implicit game: A) = 
     new AnyModeWithSpawningOfDiceSpec(game)
 }

@@ -56,5 +56,5 @@ class AnyModeSpec[A <: Mode[A]](game: A) extends SpecBase with TestHelpers {
   }
 }
 object AnyModeSpec {
-  def apply[A <: Mode[A]](game: A) = new AnyModeSpec(game)
+  def apply[A <: Mode[A]]()(implicit game: A) = new AnyModeSpec(game)
 }
