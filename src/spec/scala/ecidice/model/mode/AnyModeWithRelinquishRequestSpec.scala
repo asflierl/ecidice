@@ -33,20 +33,31 @@ package ecidice.model
 package mode
 
 import ecidice.SpecBase
-import time._
 
 /**
- * Informal specification of the "Gauntlet" game mode.
+ * Informal specification of a player relinquishing control of a dice.
  * 
  * @author Andreas Flierl
  */
-object GauntletSpec extends SpecBase with TestHelpers {
-  implicit val game = Gauntlet.create(3)
+class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) 
+extends SpecBase with TestHelpers {
   
-  "A gauntlet game" should {
-    behave like AnyModeSpec()
-    behave like AnyModeWithControlRequestSpec()
-    behave like AnyModeWithRelinquishRequestSpec()
-    behave like AnyModeWithSpawningOfDiceSpec()
+  "Any mode that allows a player to relinquish control of a dice" should {
+    
+    "allow relinquishing when the player is controlling a dice" in {
+      val beforeControl = game.spawnPlayer(Tile(1, 1))
+                         .addSolidDice(Tile(1, 1).floor)
+                         
+      val afterRelinquish =
+        beforeControl.control(Player(1))
+                     .relinquish(Player(1))
+      
+      afterRelinquish mustEqual beforeControl
+    }
+    //TODO specifiy movement cases
   }
+}
+object AnyModeWithRelinquishRequestSpec {
+  def apply[A <: Mode[A] with RelinquishRequest[A]]()(implicit game: A) = 
+    new AnyModeWithRelinquishRequestSpec(game)
 }

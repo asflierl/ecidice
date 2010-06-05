@@ -58,6 +58,7 @@ trait Mode[A <: Mode[A]] { this: A =>
   def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random): A
   
   def control(player: Player): A
+  def relinquish(player: Player): A
   
   def dupe(board: Board = board, 
            locks: Set[DiceLock[_]] = locks,

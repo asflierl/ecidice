@@ -35,14 +35,14 @@ package mode
 import ecidice.SpecBase
 
 /**
- * Informal specification of any game mode that supports dice spawning.
+ * Informal specification of a player's request to control a dice.
  * 
  * @author Andreas Flierl
  */
 class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) 
 extends SpecBase with TestHelpers {
   
-  "Any mode that supports control requests" should {
+  "Any mode that allows a player to control a dice" should {
 
     "not grant control when player stands on an empty tile" in {
       val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))

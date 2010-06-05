@@ -60,8 +60,7 @@ object Main extends Logging {
         L10n.of.appName))
 
     try {
-      if (GameSettingsPanel.prompt(settings, L10n.of.appName)
-          == false) {
+      if (false == GameSettingsPanel.prompt(settings, L10n.of.appName)) {
         Logger.info("game startup cancelled")
         return
       }

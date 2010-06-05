@@ -32,21 +32,6 @@
 package ecidice.model
 package mode
 
-import ecidice.SpecBase
-import time._
-
-/**
- * Informal specification of the "Gauntlet" game mode.
- * 
- * @author Andreas Flierl
- */
-object GauntletSpec extends SpecBase with TestHelpers {
-  implicit val game = Gauntlet.create(3)
-  
-  "A gauntlet game" should {
-    behave like AnyModeSpec()
-    behave like AnyModeWithControlRequestSpec()
-    behave like AnyModeWithRelinquishRequestSpec()
-    behave like AnyModeWithSpawningOfDiceSpec()
-  }
+trait RelinquishRequest[A <: Mode[A]] { this: A =>
+  def relinquish(player: Player) = this
 }
