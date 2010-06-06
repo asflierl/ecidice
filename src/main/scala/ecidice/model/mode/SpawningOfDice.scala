@@ -50,7 +50,7 @@ trait SpawningOfDice[A <: Mode[A]] extends Helpers { this: A =>
     if (free) {
       val space = Space(tile, Floor)
       val activity = DiceAppearing(Dice.initial, space, now)
-      dupe(board = board.put(space -> activity))
+      dupe(board = board + (space -> activity))
     } else this
   }
 }

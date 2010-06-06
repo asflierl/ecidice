@@ -44,8 +44,8 @@ trait TestHelpers {
 
 class ModeTestHelpers[A <: Mode[A]](m: A) {
   def addSolidDice(contents: (Space, Dice)) = 
-    m.dupe(board = m.board.put(contents))
+    m.dupe(board = m.board + (contents))
     
   def addSolidDice(sp: Space) =
-    m.dupe(board = m.board.put(sp -> Dice.random))
+    m.dupe(board = m.board + (sp -> Dice.random))
 }

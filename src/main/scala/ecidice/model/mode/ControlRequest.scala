@@ -57,12 +57,12 @@ trait ControlRequest[A <: Mode[A]] extends Helpers { this: A =>
       else controlSpace(loc.floor)
     
     def controlSpace(space: Space) = board(space) match {
-      case d : Dice => createResult(space, d)
+      case d : Dice => controlDice(space, d)
       case _ => this
     }
     
-    def createResult(space: Space, dice: Dice) =
-      dupe(board = board.put(space -> SolidControlled(dice, player)),
+    def controlDice(space: Space, dice: Dice) =
+      dupe(board = board + (space -> SolidControlled(dice, player)),
            players = players + (player -> ControllingADice(space)))
     
     def retainControl(mov: DiceMovement) =

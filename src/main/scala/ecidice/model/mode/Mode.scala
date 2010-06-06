@@ -40,7 +40,6 @@ import time._
 //TODO falling dice must be modeled (probably linked to burst time?)
 //TODO it also should probably be possible to move onto an appearing dice
 
-//TODO relinquish control must be modeled
 //TODO some kind of scoring system 
 //TODO when do new dice spawn?
 //TODO take tile visibility into account

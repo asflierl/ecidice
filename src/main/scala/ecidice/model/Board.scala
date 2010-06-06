@@ -42,7 +42,7 @@ case class Board(
     (tile.column >= 0 && tile.column < columns) && 
     (tile.row >= 0 && tile.row < rows)
     
-  def put(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
+  def +(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
 }
 object Board {
   def sized(columns: Int, rows: Int): Board =

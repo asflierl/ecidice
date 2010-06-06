@@ -33,5 +33,18 @@ package ecidice.model
 package mode
 
 trait RelinquishRequest[A <: Mode[A]] { this: A =>
-  def relinquish(player: Player) = this
+  def relinquish(player: Player) = players(player) match {
+    case ControllingADice(somewhere) => relinquishSolidDice(player, somewhere)
+    case move @ MovingWithADice(_, _) => relinquishMovement(player, move)
+    case _ => this
+  }
+  
+  private def relinquishSolidDice(player: Player, space: Space) = {
+    val dice = board(space) match { case SolidControlled(d, _) => d }
+    dupe(board = board + (space -> dice),
+         players = players + (player -> Standing(space.tile)))
+  }
+  
+  private def relinquishMovement(player: Player, move: MovingWithADice) =
+    dupe(players = players + (player -> MovingWithADice(move.activity, true)))
 }
