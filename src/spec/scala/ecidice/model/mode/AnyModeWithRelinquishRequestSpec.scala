@@ -40,7 +40,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) 
-extends SpecBase with TestHelpers {
+extends SpecBase with ModelTestHelpers {
   
   "Any mode that allows a player to relinquish control of a dice" should {
     
@@ -56,8 +56,4 @@ extends SpecBase with TestHelpers {
     }
     //TODO specifiy movement cases
   }
-}
-object AnyModeWithRelinquishRequestSpec {
-  def apply[A <: Mode[A] with RelinquishRequest[A]]()(implicit game: A) = 
-    new AnyModeWithRelinquishRequestSpec(game)
 }

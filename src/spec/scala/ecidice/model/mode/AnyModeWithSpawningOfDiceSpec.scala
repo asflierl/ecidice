@@ -40,7 +40,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 class AnyModeWithSpawningOfDiceSpec[A <: Mode[A] with SpawningOfDice[A]](game: A) 
-extends SpecBase with TestHelpers {
+extends SpecBase with ModelTestHelpers {
   
   "Any mode that supports the spawning of dice" should {
 
@@ -81,8 +81,4 @@ extends SpecBase with TestHelpers {
     
     //TODO specify interaction with movement
   }
-}
-object AnyModeWithSpawningOfDiceSpec {
-  def apply[A <: Mode[A] with SpawningOfDice[A]]()(implicit game: A) = 
-    new AnyModeWithSpawningOfDiceSpec(game)
 }

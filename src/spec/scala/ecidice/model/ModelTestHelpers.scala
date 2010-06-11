@@ -30,31 +30,36 @@
  */
 
 package ecidice.model
-package mode
 
-import ecidice.SpecBase
+import mode._
+import time._
 
-/**
- * Informal specification of basic stuff in any game mode.
- * 
- * @author Andreas Flierl
- */
-class AnyModeSpec[A <: Mode[A]](game: A) extends SpecBase with ModelTestHelpers {
-  "Any mode" should {
-    "correctly dupe itself" in {
-      game.dupe() aka "the duped game" mustEqual game
-    }
-    
-    "correctly spawn new players" in {
-      val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
-      val gameWithTwoPlayers = gameWithOnePlayer.spawnPlayer(Tile(2, 1))
-      
-      gameWithTwoPlayers.players mustEqual 
-        Map(Player(1) -> Standing(Tile(0, 0)),
-            Player(2) -> Standing(Tile(2, 1)))
-    }
-  }
+trait ModelTestHelpers {
+  implicit def firstSystemOfSpec(spec: org.specs.Specification) = spec.systems.head
+  
+  implicit def pimpMode[A <: Mode[A]](m: A) = new ModeTestHelpers(m)
+  
+  def anyMode[A <: Mode[A]](implicit game: A) = new AnyModeSpec(game)
+  
+  def anyModeWithControlRequest[A <: Mode[A] with ControlRequest[A]](implicit game: A) = 
+    new AnyModeWithControlRequestSpec(game)
+  
+  def anyModeWithMovement[A <: Mode[A] with Movement[A]](implicit game: A) = 
+    new AnyModeWithMovementSpec(game)
+  
+  def anyModeWithRelinquishRequest[A <: Mode[A] with RelinquishRequest[A]](implicit game: A) = 
+    new AnyModeWithRelinquishRequestSpec(game)
+  
+  def anyModeWithSpawningOfDice[A <: Mode[A] with SpawningOfDice[A]](implicit game: A) = 
+    new AnyModeWithSpawningOfDiceSpec(game)
+  
+  val now = Instant()
 }
-object AnyModeSpec {
-  def apply[A <: Mode[A]]()(implicit game: A) = new AnyModeSpec(game)
+
+class ModeTestHelpers[A <: Mode[A]](m: A) {
+  def addSolidDice(contents: (Space, Dice)) = 
+    m.dupe(board = m.board + (contents))
+    
+  def addSolidDice(sp: Space) =
+    m.dupe(board = m.board + (sp -> Dice.random))
 }

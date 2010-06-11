@@ -40,13 +40,14 @@ import time._
  * 
  * @author Andreas Flierl
  */
-object GauntletSpec extends SpecBase with TestHelpers {
+object GauntletSpec extends SpecBase with ModelTestHelpers {
   implicit val game = Gauntlet.create(3)
   
   "A gauntlet game" should {
-    behave like AnyModeSpec()
-    behave like AnyModeWithControlRequestSpec()
-    behave like AnyModeWithRelinquishRequestSpec()
-    behave like AnyModeWithSpawningOfDiceSpec()
+    behave like anyMode
+    behave like anyModeWithControlRequest
+    behave like anyModeWithRelinquishRequest
+    behave like anyModeWithSpawningOfDice
+    behave like anyModeWithMovement
   }
 }

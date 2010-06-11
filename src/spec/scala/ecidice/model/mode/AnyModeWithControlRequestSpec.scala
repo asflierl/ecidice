@@ -40,7 +40,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) 
-extends SpecBase with TestHelpers {
+extends SpecBase with ModelTestHelpers {
   
   "Any mode that allows a player to control a dice" should {
 
@@ -137,8 +137,4 @@ extends SpecBase with TestHelpers {
     
     //TODO specifiy movement cases
   }
-}
-object AnyModeWithControlRequestSpec {
-  def apply[A <: Mode[A] with ControlRequest[A]]()(implicit game: A) = 
-    new AnyModeWithControlRequestSpec(game)
 }

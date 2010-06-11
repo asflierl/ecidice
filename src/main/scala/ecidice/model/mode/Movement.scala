@@ -30,22 +30,14 @@
  */
 
 package ecidice.model
+package mode
 
-import mode._
-import time._
-
-trait TestHelpers {
-  implicit def firstSystemOfSpec(spec: org.specs.Specification) = spec.systems.head
-  
-  implicit def pimpMode[A <: Mode[A]](m: A) = new ModeTestHelpers(m)
-  
-  val now = Instant()
-}
-
-class ModeTestHelpers[A <: Mode[A]](m: A) {
-  def addSolidDice(contents: (Space, Dice)) = 
-    m.dupe(board = m.board + (contents))
-    
-  def addSolidDice(sp: Space) =
-    m.dupe(board = m.board + (sp -> Dice.random))
+/**
+ * Defines the (partially quite complex) rules for movement.
+ * 
+ * Players may move alone, which is rather simple: a player can move to any
+ * tile on the game board. If she's already moving, movement continues.
+ */
+trait Movement[A <: Mode[A]] { this: A =>
+  def move(player: Player, dir: Direction.Value) = this
 }

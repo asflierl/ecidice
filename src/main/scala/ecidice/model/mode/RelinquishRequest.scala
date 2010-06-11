@@ -32,6 +32,11 @@
 package ecidice.model
 package mode
 
+/**
+ * A player that has control over a dice can relinquish control over that dice.
+ * If the player is currently moving with a dice, the control will be 
+ * relinquished after the move finishes.
+ */
 trait RelinquishRequest[A <: Mode[A]] { this: A =>
   def relinquish(player: Player) = players(player) match {
     case ControllingADice(somewhere) => relinquishSolidDice(player, somewhere)

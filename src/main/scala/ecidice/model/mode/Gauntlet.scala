@@ -45,7 +45,8 @@ case class Gauntlet(
      with SpawningOfDice[Gauntlet]
      with SpawningOfPlayer[Gauntlet]
      with ControlRequest[Gauntlet]
-     with RelinquishRequest[Gauntlet] {
+     with RelinquishRequest[Gauntlet]
+     with Movement[Gauntlet] {
   
   def dupe(board: Board, locks: Set[DiceLock[_]], players: Map[Player, Assignment]) = 
     Gauntlet(board, locks, players)
