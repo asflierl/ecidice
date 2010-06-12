@@ -34,9 +34,6 @@ package ecidice.model
 import Direction._
 
 case class Tile(column: Int, row: Int) extends Ordered[Tile] {
-  require(column >= 0, "column must be >= 0")
-  require(row >= 0, "row must be >= 0")
-  
   def floor = Space(this, Level.Floor)
   def raised = Space(this, Level.Raised)
   

@@ -48,25 +48,13 @@ object TileSpec extends SpecBase {
       consistency must pass
     }
     
-    "not allow negative rows or columns" in {
-      "column" | "row" | "legal" |>
-       8       !  42   ! true    |
-      -7       !  3    ! false   |
-       1       ! -100  ! false   |
-      -1       !  0    ! false   |
-       0       !  0    ! true    | {
-        
-      (col, row, legal) =>
-        if (! legal) Tile(col, row) must throwAn[IllegalArgumentException]
-        else Tile(col, row) mustNot beNull
-      }
-    }
-    
     "have correct ordering behaviour" in {
-      val tiles = List(Tile(3, 1), Tile(4, 0), Tile(0, 1), Tile(3, 5), Tile(2, 0))
+      val tiles = List(Tile(3, 1), Tile(-1, -2), Tile(4, 0), Tile(0, 1), 
+          Tile(-1, 2), Tile(3, 5), Tile(3, -2), Tile(2, 0))
       
       tiles.sortWith(_ < _) aka "the ordered tiles" mustEqual (
-          List(Tile(2, 0), Tile(4, 0), Tile(0, 1), Tile(3, 1), Tile(3, 5))
+          List(Tile(-1, -2), Tile(3, -2), Tile(2, 0), Tile(4, 0), Tile(0, 1), 
+              Tile(3, 1), Tile(-1, 2), Tile(3, 5))
       )
     }
     
