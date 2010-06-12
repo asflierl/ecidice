@@ -41,11 +41,9 @@ import Gen._
  * specifications.
  */
 object Generators {
-  private def positive = Gen.choose(0, Int.MaxValue)
-  
   private def tile = for (
-    col <- positive; 
-    row <- positive
+    col <- arbitrary[Int]; 
+    row <- arbitrary[Int]
   ) yield Tile(col, row)
   
   implicit def arbTile: Arbitrary[Tile] = Arbitrary(tile)
