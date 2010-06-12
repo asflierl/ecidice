@@ -47,7 +47,7 @@ extends SpecBase with ModelTestHelpers {
       for (dir <- Direction.values) {
 //        "from the center " + dir >> {
           val testGame = game.spawnPlayer(Tile(1, 1))
-                             .move(Player(1), dir)
+                             .move(Player(1), dir, now)
         
           testGame.players(Player(1)) aka
             "assignment of player 1" must beLike { case MovingAlone(_) => true }
@@ -69,7 +69,7 @@ extends SpecBase with ModelTestHelpers {
         for (dir <- Direction.values) {
 //          "player moving " + dir in {
             val before = game.spawnPlayer(corner)
-            val after = before.move(Player(1), dir)
+            val after = before.move(Player(1), dir, now)
             
             if (allowed.contains(dir)) after must !=(before)
             else after must ==(before)
@@ -90,7 +90,7 @@ extends SpecBase with ModelTestHelpers {
         for (dir <- Direction.values) {
 //          "player moving " + dir in {
             val before = game.spawnPlayer(pos)
-            val after = before.move(Player(1), dir)
+            val after = before.move(Player(1), dir, now)
             
             if (disallowed == dir) after must ==(before)
             else after must !=(before)

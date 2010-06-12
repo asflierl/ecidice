@@ -57,7 +57,7 @@ trait Mode[A <: Mode[A]] { this: A =>
   
   def control(player: Player): A
   def relinquish(player: Player): A
-  def move(player: Player, dir: Direction.Value): A
+  def move(player: Player, dir: Direction.Value, now: Instant): A
   
   def dupe(board: Board = board, 
            locks: Set[DiceLock[_]] = locks,

@@ -32,6 +32,8 @@
 package ecidice.model
 package mode
 
+import time._
+
 /**
  * Defines the (partially quite complex) rules for movement.
  * 
@@ -39,5 +41,17 @@ package mode
  * tile on the game board. If she's already moving, movement continues.
  */
 trait Movement[A <: Mode[A]] { this: A =>
-  def move(player: Player, dir: Direction.Value) = this
+  def move(player: Player, dir: Direction.Value, now: Instant) = players(player) match {
+    case Standing(tile) => 
+      movePlayerAlone(PlayerMovement(player, tile, tile.look(dir), now))
+    case MovingAlone(_) => this
+    case ControllingADice(_) => this //TODO
+    case MovingWithADice(_, _) => this
+  }
+  
+  private def movePlayerAlone(move: PlayerMovement) = {
+    if (board.contains(move.destination))
+      dupe(players = players + (move.player -> MovingAlone(move)))
+    else this
+  }
 }
