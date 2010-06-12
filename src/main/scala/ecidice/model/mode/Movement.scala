@@ -44,9 +44,8 @@ trait Movement[A <: Mode[A]] { this: A =>
   def move(player: Player, dir: Direction.Value, now: Instant) = players(player) match {
     case Standing(tile) => 
       movePlayerAlone(PlayerMovement(player, tile, tile.look(dir), now))
-    case MovingAlone(_) => this
     case ControllingADice(_) => this //TODO
-    case MovingWithADice(_, _) => this
+    case _ => this
   }
   
   private def movePlayerAlone(move: PlayerMovement) = {

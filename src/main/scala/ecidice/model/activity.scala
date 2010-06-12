@@ -70,6 +70,18 @@ object DiceMovement {
   val duration = Duration(.25d)
 }
 
+case class DiceFalling(
+  dice: Dice,
+  location: Tile,
+  controller: Option[Player],
+  start: Instant
+) extends Activity with Contents {
+  def duration = DiceFalling.duration
+}
+object DiceFalling {
+  val duration = Duration(.25d)
+}
+
 sealed trait DiceLock[T <: DiceGroup[T]] extends Activity {
   def group: T
 }
