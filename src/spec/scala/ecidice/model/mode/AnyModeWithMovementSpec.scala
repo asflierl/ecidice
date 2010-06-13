@@ -33,6 +33,8 @@ package ecidice.model
 package mode
 
 import ecidice.SpecBase
+import Direction._
+import Transform._
 
 /**
  * Informal specification of player and dice movement.
@@ -43,9 +45,12 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A)
 extends SpecBase with ModelTestHelpers {
   
   "Any mode with player and dice movement" should {
+    val center = Tile(1, 1)
+    val dice = Dice.random
+    
     "allow a player in the center to move in all directions" in {
       for (dir <- Direction.values) {
-//        "from the center " + dir >> {
+//        "from the center " + dir in {
           val testGame = game.spawnPlayer(Tile(1, 1))
                              .move(Player(1), dir, now)
         
@@ -59,13 +64,13 @@ extends SpecBase with ModelTestHelpers {
     
     "correctly handle player movement in the corners" in {
 
-      "corner position" | "allowed movement directions"              |>
-      Tile(0, 0)        ! Set(Direction.Backward, Direction.Right)   |
-      Tile(2, 0)        ! Set(Direction.Backward, Direction.Left)    |
-      Tile(0, 2)        ! Set(Direction.Forward, Direction.Right)    |
-      Tile(2, 2)        ! Set(Direction.Forward, Direction.Left)     | {  
+      "corner position" | "allowed movement directions" |>
+      Tile(0, 0)        ! Set(Backward, Right)          |
+      Tile(2, 0)        ! Set(Backward, Left)           |
+      Tile(0, 2)        ! Set(Forward, Right)           |
+      Tile(2, 2)        ! Set(Forward, Left)            | {  
         
-      (corner, allowed) =>
+      (corner, allowed) => 
         for (dir <- Direction.values) {
 //          "player moving " + dir in {
             val before = game.spawnPlayer(corner)
@@ -81,10 +86,10 @@ extends SpecBase with ModelTestHelpers {
     "correctly handle player movement at the board edge" in {
       
       "edge position" | "disallowed movement direction" |>
-      Tile(1, 0)      ! Direction.Forward               |
-      Tile(0, 1)      ! Direction.Left                  |
-      Tile(1, 2)      ! Direction.Backward              |
-      Tile(2, 1)      ! Direction.Right                 | {
+      Tile(1, 0)      ! Forward                         |
+      Tile(0, 1)      ! Left                            |
+      Tile(1, 2)      ! Backward                        |
+      Tile(2, 1)      ! Right                           | {
         
       (pos, disallowed) =>
         for (dir <- Direction.values) {
@@ -97,7 +102,162 @@ extends SpecBase with ModelTestHelpers {
 //          }
         }
       }
+    }
+    
+    "allow a player to move in any direction with a floor dice from the center" in {
+      for (somewhere <- Direction.values) {
+//        "from the center " + somewhere in {
+          val origin = center.floor
+          val destination = center.look(somewhere).floor
+          val transform = Transform(origin, destination, somewhere)
+        
+          val testGame = game.spawnPlayer(origin.tile)
+                             .addSolidDice(origin -> dice)
+                             .control(Player(1))
+                             .move(Player(1), somewhere, now)
+          
+          check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
+//        }
+      }
+    }
+    
+    "allow a player to move in any direction with an upper dice from the center" in {
+      for (somewhere <- Direction.values) {
+//        "from the center " + somewhere in {
+          val origin = center.raised
+          val destination = center.look(somewhere).floor
+          val transform = Transform(origin, destination, somewhere)
+          
+          val testGame = game.spawnPlayer(origin.tile)
+                             .addSolidDice(origin.floor -> Dice.random)
+                             .addSolidDice(origin -> dice)
+                             .control(Player(1))
+                             .move(Player(1), somewhere, now)
+          
+          check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
+//        }
+      }
+    }
+    
+    "allow a player to move with a dice from the floor onto another dice" in {
+      val origin = center.floor
+      val destination = center.look(Backward).raised
       
+      val testGame = game.spawnPlayer(origin.tile)
+                         .addSolidDice(origin -> dice)
+                         .addSolidDice(destination.floor -> Dice.random)
+                         .control(Player(1))
+                         .move(Player(1), Backward, now)
+      
+      check(DiceMovement(dice, origin, destination, FlipUpOrDown, Player(1), now), testGame)
+    }
+    
+    "allow a player to grab the upper of 2 dice and move onto another dice" in {
+      val origin = center.raised
+      val destination = center.look(Left).raised
+      
+      val testGame = game.spawnPlayer(origin.tile)
+                         .addSolidDice(origin.floor -> Dice.random)
+                         .addSolidDice(origin -> dice)
+                         .addSolidDice(destination.floor -> Dice.random)
+                         .control(Player(1))
+                         .move(Player(1), Left, now)
+      
+      check(DiceMovement(dice, origin, destination, RotateLeft, Player(1), now), testGame)
+    }
+    
+    "allow a player to grab the upper of 2 dice and move to an empty tile" in {
+      val origin = center.raised
+      val destination = center.look(Right).raised
+      
+      val testGame = game.spawnPlayer(origin.tile)
+                         .addSolidDice(origin.floor -> Dice.random)
+                         .addSolidDice(origin -> dice)
+                         .control(Player(1))
+                         .move(Player(1), Right, now)
+      
+      check(DiceMovement(dice, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
+    }
+    
+    "allow a player to move onto an appearing dice" in {
+      val origin = center.floor
+      val destination = center.look(Left).raised
+      
+      val testGame = game.spawnPlayer(origin.tile)
+                         .addSolidDice(origin -> dice)
+                         .spawnDice(destination.tile, now)
+                         .control(Player(1))
+                         .move(Player(1), Left, now)
+      
+      check(DiceMovement(dice, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
+    }
+    
+    "not let a player move with a dice from the floor onto a " +
+    "dice that is controlled by another player" in {
+      val before = game.spawnPlayer(Tile(1, 1))
+                       .addSolidDice(Tile(1, 1).floor)
+                       .control(Player(1))
+                       .spawnPlayer(Tile(2, 1))
+                       .addSolidDice(Tile(2, 1).floor)
+                       .control(Player(2))
+
+      val after = before.move(Player(1), Left, now)
+      
+      after aka "after move request" mustEqual before
+    }
+    
+    "not let a player move with a dice from the raised level " +
+    "onto a dice that is controlled by another player" in {
+      val before = game.spawnPlayer(Tile(1, 1))
+                       .addSolidDice(Tile(1, 1).floor)
+                       .addSolidDice(Tile(1, 1).raised)
+                       .control(Player(1))
+                       .spawnPlayer(Tile(2, 1))
+                       .addSolidDice(Tile(2, 1).floor)
+                       .control(Player(2))
+
+      val after = before.move(Player(1), Left, now)
+      
+      after aka "after move request" mustEqual before
+    }
+    
+    "not let 2 players move onto the same floor space" in {
+      val before = game.spawnPlayer(Tile(0, 2))
+                       .addSolidDice(Tile(0, 2).floor)
+                       .control(Player(1))
+                       .move(Player(1), Right, now)
+                       .spawnPlayer(Tile(1, 1))
+                       .addSolidDice(Tile(1, 1).floor)
+                       .control(Player(2))
+
+      val after = before.move(Player(2), Backward, now)
+      
+      after aka "after move request" mustEqual before
+    }
+    
+    "not let 2 players move onto the same raised space" in {
+      val before = game.addSolidDice(Tile(1, 2).floor)
+                       .spawnPlayer(Tile(0, 2))
+                       .addSolidDice(Tile(0, 2).floor)
+                       .control(Player(1))
+                       .move(Player(1), Right, now)
+                       .spawnPlayer(Tile(1, 1))
+                       .addSolidDice(Tile(1, 1).floor)
+                       .control(Player(2))
+
+      val after = before.move(Player(2), Backward, now)
+      
+      after aka "after move request" mustEqual before
+    }
+    
+    def check(move: DiceMovement, testGame: A) = {
+      val p = move.controller
+      
+      testGame.players(p) aka
+            "assignment of player " + p.id mustEqual MovingWithADice(move, false)
+          
+      testGame.board(move.origin)      aka "contents of origin"      mustEqual move
+      testGame.board(move.destination) aka "contents of destination" mustEqual move
     }
   }
 }
