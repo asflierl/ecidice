@@ -1,5 +1,3 @@
-repositories.remote << 'http://scala-tools.org/repo-snapshots'
-
 require 'buildr/scala'
 
 ENV['USE_FSC'] ||= 'yes'

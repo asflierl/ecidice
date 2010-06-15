@@ -40,17 +40,37 @@ import time._
  * Players may move alone, which is rather simple: a player can move to any
  * tile on the game board. If she's already moving, movement continues.
  */
-trait Movement[A <: Mode[A]] { this: A =>
+trait Movement[A <: Mode[A]] extends Helpers { this: A =>
   def move(player: Player, dir: Direction.Value, now: Instant) = players(player) match {
     case Standing(tile) => 
-      movePlayerAlone(PlayerMovement(player, tile, tile.look(dir), now))
-    case ControllingADice(_) => this //TODO
+      movePlayer(PlayerMovement(player, tile, tile.look(dir), now))
+    case ControllingADice(origin) => moveDice(player, origin, dir, now)
     case _ => this
   }
   
-  private def movePlayerAlone(move: PlayerMovement) = {
+  private def movePlayer(move: PlayerMovement) = {
     if (board.contains(move.destination))
       dupe(players = players + (move.player -> MovingAlone(move)))
     else this
+  }
+  
+  private def moveDice(player: Player, origin: Space, dir: Direction.Value, now: Instant) = {
+    val destinationTile = origin.tile.look(dir)
+    
+    def decideLevel = board(destinationTile.raised) match {
+      case Empty => moveToFloor
+      case d : Dice => this
+      case DiceAppearing(d, l, s) => this 
+      case _ => this
+    }
+
+    def moveToFloor = this
+    
+    if (isEmpty(board(destinationTile.raised))) decideLevel
+    else this
+  }
+  
+  private def diceAt(loc: Space) = board(loc) match { 
+    case SolidControlled(dice, _) => dice
   }
 }

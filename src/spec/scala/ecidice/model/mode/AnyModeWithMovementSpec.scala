@@ -50,7 +50,7 @@ extends SpecBase with ModelTestHelpers {
     
     "allow a player in the center to move in all directions" in {
       for (dir <- Direction.values) {
-//        "from the center " + dir in {
+        "from the center " + dir in {
           val testGame = game.spawnPlayer(Tile(1, 1))
                              .move(Player(1), dir, now)
         
@@ -58,7 +58,7 @@ extends SpecBase with ModelTestHelpers {
             "assignment of player 1" must beLike { case MovingAlone(_) => true }
           
           //TODO this could use a data table with destination tiles
-//        }
+        }
       }
     }
     
@@ -72,13 +72,13 @@ extends SpecBase with ModelTestHelpers {
         
       (corner, allowed) => 
         for (dir <- Direction.values) {
-//          "player moving " + dir in {
+          "player moving " + dir in {
             val before = game.spawnPlayer(corner)
             val after = before.move(Player(1), dir, now)
             
             if (allowed.contains(dir)) after must !=(before)
             else after must ==(before)
-//          }
+          }
         }
       }
     }
@@ -93,20 +93,20 @@ extends SpecBase with ModelTestHelpers {
         
       (pos, disallowed) =>
         for (dir <- Direction.values) {
-//          "player moving " + dir in {
+          "player moving " + dir in {
             val before = game.spawnPlayer(pos)
             val after = before.move(Player(1), dir, now)
             
             if (disallowed == dir) after must ==(before)
             else after must !=(before)
-//          }
+          }
         }
       }
     }
     
     "allow a player to move in any direction with a floor dice from the center" in {
       for (somewhere <- Direction.values) {
-//        "from the center " + somewhere in {
+        "from the center " + somewhere in {
           val origin = center.floor
           val destination = center.look(somewhere).floor
           val transform = Transform(origin, destination, somewhere)
@@ -117,13 +117,13 @@ extends SpecBase with ModelTestHelpers {
                              .move(Player(1), somewhere, now)
           
           check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-//        }
+        }
       }
     }
     
     "allow a player to move in any direction with an upper dice from the center" in {
       for (somewhere <- Direction.values) {
-//        "from the center " + somewhere in {
+        "from the center " + somewhere in {
           val origin = center.raised
           val destination = center.look(somewhere).floor
           val transform = Transform(origin, destination, somewhere)
@@ -135,7 +135,7 @@ extends SpecBase with ModelTestHelpers {
                              .move(Player(1), somewhere, now)
           
           check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-//        }
+        }
       }
     }
     
@@ -249,15 +249,15 @@ extends SpecBase with ModelTestHelpers {
       
       after aka "after move request" mustEqual before
     }
+  }
+  
+  def check(move: DiceMovement, testGame: A) = {
+    val p = move.controller
     
-    def check(move: DiceMovement, testGame: A) = {
-      val p = move.controller
-      
-      testGame.players(p) aka
-            "assignment of player " + p.id mustEqual MovingWithADice(move, false)
-          
-      testGame.board(move.origin)      aka "contents of origin"      mustEqual move
-      testGame.board(move.destination) aka "contents of destination" mustEqual move
-    }
+    testGame.players(p) aka
+          "assignment of player " + p.id mustEqual MovingWithADice(move, false)
+        
+    testGame.board(move.origin)      aka "contents of origin"      mustEqual move
+    testGame.board(move.destination) aka "contents of destination" mustEqual move
   }
 }
