@@ -57,14 +57,18 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
   private def moveDice(player: Player, origin: Space, dir: Direction.Value, now: Instant) = {
     val destinationTile = origin.tile.look(dir)
     
-    def decideLevel = board(destinationTile.raised) match {
-      case Empty => moveToFloor
-      case d : Dice => this
-      case DiceAppearing(d, l, s) => this 
+    def decideLevel = board(destinationTile.floor) match {
+      case Empty => moveTo(destinationTile.floor)
+      case Dice(_, _, _) | DiceAppearing(_, _, _) => moveTo(destinationTile.raised)
       case _ => this
     }
 
-    def moveToFloor = this
+    def moveTo(destination: Space) = {
+      val move = DiceMovement(diceAt(origin), origin, destination,
+                              Transform(origin, destination, dir), player, now)
+      dupe(players = players + (player -> MovingWithADice(move, false)),
+           board = board + (origin -> move) + (destination -> move))
+    }
     
     if (isEmpty(board(destinationTile.raised))) decideLevel
     else this

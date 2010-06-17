@@ -168,7 +168,7 @@ extends SpecBase with ModelTestHelpers {
     
     "allow a player to grab the upper of 2 dice and move to an empty tile" in {
       val origin = center.raised
-      val destination = center.look(Right).raised
+      val destination = center.look(Right).floor
       
       val testGame = game.spawnPlayer(origin.tile)
                          .addSolidDice(origin.floor -> Dice.random)
@@ -201,7 +201,7 @@ extends SpecBase with ModelTestHelpers {
                        .addSolidDice(Tile(2, 1).floor)
                        .control(Player(2))
 
-      val after = before.move(Player(1), Left, now)
+      val after = before.move(Player(1), Right, now)
       
       after aka "after move request" mustEqual before
     }
@@ -216,7 +216,7 @@ extends SpecBase with ModelTestHelpers {
                        .addSolidDice(Tile(2, 1).floor)
                        .control(Player(2))
 
-      val after = before.move(Player(1), Left, now)
+      val after = before.move(Player(1), Right, now)
       
       after aka "after move request" mustEqual before
     }
