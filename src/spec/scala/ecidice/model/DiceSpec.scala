@@ -41,7 +41,7 @@ import Transform._
  */
 object DiceSpec extends SpecBase {
   "A dice" should {
-    val dice = Dice.initial
+    val dice = Dice.default
     val all = Dice.allRotations.toSet
     
     def check(changed: Dice, top: Int, right: Int, front: Int) = {

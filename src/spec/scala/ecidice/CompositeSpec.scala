@@ -37,6 +37,7 @@ object CompositeSpec extends Specification {
   "ecidice".isSpecifiedBy(
     model.BoardSpec,
     model.DiceSpec,
+    model.DiceMatcherSpec,
     model.SpaceSpec,
     model.TileSpec,
     

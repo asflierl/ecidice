@@ -70,9 +70,9 @@ case class Dice(top: Int, right: Int, front: Int) extends Contents {
   }
 }
 object Dice {
-  def initial = Dice(6, 5, 4)
+  val default = Dice(6, 5, 4)
   
-  val allRotations = next(initial, 0, 0, List.empty)
+  val allRotations = next(default, 0, 0, List.empty)
   
   /**
    * Calculates all possible dice rotations in the following order where

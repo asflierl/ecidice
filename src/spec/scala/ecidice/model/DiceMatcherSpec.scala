@@ -30,27 +30,21 @@
  */
 
 package ecidice.model
-package mode
 
-import time._
-import Level._
+import ecidice.SpecBase
+import org.scalacheck._
+import Prop.forAll
+import Generators._
 
 /**
- * Defines the rules for spawning a new dice.
- * 
- * A new dice is only spawned if and only if both spaces at a given tile are
- * empty. The new dice always appears on the floor.
- * 
- * @author Andreas Flierl
+ * Informal specification of a dice matcher. 
  */
-trait SpawningOfDice[A <: Mode[A]] extends Helpers { this: A =>
-  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random) = {
-    val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
+object DiceMatcherSpec extends SpecBase {
+  "A dice matcher" should {
+    val board = Board.sized(3, 3)
     
-    if (free) {
-      val space = Space(tile, Floor)
-      val activity = DiceAppearing(Dice.default, space, now)
-      dupe(board = board + (space -> activity))
-    } else this
+    "correctly find a group of matching dice" in {
+      
+    }
   }
 }
