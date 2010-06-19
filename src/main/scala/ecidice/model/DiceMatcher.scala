@@ -2,6 +2,8 @@ package ecidice.model
 
 import Level._
 
+import scala.collection.breakOut
+
 /**
  * Finds and returns all dice (including `startDice`) that show the same 
  * top face as `startDice` and that are reachable from `startDice`
@@ -25,9 +27,9 @@ import Level._
 class DiceMatcher(board: Board, startAt: (Space, Dice)) {
   val (startSpace, startDice) = startAt
   
-  def find = findFromSpace(startSpace, Set(startAt))
+  def find = findFromSpace(startSpace, Map(startAt))
   
-  private def findFromSpace(s: Space, g: Set[(Space, Dice)]): Set[(Space, Dice)] = {
+  private def findFromSpace(s: Space, g: Map[Space, Dice]): Map[Space, Dice] = {
     var res = g
     Direction.values.foreach(
       diceInDir(s, _, Floor).foreach( 
@@ -43,10 +45,10 @@ class DiceMatcher(board: Board, startAt: (Space, Dice)) {
     } else None
   }
   
-  private def findFromSpaceAndDice(pos: (Space, Dice), group: Set[(Space, Dice)]) = {
+  private def findFromSpaceAndDice(pos: (Space, Dice), group: Map[Space, Dice]) = {
     val (space, dice) = pos
     
-    if (dice.top == startDice.top && ! group.contains(space -> dice))
+    if (dice.top == startDice.top && ! group.contains(space))
       findFromSpace(space, group + (space -> dice))
     else group
   }

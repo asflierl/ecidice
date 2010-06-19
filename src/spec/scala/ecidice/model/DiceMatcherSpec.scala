@@ -32,19 +32,49 @@
 package ecidice.model
 
 import ecidice.SpecBase
-import org.scalacheck._
-import Prop.forAll
-import Generators._
+import Transform._
+
+import scala.collection.breakOut
 
 /**
  * Informal specification of a dice matcher. 
  */
 object DiceMatcherSpec extends SpecBase {
   "A dice matcher" should {
-    val board = Board.sized(3, 3)
-    
     "correctly find a group of matching dice" in {
+      val similarDice = sixOnTop(Set(Tile(0,0), Tile(1,0), Tile(2,0), Tile(0,1),
+                                     Tile(2,1), Tile(0,2), Tile(1,2)))
+      val separators = fourOnTop(Set(Tile(1, 1), Tile(2, 2)))
+      val board = Board.sized(3, 3) ++ similarDice ++ separators
       
+      DiceMatcher(board, similarDice.head).find mustEqual similarDice
+    }
+    
+    "correctly find only one of two (separated) groups of matching dice" in {
+      val groupOne = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
+      val groupTwo = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
+      val separator = fourOnTop(Set(Tile(1, 1)))
+      val board = Board.sized(3, 3) ++ groupOne ++ groupTwo ++ separator
+      
+      DiceMatcher(board, groupOne.head).find mustEqual groupOne
+      DiceMatcher(board, groupTwo.head).find mustEqual groupTwo
+      DiceMatcher(board, separator.head).find mustEqual separator
+    }
+    
+    "correctly find no matches of isolated dice" in {
+      val isolated = sixOnTop(Set(Tile(0, 0), Tile(2, 0), Tile(1, 1),
+                                  Tile(0, 2), Tile(2, 2)))
+      val board = Board.sized(3, 3) ++ isolated
+                                  
+      for (d <- isolated) {
+        DiceMatcher(board, d).find mustEqual Map(d)
+      }
     }
   }
+  
+  def sixOnTop(locs: Set[Tile]): Map[Space, Dice] = 
+    locs.map(_.floor -> Dice.default)(breakOut)
+    
+  def fourOnTop(locs: Set[Tile]): Map[Space, Dice] = 
+    locs.map(_.floor -> Dice.default.transform(RotateBackward))(breakOut)
 }
