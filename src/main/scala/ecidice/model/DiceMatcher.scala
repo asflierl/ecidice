@@ -58,29 +58,29 @@ import scala.collection.breakOut
 class DiceMatcher(board: Board, startAt: (Space, Dice)) {
   val (startSpace, startDice) = startAt
   
-  def find = findFromSpace(startSpace, Map(startAt))
+  def find = searchSurroundingsOf(startSpace, Map(startAt))
   
-  private def findFromSpace(s: Space, g: Map[Space, Dice]): Map[Space, Dice] = {
-    var res = g
-    Direction.values.foreach(
-      diceInDir(s, _, Floor).foreach( 
-        (next) => res = findFromSpaceAndDice(next, res)))
-    res
-  }
+  private def searchSurroundingsOf(s: Space, group: Map[Space, Dice]): Map[Space, Dice] =
+    Direction.values
+             .map(diceInDirection(s, _, Floor))
+             .collect { case Some(diceThere) => diceThere }
+             .foldLeft(group)((accu, next) => matchTopFaces(next, accu))
   
-  private def diceInDir(s: Space, dir: Direction.Value, level: Level.Value) = {
-    val pos = s.tile.look(dir)
-    if (board.contains(pos)) board(pos.floor) match {
-      case d : Dice => Some(pos.floor -> d)
+  private def diceInDirection(space: Space, dir: Direction.Value, level: Level.Value) = {
+    val tile = space.tile.look(dir)
+    
+    if (! board.contains(tile)) None
+    else board(tile.floor) match {
+      case d : Dice => Some(tile.floor -> d)
       case _ => None
-    } else None
+    }
   }
   
-  private def findFromSpaceAndDice(pos: (Space, Dice), group: Map[Space, Dice]) = {
-    val (space, dice) = pos
+  private def matchTopFaces(pair: (Space, Dice), group: Map[Space, Dice]) = {
+    val (space, dice) = pair
     
     if (dice.top == startDice.top && ! group.contains(space))
-      findFromSpace(space, group + (space -> dice))
+      searchSurroundingsOf(space, group + (space -> dice))
     else group
   }
 }

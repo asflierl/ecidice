@@ -66,6 +66,7 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
     def moveTo(destination: Space) = {
       val move = DiceMovement(diceAt(origin), origin, destination,
                               Transform(origin, destination, dir), player, now)
+                              
       dupe(players = players + (player -> MovingWithADice(move, false)),
            board = board + (origin -> move) + (destination -> move))
     }
