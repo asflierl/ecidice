@@ -47,7 +47,7 @@ object DiceMatcherSpec extends SpecBase {
       val separators = fourOnTop(Set(Tile(1, 1), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ similarDice ++ separators
       
-      DiceMatcher(board, similarDice.head).find mustEqual similarDice
+      DiceMatcher(board).find(similarDice.head) mustEqual similarDice
     }
     
     "correctly find only one of two (separated) groups of matching dice" in {
@@ -56,9 +56,11 @@ object DiceMatcherSpec extends SpecBase {
       val separator = fourOnTop(Set(Tile(1, 1)))
       val board = Board.sized(3, 3) ++ groupOne ++ groupTwo ++ separator
       
-      DiceMatcher(board, groupOne.head).find mustEqual groupOne
-      DiceMatcher(board, groupTwo.head).find mustEqual groupTwo
-      DiceMatcher(board, separator.head).find mustEqual separator
+      val matcher = DiceMatcher(board)
+      
+      matcher.find(groupOne.head) mustEqual groupOne
+      matcher.find(groupTwo.head) mustEqual groupTwo
+      matcher.find(separator.head) mustEqual separator
     }
     
     "correctly find no matches of isolated dice" in {
@@ -67,7 +69,7 @@ object DiceMatcherSpec extends SpecBase {
       val board = Board.sized(3, 3) ++ isolated
                                   
       for (d <- isolated) {
-        DiceMatcher(board, d).find mustEqual Map(d)
+        DiceMatcher(board).find(d) mustEqual Map(d)
       }
     }
   }

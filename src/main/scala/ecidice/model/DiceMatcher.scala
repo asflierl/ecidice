@@ -55,35 +55,37 @@ import scala.collection.breakOut
  * from BY, it would only return BY. Starting from BZ, it would return AZ 
  * and BZ.
  */
-class DiceMatcher(board: Board, startAt: (Space, Dice)) {
-  val (startSpace, startDice) = startAt
-  
-  def find = searchSurroundingsOf(startSpace, Map(startAt))
-  
-  private def searchSurroundingsOf(s: Space, group: Map[Space, Dice]): Map[Space, Dice] =
-    Direction.values
-             .map(diceInDirection(s, _, Floor))
-             .collect { case Some(diceThere) => diceThere }
-             .foldLeft(group)((accu, next) => matchTopFaces(next, accu))
-  
-  private def diceInDirection(space: Space, dir: Direction.Value, level: Level.Value) = {
-    val tile = space.tile.look(dir)
+class DiceMatcher(board: Board) {
+  def find(startAt: (Space, Dice)) = {
+    val (startSpace, startDice) = startAt
     
-    if (! board.contains(tile)) None
-    else board(tile.floor) match {
-      case d : Dice => Some(tile.floor -> d)
-      case _ => None
+    def searchSurroundingsOf(s: Space, group: Map[Space, Dice]): Map[Space, Dice] =
+      Direction.values
+               .map(diceInDirection(s, _, Floor))
+               .collect { case Some(diceThere) => diceThere }
+               .foldLeft(group)((accu, next) => matchTopFaces(next, accu))
+    
+    def diceInDirection(space: Space, dir: Direction.Value, level: Level.Value) = {
+      val tile = space.tile.look(dir)
+      
+      if (! board.contains(tile)) None
+      else board(tile.floor) match {
+        case d : Dice => Some(tile.floor -> d)
+        case _ => None
+      }
     }
-  }
-  
-  private def matchTopFaces(pair: (Space, Dice), group: Map[Space, Dice]) = {
-    val (space, dice) = pair
     
-    if (dice.top == startDice.top && ! group.contains(space))
-      searchSurroundingsOf(space, group + (space -> dice))
-    else group
+    def matchTopFaces(pair: (Space, Dice), group: Map[Space, Dice]) = {
+      val (space, dice) = pair
+      
+      if (dice.top == startDice.top && ! group.contains(space))
+        searchSurroundingsOf(space, group + (space -> dice))
+      else group
+    }
+    
+    searchSurroundingsOf(startSpace, Map(startAt))
   }
 }
 object DiceMatcher {
-  def apply(board: Board, startAt: (Space, Dice)) = new DiceMatcher(board, startAt)
+  def apply(board: Board) = new DiceMatcher(board)
 }
