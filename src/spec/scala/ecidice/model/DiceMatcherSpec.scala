@@ -54,12 +54,12 @@ object DiceMatcherSpec extends SpecBase {
       DiceMatcher(board).find(similarDice.head) mustEqual similarDice
     }
     
-    /* . . 6
-     * . 4 6
+    /* . . 5
+     * . 4 5
      * 6 6 . */
     "correctly find only one of two (separated) groups of matching dice" in {
       val groupOne = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
-      val groupTwo = sixOnTop(Set(Tile(2, 2), Tile(2, 1)))
+      val groupTwo = fiveOnTop(Set(Tile(2, 2), Tile(2, 1)))
       val separator = fourOnTop(Set(Tile(1, 1)))
       val board = Board.sized(3, 3) ++ groupOne ++ groupTwo ++ separator
       
@@ -84,9 +84,12 @@ object DiceMatcherSpec extends SpecBase {
     }
   }
   
-  def sixOnTop(locs: Set[Tile]): Map[Space, Dice] = 
-    locs.map(_.floor -> Dice.default)(breakOut)
+  def sixOnTop(locs: Set[Tile]) = place(locs, Dice.default)
     
-  def fourOnTop(locs: Set[Tile]): Map[Space, Dice] = 
-    locs.map(_.floor -> Dice.default.transform(RotateBackward))(breakOut)
+  def fiveOnTop(locs: Set[Tile]) = place(locs, Dice.default.transform(RotateLeft))
+  
+  def fourOnTop(locs: Set[Tile]) = place(locs, Dice.default.transform(RotateBackward))
+  
+  def place(locs: Set[Tile], factory: => Dice): Map[Space, Dice] =
+    locs.map(_.floor -> factory())(breakOut)
 }
