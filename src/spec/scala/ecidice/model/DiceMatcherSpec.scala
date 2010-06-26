@@ -41,6 +41,10 @@ import scala.collection.breakOut
  */
 object DiceMatcherSpec extends SpecBase {
   "A dice matcher" should {
+    
+    /* 6 6 4
+     * 6 4 6
+     * 6 6 6 */
     "correctly find a group of matching dice" in {
       val similarDice = sixOnTop(Set(Tile(0,0), Tile(1,0), Tile(2,0), Tile(0,1),
                                      Tile(2,1), Tile(0,2), Tile(1,2)))
@@ -50,9 +54,12 @@ object DiceMatcherSpec extends SpecBase {
       DiceMatcher(board).find(similarDice.head) mustEqual similarDice
     }
     
+    /* . . 6
+     * . 4 6
+     * 6 6 . */
     "correctly find only one of two (separated) groups of matching dice" in {
       val groupOne = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
-      val groupTwo = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
+      val groupTwo = sixOnTop(Set(Tile(2, 2), Tile(2, 1)))
       val separator = fourOnTop(Set(Tile(1, 1)))
       val board = Board.sized(3, 3) ++ groupOne ++ groupTwo ++ separator
       
@@ -63,6 +70,9 @@ object DiceMatcherSpec extends SpecBase {
       matcher.find(separator.head) mustEqual separator
     }
     
+    /* 6 . 6
+     * . 6 .
+     * 6 . 6 */
     "correctly find no matches of isolated dice" in {
       val isolated = sixOnTop(Set(Tile(0, 0), Tile(2, 0), Tile(1, 1),
                                   Tile(0, 2), Tile(2, 2)))
