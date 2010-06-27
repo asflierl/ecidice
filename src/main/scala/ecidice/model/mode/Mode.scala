@@ -34,11 +34,9 @@ package mode
 
 import time._
 
-//TODO it probably should be possible to move onto charging dice!
 // 2-player situation: player 1 upon a charging dice, dice bursts, player 2
 // wants to move where the dice burst; it must be ensured that player 2 won't 
 // move there
-//TODO it also should probably be possible to move onto an appearing dice
 
 //TODO some kind of scoring system 
 //TODO when do new dice spawn?

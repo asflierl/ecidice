@@ -41,10 +41,13 @@ import time._
  * tile on the game board. If she's already moving, movement continues.
  */
 trait Movement[A <: Mode[A]] extends Helpers { this: A =>
+
   def move(player: Player, dir: Direction.Value, now: Instant) = players(player) match {
     case Standing(tile) => 
       movePlayer(PlayerMovement(player, tile, tile.look(dir), now))
+      
     case ControllingADice(origin) => moveDice(player, origin, dir, now)
+    
     case _ => this
   }
   
@@ -59,7 +62,10 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
     
     def decideLevel = board(destinationTile.floor) match {
       case Empty => moveTo(destinationTile.floor)
-      case Dice(_, _, _) | DiceAppearing(_, _, _) => moveTo(destinationTile.raised)
+      
+      case Dice(_, _, _) | DiceAppearing(_, _, _) | Charging => 
+        moveTo(destinationTile.raised)
+        
       case _ => this
     }
 
@@ -68,7 +74,7 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
                               Transform(origin, destination, dir), player, now)
                               
       dupe(players = players + (player -> MovingWithADice(move, false)),
-           board = board + (origin -> move) + (destination -> move))
+           board   = board   + (origin -> move) + (destination -> move))
     }
     
     if (isEmpty(board(destinationTile.raised))) decideLevel

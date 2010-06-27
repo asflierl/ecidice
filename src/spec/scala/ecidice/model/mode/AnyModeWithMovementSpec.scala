@@ -49,15 +49,19 @@ extends SpecBase with ModelTestHelpers {
     val dice = Dice.random
     
     "allow a player in the center to move in all directions" in {
-      for (dir <- Direction.values) {
-        "from the center " + dir in {
-          val testGame = game.spawnPlayer(Tile(1, 1))
-                             .move(Player(1), dir, now)
+      "direction" | "destination" |>
+      Backward    ! Tile(1, 2)    |
+      Right       ! Tile(2, 1)    |
+      Forward     ! Tile(1, 0)    |
+      Left        ! Tile(0, 1)    | {
         
+        (direction, destination) => {
+          val testGame = game.spawnPlayer(Tile(1, 1))
+                             .move(Player(1), direction, now)
+                             
           testGame.players(Player(1)) aka
-            "assignment of player 1" must beLike { case MovingAlone(_) => true }
-          
-          //TODO this could use a data table with destination tiles
+            "assignment of player 1" mustEqual
+            MovingAlone(PlayerMovement(Player(1), center, destination, now))
         }
       }
     }
@@ -192,6 +196,20 @@ extends SpecBase with ModelTestHelpers {
       check(DiceMovement(dice, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
     }
     
+    "allow a player to move onto a charging dice" in {
+      val origin = center.floor
+      val destination = center.look(Forward).raised
+      
+      val testGame = game.spawnPlayer(origin.tile)
+                         .addSolidDice(origin -> dice)
+                         .addChargeGroup(threeOnTop, Set(
+                             Tile(0, 0), Tile(1, 0), Tile(2, 0)))
+                         .control(Player(1))
+                         .move(Player(1), Forward, now)
+      
+      check(DiceMovement(dice, origin, destination, FlipUpOrDown, Player(1), now), testGame)
+    }
+    
     "not let a player move with a dice from the floor onto a " +
     "dice that is controlled by another player" in {
       val before = game.spawnPlayer(Tile(1, 1))
@@ -260,4 +278,6 @@ extends SpecBase with ModelTestHelpers {
     testGame.board(move.origin)      aka "contents of origin"      mustEqual move
     testGame.board(move.destination) aka "contents of destination" mustEqual move
   }
+  
+  def threeOnTop = Dice.default.transform(RotateForward)
 }
