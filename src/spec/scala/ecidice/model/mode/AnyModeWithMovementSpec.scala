@@ -76,13 +76,12 @@ extends SpecBase with ModelTestHelpers {
         
       (corner, allowed) => 
         for (dir <- Direction.values) {
-          "player moving " + dir in {
-            val before = game.spawnPlayer(corner)
-            val after = before.move(Player(1), dir, now)
+          val desc = "game after player moving " + dir + " from " + corner
+          val before = game.spawnPlayer(corner)
+          val after = before.move(Player(1), dir, now)
             
-            if (allowed.contains(dir)) after must !=(before)
-            else after must ==(before)
-          }
+          if (allowed.contains(dir)) after aka desc must !=(before)
+          else after aka desc must ==(before)
         }
       }
     }
@@ -97,13 +96,12 @@ extends SpecBase with ModelTestHelpers {
         
       (pos, disallowed) =>
         for (dir <- Direction.values) {
-          "player moving " + dir in {
-            val before = game.spawnPlayer(pos)
-            val after = before.move(Player(1), dir, now)
+          val desc = "game after player moving " + dir + " from " + pos
+          val before = game.spawnPlayer(pos)
+          val after = before.move(Player(1), dir, now)
             
-            if (disallowed == dir) after must ==(before)
-            else after must !=(before)
-          }
+          if (disallowed == dir) after aka desc must ==(before)
+          else after aka desc must !=(before)
         }
       }
     }
