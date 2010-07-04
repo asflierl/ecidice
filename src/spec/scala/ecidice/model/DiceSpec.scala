@@ -44,16 +44,6 @@ object DiceSpec extends SpecBase {
     val dice = Dice.default
     val all = Dice.allRotations.toSet
     
-    def check(changed: Dice, top: Int, right: Int, front: Int) = {
-      changed.top mustEqual top
-      changed.right mustEqual right
-      changed.front mustEqual front
-      changed.bottom mustEqual (7 - top)
-      changed.left mustEqual (7 - right)
-      changed.back mustEqual (7 - front)
-      all mustContain changed
-    }
-    
     "initially look like this: top = 6, right = 5, front = 4" in {
       dice.top mustEqual 6
       dice.right mustEqual 5
@@ -108,6 +98,16 @@ object DiceSpec extends SpecBase {
     "correctly flip left or right" in {
       val changed = dice.transform(FlipLeftOrRight)
       check(changed, 1, 2, 4)
+    }
+    
+    def check(changed: Dice, top: Int, right: Int, front: Int) = {
+      changed.top mustEqual top
+      changed.right mustEqual right
+      changed.front mustEqual front
+      changed.bottom mustEqual (7 - top)
+      changed.left mustEqual (7 - right)
+      changed.back mustEqual (7 - front)
+      all mustContain changed
     }
   }
 }
