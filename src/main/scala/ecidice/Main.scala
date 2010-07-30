@@ -29,36 +29,35 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//package ecidice
-//
-//import com.jme.input.MouseInput
-//import com.jmex.editors.swing.settings.GameSettingsPanel
-//import com.jmex.game.StandardGame
-//import com.jme.app.AbstractGame
-//import com.jme.system.PreferencesGameSettings
-//import com.jmex.game.state.GameStateManager
-//
-//import ecidice.controller.WorldController
-//import ecidice.i18n.L10n
-//import ecidice.util.Logging
-//
-//import java.util.prefs.Preferences
-//
-///**
-// * The application's entry point object.
-// * 
-// * @author Andreas Flierl
-// */
-//object Main extends Logging {
-//  /**
-//   * Bootstraps the game classes.
-//   * 
-//   * @param args will be ignored
-//   */
-//  def main(args: Array[String]) {
+package ecidice
+
+import com.jme3.app.SimpleApplication
+import com.jme3.material.Material
+import com.jme3.math.Vector3f
+import com.jme3.scene.Geometry
+import com.jme3.scene.shape.Box
+import com.jme3.math.ColorRGBA
+
+import ecidice.i18n.L10n
+import ecidice.util.Logging
+
+import java.util.prefs.Preferences
+
+/**
+ * The application's entry point object.
+ * 
+ * @author Andreas Flierl
+ */
+object Main extends SimpleApplication with Logging {
+  /**
+   * Bootstraps the game classes.
+   * 
+   * @param args will be ignored
+   */
+  def main(args: Array[String]) {
 //    val settings = new PreferencesGameSettings(Preferences.userRoot().node(
 //        L10n.of.appName))
-//
+
 //    try {
 //      if (false == GameSettingsPanel.prompt(settings, L10n.of.appName)) {
 //        Logger.info("game startup cancelled")
@@ -70,26 +69,32 @@
 //        return
 //      }
 //    }
-//
-//    val game = new StandardGame(L10n.of.appName,
-//                                StandardGame.GameType.GRAPHICAL, settings)
-//
-//    game.start()
-//    game.setUncaughtExceptionHandler(Terminator)
+
+    start()
+    Thread.setDefaultUncaughtExceptionHandler(Terminator)
 //    
 //    val worldController = new WorldController(game)
 //    GameStateManager.getInstance().attachChild(worldController)
 //    MouseInput.get.setCursorVisible(true)
 //    worldController.setActive(true)
-//  }
-//  
-//  /**
-//   * Handler for uncaught exceptions in JME threads.
-//   */
-//  private object Terminator extends Thread.UncaughtExceptionHandler {
-//    def uncaughtException(thread: Thread, thrown: Throwable) {
-//      Logger.severe("uncaught exception in thread " + thread, thrown)
-//      System.exit(1)
-//    }
-//  }
-//}
+  }
+  
+  def simpleInitApp: Unit = {
+    val b = new Box(Vector3f.ZERO, 1, 1, 1)
+    val geom = new Geometry("Box", b)
+    val mat = new Material(assetManager, "Common/MatDefs/Misc/SolidColor.j3md")
+    mat.setColor("m_Color", ColorRGBA.Blue)
+    geom.setMaterial(mat)
+    rootNode.attachChild(geom)
+  }
+  
+  /**
+   * Handler for uncaught exceptions in JME threads.
+   */
+  private object Terminator extends Thread.UncaughtExceptionHandler {
+    def uncaughtException(thread: Thread, thrown: Throwable) {
+      Logger.severe("uncaught exception in thread " + thread, thrown)
+      System.exit(1)
+    }
+  }
+}
