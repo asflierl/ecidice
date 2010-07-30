@@ -1,4 +1,6 @@
 import sbt._
+import sbt.FileUtilities.{ clean => delete, createDirectory, unzip }
+import java.net.URL
 import de.element34.sbteclipsify._
 
 class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclipsify {
@@ -12,8 +14,17 @@ class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclips
   val objenesis = "org.objenesis" % "objenesis" % "1.1"
   val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1"
   val junit = "junit" % "junit" % "4.8.1"
+  val jme = new URL("http://www.jmonkeyengine.com/nightly/jME3_07-30-2010.zip")
   
   override def compileOptions = super.compileOptions ++ Seq(Optimize)
   
   override def testOptions = super.testOptions ++ Seq(TestFilter(_ == "ecidice.CompositeSpec"))
+  
+  lazy val fetchJme = task {
+    val target = "lib" / "jme"
+    delete(target, log)
+    createDirectory(target, log)
+    unzip(jme, target, AllPassFilter, log)
+    None
+  }
 }
