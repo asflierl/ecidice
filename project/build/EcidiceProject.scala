@@ -6,8 +6,8 @@ import de.element34.sbteclipsify._
 class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclipsify {
   val scalaToolsSnapshots = "Scala-Tools Maven2 Snapshots Repository" at "http://scala-tools.org/repo-snapshots"
   
-  val specs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5-SNAPSHOT"
-  val scalacheck = "org.scala-tools.testing" % "scalacheck_2.8.0" % "1.8-SNAPSHOT"
+  val specs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5"
+  val scalacheck = "org.scala-tools.testing" % "scalacheck_2.8.0" % "1.7"
   val mockito = "org.mockito" % "mockito-all" % "1.8.4"
   val cglib = "cglib" % "cglib" % "2.1_3"
   val asm = "asm" % "asm" % "1.5.3"
