@@ -12,5 +12,4 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ecidice.Main"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ecidice"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djava.library.path=lib/lwjgl/native/macosx"/>
 </launchConfiguration>
