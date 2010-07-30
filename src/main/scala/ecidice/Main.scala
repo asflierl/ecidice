@@ -29,67 +29,67 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
-
-import com.jme.input.MouseInput
-import com.jmex.editors.swing.settings.GameSettingsPanel
-import com.jmex.game.StandardGame
-import com.jme.app.AbstractGame
-import com.jme.system.PreferencesGameSettings
-import com.jmex.game.state.GameStateManager
-
-import ecidice.controller.WorldController
-import ecidice.i18n.L10n
-import ecidice.util.Logging
-
-import java.util.prefs.Preferences
-
-/**
- * The application's entry point object.
- * 
- * @author Andreas Flierl
- */
-object Main extends Logging {
-  /**
-   * Bootstraps the game classes.
-   * 
-   * @param args will be ignored
-   */
-  def main(args: Array[String]) {
-    val settings = new PreferencesGameSettings(Preferences.userRoot().node(
-        L10n.of.appName))
-
-    try {
-      if (false == GameSettingsPanel.prompt(settings, L10n.of.appName)) {
-        Logger.info("game startup cancelled")
-        return
-      }
-    } catch {
-      case exc: InterruptedException => {
-        Logger.warn("game startup interrupted", exc)
-        return
-      }
-    }
-
-    val game = new StandardGame(L10n.of.appName,
-                                StandardGame.GameType.GRAPHICAL, settings)
-
-    game.start()
-    game.setUncaughtExceptionHandler(Terminator)
-    
-    val worldController = new WorldController(game)
-    GameStateManager.getInstance().attachChild(worldController)
-    MouseInput.get.setCursorVisible(true)
-    worldController.setActive(true)
-  }
-  
-  /**
-   * Handler for uncaught exceptions in JME threads.
-   */
-  private object Terminator extends Thread.UncaughtExceptionHandler {
-    def uncaughtException(thread: Thread, thrown: Throwable) {
-      Logger.severe("uncaught exception in thread " + thread, thrown)
-      System.exit(1)
-    }
-  }
-}
+//package ecidice
+//
+//import com.jme.input.MouseInput
+//import com.jmex.editors.swing.settings.GameSettingsPanel
+//import com.jmex.game.StandardGame
+//import com.jme.app.AbstractGame
+//import com.jme.system.PreferencesGameSettings
+//import com.jmex.game.state.GameStateManager
+//
+//import ecidice.controller.WorldController
+//import ecidice.i18n.L10n
+//import ecidice.util.Logging
+//
+//import java.util.prefs.Preferences
+//
+///**
+// * The application's entry point object.
+// * 
+// * @author Andreas Flierl
+// */
+//object Main extends Logging {
+//  /**
+//   * Bootstraps the game classes.
+//   * 
+//   * @param args will be ignored
+//   */
+//  def main(args: Array[String]) {
+//    val settings = new PreferencesGameSettings(Preferences.userRoot().node(
+//        L10n.of.appName))
+//
+//    try {
+//      if (false == GameSettingsPanel.prompt(settings, L10n.of.appName)) {
+//        Logger.info("game startup cancelled")
+//        return
+//      }
+//    } catch {
+//      case exc: InterruptedException => {
+//        Logger.warn("game startup interrupted", exc)
+//        return
+//      }
+//    }
+//
+//    val game = new StandardGame(L10n.of.appName,
+//                                StandardGame.GameType.GRAPHICAL, settings)
+//
+//    game.start()
+//    game.setUncaughtExceptionHandler(Terminator)
+//    
+//    val worldController = new WorldController(game)
+//    GameStateManager.getInstance().attachChild(worldController)
+//    MouseInput.get.setCursorVisible(true)
+//    worldController.setActive(true)
+//  }
+//  
+//  /**
+//   * Handler for uncaught exceptions in JME threads.
+//   */
+//  private object Terminator extends Thread.UncaughtExceptionHandler {
+//    def uncaughtException(thread: Thread, thrown: Throwable) {
+//      Logger.severe("uncaught exception in thread " + thread, thrown)
+//      System.exit(1)
+//    }
+//  }
+//}
