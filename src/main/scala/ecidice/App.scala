@@ -3,13 +3,15 @@ package ecidice
 import com.jme3.app.Application
 import com.jme3.system.JmeSystem
 import com.jme3.material._
+import com.jme3.material.RenderState.DEFAULT
 import com.jme3.math._
+import com.jme3.math.Vector3f.ZERO
 import com.jme3.scene._
 import com.jme3.scene.shape._
-import com.jme3.math.ColorRGBA
+import com.jme3.math.ColorRGBA._
 import com.jme3.renderer.RenderManager
-import com.jme3.renderer.queue.RenderQueue.Bucket
-import com.jme3.scene.Spatial.CullHint
+import com.jme3.renderer.queue.RenderQueue.Bucket.Gui
+import com.jme3.scene.Spatial.CullHint.Never
 import com.jme3.font._
 
 import ecidice.util.Logging
@@ -37,10 +39,10 @@ class App extends Application with Logging {
   override def initialize() {
     super.initialize()
     
-    renderer.applyRenderState(RenderState.DEFAULT)
+    renderer.applyRenderState(DEFAULT)
 
-    guiNode.setQueueBucket(Bucket.Gui)
-    guiNode.setCullHint(CullHint.Never)
+    guiNode.setQueueBucket(Gui)
+    guiNode.setCullHint(Never)
     
     // custom initialization here
     loadFPSText()
@@ -48,10 +50,10 @@ class App extends Application with Logging {
     viewPort.attachScene(rootNode)
     guiViewPort.attachScene(guiNode)
     
-    val b = new Box(Vector3f.ZERO, 1, 1, 1)
+    val b = new Box(ZERO, 1, 1, 1)
     val geom = new Geometry("Box", b)
     val mat = new Material(assetManager, "Common/MatDefs/Misc/SolidColor.j3md")
-    mat.setColor("m_Color", ColorRGBA.Blue)
+    mat.setColor("m_Color", Blue)
     geom.setMaterial(mat)
     rootNode.attachChild(geom)
   }
