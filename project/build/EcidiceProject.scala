@@ -3,7 +3,7 @@ import sbt.FileUtilities.{ clean => delete, createDirectory, unzip }
 import java.net.URL
 import de.element34.sbteclipsify._
 
-class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclipsify {
+class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclipsify with AkkaProject {
   val scalaToolsSnapshots = "Scala-Tools Maven2 Snapshots Repository" at "http://scala-tools.org/repo-snapshots"
   
   val specs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5"
@@ -14,7 +14,7 @@ class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclips
   val objenesis = "org.objenesis" % "objenesis" % "1.1"
   val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1"
   val junit = "junit" % "junit" % "4.8.1"
-  val jme = new URL("http://www.jmonkeyengine.com/nightly/jME3_08-20-2010.zip")
+  val jme = new URL("http://www.jmonkeyengine.com/nightly/jME3_08-29-2010.zip")
   
   override def compileOptions = super.compileOptions ++ Seq(Optimize)
   
