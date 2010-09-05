@@ -76,6 +76,7 @@ class App extends Application with Logging {
     guiNode.setCullHint(Never)
     
     // custom initialization here
+    viewPort.setBackgroundColor(ColorRGBA.White)
     loadFPSText()
     
     viewPort.attachScene(rootNode)
