@@ -31,6 +31,7 @@
 
 package ecidice
 
+import com.jme3.material.RenderState.BlendMode.Alpha
 import com.jme3.app.Application
 import com.jme3.system.JmeSystem
 import com.jme3.material._
@@ -76,7 +77,7 @@ class App extends Application with Logging {
     guiNode.setCullHint(Never)
     
     // custom initialization here
-    viewPort.setBackgroundColor(ColorRGBA.White)
+    viewPort.setBackgroundColor(White)
     loadFPSText()
     
     viewPort.attachScene(rootNode)
@@ -85,7 +86,7 @@ class App extends Application with Logging {
     val b = new Box(ZERO, 1, 1, 1)
     val geom = new Geometry("Box", b)
     val mat = new Material(assetManager, "Common/MatDefs/Misc/SolidColor.j3md")
-    mat.setColor("m_Color", Blue)
+    mat.setColor("m_Color", White)
     geom.setMaterial(mat)
     rootNode.attachChild(geom)
   }
@@ -93,7 +94,10 @@ class App extends Application with Logging {
   def loadFPSText() {
     fpsText.setSize(guiFont.getCharSet().getRenderedSize())
     fpsText.setLocalTranslation(0, fpsText.getLineHeight(), 0)
-    fpsText.setText("fps")
+    fpsText.setText("")
+    
+    fpsText.setColor(Black)
+    fpsText.getMaterial.getAdditionalRenderState.setBlendMode(Alpha);
     guiNode.attachChild(fpsText)
   }
   
