@@ -41,17 +41,15 @@ import Gen._
  * specifications.
  */
 object Generators {
-  private def tile = for (
-    col <- arbitrary[Int]; 
-    row <- arbitrary[Int]
-  ) yield Tile(col, row)
-  
-  implicit def arbTile: Arbitrary[Tile] = Arbitrary(tile)
-  
-  private def space = for (
-    t <- arbitrary[Tile];
-    l <- oneOf(Level.values.toSeq)
-  ) yield Space(t, l)
-  
-  implicit def arbSpace: Arbitrary[Space] = Arbitrary(space)
+  implicit def arbitraryTile: Arbitrary[Tile] = Arbitrary(
+    for (
+      col <- arbitrary[Int];
+      row <- arbitrary[Int]
+    ) yield Tile(col, row))
+
+  implicit def arbitrarySpace: Arbitrary[Space] = Arbitrary(
+    for (
+      t <- arbitrary[Tile];
+      l <- oneOf(Level.values.toSeq)
+    ) yield Space(t, l))
 }
