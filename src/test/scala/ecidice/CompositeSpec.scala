@@ -46,17 +46,6 @@ object CompositeSpec extends Specification {
     model.time.DurationSpec,
     model.time.TimespanSpec,
     model.time.InstantSpec,
-    
-    modelold.BoardSpec,
-    modelold.ClockSpec,
-    modelold.ControlRefereeSpec,
-    modelold.DiceGroupSpec,
-    modelold.DiceMatcherSpec,
-    modelold.DiceSpec,
-    modelold.GameSpec,
-    modelold.MovementRefereeSpec,
-    modelold.TimespanSpec,
-    modelold.UpdateMechanicsSpec,
 
     util.HashCodeSpec
   )
