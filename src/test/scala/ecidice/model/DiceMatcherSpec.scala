@@ -65,7 +65,7 @@ object DiceMatcherSpec extends SpecBase {
       
       val matcher = DiceMatcher(board)
       
-      matcher.find(groupOne.head) mustEqual groupOne
+      matcher find groupOne.head mustEqual groupOne
       matcher.find(groupTwo.head) mustEqual groupTwo
       matcher.find(separator.head) mustEqual separator
     }
@@ -78,9 +78,7 @@ object DiceMatcherSpec extends SpecBase {
                                   Tile(0, 2), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ isolated
                                   
-      for (d <- isolated) {
-        DiceMatcher(board).find(d) mustEqual Map(d)
-      }
+      isolated foreach { d => DiceMatcher(board).find(d) mustEqual Map(d) }
     }
   }
   
@@ -91,5 +89,5 @@ object DiceMatcherSpec extends SpecBase {
   def fourOnTop(locs: Set[Tile]) = place(locs, Dice.default.transform(RotateBackward))
   
   def place(locs: Set[Tile], factory: => Dice): Map[Space, Dice] =
-    locs.map(_.floor -> factory())(breakOut)
+    locs.map(_.floor -> factory)(breakOut)
 }
