@@ -15,7 +15,7 @@ class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclips
   val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1"
   val junit = "junit" % "junit" % "4.7"
 
-  val jme = new URL("http://jmonkeyengine.com/nightly/jME3_12-12-2010.zip")
+  val jme = new URL("http://jmonkeyengine.com/nightly/jME3_12-22-2010.zip")
   
   override def compileOptions = super.compileOptions ++ Seq(Optimize)
   
