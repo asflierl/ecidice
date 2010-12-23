@@ -35,7 +35,9 @@ import ecidice.util.Logging
 
 object Main extends Logging {
   def main(args: Array[String]): Unit = {
-    Logging.disable()
+    Logging writeTo Logging.console
+    Logging showWarningsAndHigher
+    
     Thread.setDefaultUncaughtExceptionHandler(Terminator)
     new App().start()
   }

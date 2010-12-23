@@ -5,6 +5,8 @@ import de.element34.sbteclipsify._
 
 class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclipsify with AkkaProject {
   val scalaToolsSnapshots = "Scala-Tools Maven2 Snapshots Repository" at "http://scala-tools.org/repo-snapshots"
+
+  val joda = "joda-time" % "joda-time" % "1.6.2"
   
   val specs = "org.scala-tools.testing" %% "specs" % "1.6.6" % "test"
   val scalacheck = "org.scala-tools.testing" %% "scalacheck" % "1.7"
