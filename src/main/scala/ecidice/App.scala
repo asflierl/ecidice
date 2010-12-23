@@ -64,7 +64,7 @@ class App extends Application with Logging {
       prefs.save()
       super.start()
     } else {
-      Logger.info("game startup cancelled")
+      logInfo("game startup cancelled")
     }
   }
   

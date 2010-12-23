@@ -35,59 +35,37 @@ import java.util.logging.{ Logger => JLogger }
 import java.util.logging.Level
 
 /**
- * Simple trait that adds logging support to a class.
+ * Simple and thin wrapper around java.util.logging to mix logging support
+ * into a class.
  * 
  * @author Andreas Flierl
  */
 trait Logging {
-  private val className = getClass.getName
+  private def logger = JLogger.getLogger(getClass.getName)
   
-  /** 
-   * Wraps a Java logger instance and provides some convenience methods.
-   */
-  object Logger {
-    private val logger = JLogger.getLogger(className)
+  def logSevere(msg: => String): Unit = Logger.log(logger, Level.SEVERE, msg)
+  
+  def logSevere(msg: => String, exc: Throwable): Unit = Logger.log(logger, Level.SEVERE, msg, exc)
+  
+  def logWarn(msg: => String): Unit = Logger.log(logger, Level.WARNING, msg)
+
+  def logWarn(msg: => String, exc: Throwable): Unit = Logger.log(logger, Level.WARNING, msg, exc)
+  
+  def logInfo(msg: => String): Unit = Logger.log(logger, Level.INFO, msg)
+  
+  def logInfo(msg: => String, exc: Throwable): Unit = Logger.log(logger, Level.INFO, msg, exc)
+}
+
+object Logging {
+  def disable(): Unit = rootLogger.getHandlers foreach rootLogger.removeHandler
     
-    /**
-     * Logs a message with SEVERE priorty.
-     */
-    def severe(msg: String) {
-      logger.log(Level.SEVERE, msg)
-    }
+  private lazy val rootLogger = JLogger.getLogger("")
+}
+
+private object Logger {
+  def log(logger: JLogger, level: Level, msg: => String): Unit = 
+    if (logger.isLoggable(level)) logger.log(level, msg)
     
-    /**
-     * Logs a message and an attached exception with SEVERE priority.
-     */
-    def severe(msg: String, exc: Throwable) {
-      logger.log(Level.SEVERE, msg, exc)
-    }
-    
-    /**
-     * Logs a message with WARNING priorty.
-     */
-    def warn(msg: String) {
-      logger.log(Level.WARNING, msg)
-    }
-    
-    /**
-     * Logs a message and an attached exception with WARNING priority.
-     */
-    def warn(msg: String, exc: Throwable) {
-      logger.log(Level.WARNING, msg, exc)
-    }
-    
-    /**
-     * Logs a message with INFO priorty.
-     */
-    def info(msg: String) {
-      logger.log(Level.INFO, msg)
-    }
-    
-    /**
-     * Logs a message and an attached exception with INFO priority.
-     */
-    def info(msg: String, exc: Throwable) {
-      logger.log(Level.INFO, msg, exc)
-    }
-  }
+  def log(logger: JLogger, level: Level, msg: => String, exc: Throwable): Unit = 
+    if (logger.isLoggable(level)) logger.log(level, msg, exc)
 }
