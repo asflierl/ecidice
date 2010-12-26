@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.i18n
+package ecidice
+package i18n
 
 /**
  * Contains the actual localizations for the language English.

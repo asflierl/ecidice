@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice
+package model
 package mode
 
 trait SpawningOfPlayer[A <: Mode[A]] { this: A =>

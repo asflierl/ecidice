@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice
+package model
 
 /**
  * Marker trait for things that can occupy a space.

@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice
+package model
 
 case class Player(id: Int) extends Ordered[Player] {
   def compare(other: Player) = id compare(other id)

@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.util
+package ecidice
+package util
 
 /**
  * Aims to help with the generation of hash codes (Any#hashCode).

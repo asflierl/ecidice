@@ -29,11 +29,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice
+package model
 package time
 
 import ecidice.SpecBase
-import ecidice.util.Preamble._
 
 /**
  * Informal specification of a timespan.

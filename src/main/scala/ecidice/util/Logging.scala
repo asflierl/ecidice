@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.util
+package ecidice
+package util
 
 import java.util.logging.{ ConsoleHandler,
                            Formatter,
@@ -71,11 +72,7 @@ object Logging {
     handlers foreach rootLogger.addHandler
   }
   
-  def console: Handler = {
-    val handler = new ConsoleHandler()
-    handler setFormatter ShortMessageFormatter
-    handler
-  }
+  def console: Handler = init(new ConsoleHandler())(_ setFormatter ShortMessageFormatter)
   
   private def removeAllHandlers(): Unit = rootLogger.getHandlers foreach rootLogger.removeHandler 
 }

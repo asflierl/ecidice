@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice
+package model
 
 case class Space(tile: Tile, level: Level.Value) extends Ordered[Space] {
   def isFloor = level equals Level.Floor 

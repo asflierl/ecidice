@@ -46,7 +46,8 @@ import com.jme3.renderer.queue.RenderQueue.Bucket.Gui
 import com.jme3.scene.Spatial.CullHint.Never
 import com.jme3.font._
 
-import ecidice.util.Logging
+import util.Logging
+import util.Prefs
 
 class App extends Application with Logging {
   val rootNode = new Node("Root Node");
@@ -105,7 +106,7 @@ class App extends Application with Logging {
     if (speed == 0 || paused) return
         
     super.update()
-    val tpf = timer.getTimePerFrame() * speed
+    val tpf = timer.getTimePerFrame * speed
 
     secondCounter += timer.getTimePerFrame
     val fps = timer.getFrameRate.toInt

@@ -36,16 +36,16 @@ import ecidice.util.Logging
 object Main extends Logging {
   def main(args: Array[String]): Unit = {
     Logging writeTo Logging.console
-    Logging showWarningsAndHigher
+    Logging showWarningsAndHigher()
     
-    Thread.setDefaultUncaughtExceptionHandler(Terminator)
-    new App().start()
+    Thread setDefaultUncaughtExceptionHandler Terminator
+    new App() start()
   }
   
   private object Terminator extends Thread.UncaughtExceptionHandler {
-    def uncaughtException(thread: Thread, thrown: Throwable) {
+    def uncaughtException(thread: Thread, thrown: Throwable): Unit = {
       logSevere("unhandled exception in thread " + thread, thrown)
-      System.exit(1)
+      System exit 1
     }
   }
 }

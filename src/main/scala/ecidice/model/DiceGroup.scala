@@ -29,7 +29,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice.model
+package ecidice
+package model
 
 sealed trait DiceGroup[T <: DiceGroup[T]] { this: T =>
   def dice: Map[Space, Dice]

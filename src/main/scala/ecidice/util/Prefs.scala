@@ -30,13 +30,13 @@
  */
 
 package ecidice
+package util
 
 import com.jme3.system.AppSettings
 import java.util.prefs.Preferences
 import collection.JavaConversions._
 
 import ecidice.i18n.L10n
-import ecidice.util.Preamble._
 
 class Prefs(root: Preferences) {
   private val jme = root.node("jME3")
