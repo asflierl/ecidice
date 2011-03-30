@@ -43,14 +43,14 @@ import ecidice.SpecBase
 class AnyModeSpec[A <: Mode[A]](game: A) extends SpecBase with ModelTestHelpers {
   "Any mode" should {
     "correctly dupe itself" in {
-      game.dupe() aka "the duped game" mustEqual game
+      game.dupe() aka "the duped game" must be equalTo game
     }
     
     "correctly spawn new players" in {
       val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
       val gameWithTwoPlayers = gameWithOnePlayer.spawnPlayer(Tile(2, 1))
       
-      gameWithTwoPlayers.players mustEqual 
+      gameWithTwoPlayers.players must be equalTo 
         Map(Player(1) -> Standing(Tile(0, 0)),
             Player(2) -> Standing(Tile(2, 1)))
     }

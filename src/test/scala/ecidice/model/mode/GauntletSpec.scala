@@ -36,6 +36,8 @@ package mode
 import ecidice.SpecBase
 import time._
 
+import org.specs2._
+
 /**
  * Informal specification of the "Gauntlet" game mode.
  * 
@@ -44,11 +46,10 @@ import time._
 object GauntletSpec extends SpecBase with ModelTestHelpers {
   implicit val game = Gauntlet.create(3)
   
-  "A gauntlet game" should {
-    behave like anyMode
-    behave like anyModeWithControlRequest
-    behave like anyModeWithRelinquishRequest
-    behave like anyModeWithSpawningOfDice
-    behave like anyModeWithMovement
-  }
+  "A gauntlet game should" ^
+    include(anyMode)
+    include(anyModeWithControlRequest)
+    include(anyModeWithRelinquishRequest)
+    include(anyModeWithSpawningOfDice)
+    include(anyModeWithMovement)
 }

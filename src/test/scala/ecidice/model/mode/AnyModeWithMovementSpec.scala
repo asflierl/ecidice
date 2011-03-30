@@ -61,7 +61,7 @@ extends SpecBase with ModelTestHelpers {
                              .move(Player(1), direction, now)
                              
           testGame.players(Player(1)) aka
-            "assignment of player 1" mustEqual
+            "assignment of player 1" must be equalTo
             MovingAlone(PlayerMovement(Player(1), center, destination, now))
         }
       }
@@ -76,14 +76,14 @@ extends SpecBase with ModelTestHelpers {
       Tile(2, 2)        ! Set(Forward, Left)            | {  
         
       (corner, allowed) => 
-        for (dir <- Direction.values) {
+        Direction.values map { dir =>
           val desc = "game after player moving " + dir + " from " + corner
           val before = game.spawnPlayer(corner)
           val after = before.move(Player(1), dir, now)
             
-          if (allowed.contains(dir)) after aka desc must !=(before)
-          else after aka desc must ==(before)
-        }
+          if (allowed.contains(dir)) after aka desc must not be equalTo (before)
+          else after aka desc must be equalTo before
+        } reduceLeft (_ and _)
       }
     }
     
@@ -96,49 +96,45 @@ extends SpecBase with ModelTestHelpers {
       Tile(2, 1)      ! Right                           | {
         
       (pos, disallowed) =>
-        for (dir <- Direction.values) {
+        Direction.values map { dir =>
           val desc = "game after player moving " + dir + " from " + pos
           val before = game.spawnPlayer(pos)
           val after = before.move(Player(1), dir, now)
             
-          if (disallowed == dir) after aka desc must ==(before)
-          else after aka desc must !=(before)
-        }
+          if (disallowed == dir) after aka desc must be equalTo before
+          else after aka desc must not be equalTo (before)
+        } reduceLeft (_ and _)
       }
     }
     
     "allow a player to move in any direction with a floor dice from the center" in {
-      for (somewhere <- Direction.values) {
-        "from the center " + somewhere in {
-          val origin = center.floor
-          val destination = center.look(somewhere).floor
-          val transform = Transform(origin, destination, somewhere)
+      "direction" ||> Direction.values | { somewhere =>
+        val origin = center.floor
+        val destination = center.look(somewhere).floor
+        val transform = Transform(origin, destination, somewhere)
+      
+        val testGame = game.spawnPlayer(origin.tile)
+                           .addSolidDice(origin -> dice)
+                           .control(Player(1))
+                           .move(Player(1), somewhere, now)
         
-          val testGame = game.spawnPlayer(origin.tile)
-                             .addSolidDice(origin -> dice)
-                             .control(Player(1))
-                             .move(Player(1), somewhere, now)
-          
-          check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-        }
+        check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
       }
     }
     
     "allow a player to move in any direction with an upper dice from the center" in {
-      for (somewhere <- Direction.values) {
-        "from the center " + somewhere in {
-          val origin = center.raised
-          val destination = center.look(somewhere).floor
-          val transform = Transform(origin, destination, somewhere)
-          
-          val testGame = game.spawnPlayer(origin.tile)
-                             .addSolidDice(origin.floor -> Dice.random)
-                             .addSolidDice(origin -> dice)
-                             .control(Player(1))
-                             .move(Player(1), somewhere, now)
-          
-          check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-        }
+      "direction" ||> Direction.values | { somewhere =>
+        val origin = center.raised
+        val destination = center.look(somewhere).floor
+        val transform = Transform(origin, destination, somewhere)
+        
+        val testGame = game.spawnPlayer(origin.tile)
+                           .addSolidDice(origin.floor -> Dice.random)
+                           .addSolidDice(origin -> dice)
+                           .control(Player(1))
+                           .move(Player(1), somewhere, now)
+        
+        check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
       }
     }
     
@@ -220,7 +216,7 @@ extends SpecBase with ModelTestHelpers {
 
       val after = before.move(Player(1), Right, now)
       
-      after aka "after move request" mustEqual before
+      after aka "after move request" must be equalTo before
     }
     
     "not let a player move with a dice from the raised level " +
@@ -235,7 +231,7 @@ extends SpecBase with ModelTestHelpers {
 
       val after = before.move(Player(1), Right, now)
       
-      after aka "after move request" mustEqual before
+      after aka "after move request" must be equalTo before
     }
     
     "not let 2 players move onto the same floor space" in {
@@ -249,7 +245,7 @@ extends SpecBase with ModelTestHelpers {
 
       val after = before.move(Player(2), Backward, now)
       
-      after aka "after move request" mustEqual before
+      after aka "after move request" must be equalTo before
     }
     
     "not let 2 players move onto the same raised space" in {
@@ -264,18 +260,20 @@ extends SpecBase with ModelTestHelpers {
 
       val after = before.move(Player(2), Backward, now)
       
-      after aka "after move request" mustEqual before
+      after aka "after move request" must be equalTo before
     }
   }
   
   def check(move: DiceMovement, testGame: A) = {
     val p = move.controller
     
-    testGame.players(p) aka
-          "assignment of player " + p.id mustEqual MovingWithADice(move, false)
-        
-    testGame.board(move.origin)      aka "contents of origin"      mustEqual move
-    testGame.board(move.destination) aka "contents of destination" mustEqual move
+    (
+      testGame.players(p) aka "assignment of player " + p.id must be equalTo MovingWithADice(move, false)
+    ) and (
+      testGame.board(move.origin)      aka "contents of origin"      must be equalTo move
+    ) and (
+      testGame.board(move.destination) aka "contents of destination" must be equalTo move
+    )
   }
   
   def threeOnTop = Dice.default.transform(RotateForward)

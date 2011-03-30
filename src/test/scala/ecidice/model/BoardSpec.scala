@@ -33,12 +33,8 @@ package ecidice
 package model
 
 import ecidice.SpecBase
+import org.specs2._
 
-/**
- * Informal specification of the game board.
- * 
- * @author Andreas Flierl
- */
 object BoardSpec extends SpecBase {
   val board = Board.sized(5, 3) 
     
@@ -55,7 +51,7 @@ object BoardSpec extends SpecBase {
       Tile(5, 3) ! false           | { 
         
       (tile, result) =>
-        board.contains(tile) mustEqual(result)
+        board.contains(tile) must beEqualTo(result)
       }
     }
   }

@@ -35,30 +35,37 @@ package model
 import ecidice.SpecBase
 import Transform._
 
-/**
- * Informal specification of a dice.
- * 
- * @author Andreas Flierl
- */
+import org.specs2._
+
 object DiceSpec extends SpecBase {
   "A dice" should {
     val dice = Dice.default
     val all = Dice.allRotations.toSet
     
     "initially look like this: top = 6, right = 5, front = 4" in {
-      dice.top mustEqual 6
-      dice.right mustEqual 5
-      dice.front mustEqual 4
+      dice.top must be equalTo 6 
+      dice.right must be equalTo 5
+      dice.front must be equalTo 4
     }
     
     "initially be consistent" in {
-      dice.top mustEqual (7 - dice.bottom)
-      dice.left mustEqual (7 - dice.right)
-      dice.front mustEqual (7 - dice.back)
+      dice.top must be equalTo (7 - dice.bottom)
+      dice.left must be equalTo (7 - dice.right)
+      dice.front must be equalTo (7 - dice.back)
     }
     
     "know about all different dice rotations" in {
-      all.size mustEqual 24
+      all.size must be equalTo 24
+    }
+    
+    def check(changed: Dice, top: Int, right: Int, front: Int) = {
+      changed.top must be equalTo top
+      changed.right must be equalTo right
+      changed.front must be equalTo front
+      changed.bottom must be equalTo (7 - top)
+      changed.left must be equalTo (7 - right)
+      changed.back must be equalTo (7 - front)
+      all must contain(changed)
     }
 
     "correctly rotate backward" in {
@@ -99,16 +106,6 @@ object DiceSpec extends SpecBase {
     "correctly flip left or right" in {
       val changed = dice.transform(FlipLeftOrRight)
       check(changed, 1, 2, 4)
-    }
-    
-    def check(changed: Dice, top: Int, right: Int, front: Int) = {
-      changed.top mustEqual top
-      changed.right mustEqual right
-      changed.front mustEqual front
-      changed.bottom mustEqual (7 - top)
-      changed.left mustEqual (7 - right)
-      changed.back mustEqual (7 - front)
-      all mustContain changed
     }
   }
 }

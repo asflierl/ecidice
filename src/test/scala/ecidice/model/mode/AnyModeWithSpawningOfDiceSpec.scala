@@ -52,7 +52,7 @@ extends SpecBase with ModelTestHelpers {
       val contents = game.spawnDice(tile, now, dice)
                          .board(tile.floor)
                          
-      contents aka "contents" mustEqual DiceAppearing(dice, tile.floor, now)
+      contents aka "contents" must be equalTo DiceAppearing(dice, tile.floor, now)
     }
     
     "not spawn a dice on a tile with an appearing dice" in {
@@ -60,7 +60,7 @@ extends SpecBase with ModelTestHelpers {
       val before = game.spawnDice(tile, now)
       val after = before.spawnDice(tile, now)
       
-      after mustEqual before
+      after must be equalTo before
     }
     
     "not spawn a dice on a tile with a solid dice" in {
@@ -68,7 +68,7 @@ extends SpecBase with ModelTestHelpers {
       val before = game.addSolidDice(tile.floor)
       val after = before.spawnDice(tile, now)
       
-      after mustEqual before
+      after must be equalTo before
     }
     
     "not spawn a dice on a tile with two solid dice" in {
@@ -77,7 +77,7 @@ extends SpecBase with ModelTestHelpers {
                        .addSolidDice(tile.raised)
       val after = before.spawnDice(tile, now)
       
-      after mustEqual before
+      after must be equalTo before
     }
     
     //TODO specify interaction with movement

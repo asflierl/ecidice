@@ -31,22 +31,21 @@
 
 package ecidice
 
-import org.specs.Specification
+import org.specs2._
 
-object CompositeSpec extends Specification {
-  "ecidice".isSpecifiedBy(
-    model.BoardSpec,
-    model.DiceSpec,
-    model.DiceMatcherSpec,
-    model.SpaceSpec,
-    model.TileSpec,
-    
-    model.mode.GauntletSpec,
-      
-    model.time.DurationSpec,
-    model.time.TimespanSpec,
-    model.time.InstantSpec,
-
-    util.HashCodeSpec
-  )
+class EcidiceSpec extends SpecificationWithJUnit { def is =
+  "ecidice" ^
+    include(model.BoardSpec) ^
+    include(model.DiceSpec) ^
+    include(model.DiceMatcherSpec) ^
+    include(model.SpaceSpec) ^
+    include(model.TileSpec) ^
+//
+    include(model.mode.GauntletSpec) ^
+//    
+    include(model.time.DurationSpec) ^
+    include(model.time.TimespanSpec) ^
+    include(model.time.InstantSpec) ^
+//    
+    include(util.HashCodeSpec)
 }

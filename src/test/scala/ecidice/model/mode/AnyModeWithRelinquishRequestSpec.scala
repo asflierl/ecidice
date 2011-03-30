@@ -53,7 +53,7 @@ extends SpecBase with ModelTestHelpers {
         beforeControl.control(Player(1))
                      .relinquish(Player(1))
       
-      afterRelinquish mustEqual beforeControl
+      afterRelinquish must be equalTo beforeControl
     }
     //TODO specifiy movement cases
   }

@@ -41,7 +41,7 @@ import ecidice.SpecBase
 object DurationSpec extends SpecBase {
   "A duration" should {
     "take 0 seconds by default" in {
-      Duration().seconds mustEqual 0d
+      Duration().seconds must be equalTo 0d
     }
     
     "never be negative" in {
@@ -49,11 +49,11 @@ object DurationSpec extends SpecBase {
     }
     
     "result in a new duration when a duration is added to it" in {
-      Duration(42) + Duration(7) mustEqual Duration(49)
+      Duration(42) + Duration(7) must be equalTo Duration(49)
     }
     
     "result in an instant when an instant is added to it" in {
-      Duration(42) + Instant(23) mustEqual Instant(65)
+      Duration(42) + Instant(23) must be equalTo Instant(65)
     }
     
     "be comparable" in {
@@ -61,7 +61,7 @@ object DurationSpec extends SpecBase {
       Duration(1)  ! Duration(0)  ! 1        |
       Duration(0)  ! Duration(1)  ! -1       |
       Duration(42) ! Duration(42) ! 0        | {
-        (a, b, result) => a.compare(b) mustEqual result
+        (a, b, result) => a.compare(b) must be equalTo result
       }
     }
   }

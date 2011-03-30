@@ -49,7 +49,7 @@ extends SpecBase with ModelTestHelpers {
       val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
       val assignment = gameWithOnePlayer.control(Player(1)).players(Player(1))
       
-      assignment mustEqual Standing(Tile(0, 0))
+      assignment must be equalTo Standing(Tile(0, 0))
     }
     
     "not grant control over an appearing dice" in {
@@ -58,7 +58,7 @@ extends SpecBase with ModelTestHelpers {
                        
       val after = before.control(Player(1))
       
-      after mustEqual before
+      after must be equalTo before
     }
     
     "grant control over a single dice on the floor" in {
@@ -70,10 +70,10 @@ extends SpecBase with ModelTestHelpers {
                          .control(Player(1))
       
       testGame.players(Player(1)) aka 
-        "assignment of player 1" mustEqual ControllingADice(location)
+        "assignment of player 1" must be equalTo ControllingADice(location)
       
       testGame.board(location) aka
-        "contents of dice space" mustEqual SolidControlled(dice, Player(1))
+        "contents of dice space" must be equalTo SolidControlled(dice, Player(1))
     }
     
     "not grant control over dice on the floor level already controlled by another player" in {
@@ -87,13 +87,13 @@ extends SpecBase with ModelTestHelpers {
                          .control(Player(2))
       
       testGame.players(Player(2)) aka
-        "assignment of player 2" mustEqual Standing(location.tile)
+        "assignment of player 2" must be equalTo Standing(location.tile)
                          
       testGame.players(Player(1)) aka 
-        "assignment of player 1" mustEqual ControllingADice(location)
+        "assignment of player 1" must be equalTo ControllingADice(location)
       
       testGame.board(location) aka
-        "contents of dice space" mustEqual SolidControlled(dice, Player(1))
+        "contents of dice space" must be equalTo SolidControlled(dice, Player(1))
     }
     
     "grant control over the upper of 2 stacked dice" in {
@@ -106,13 +106,13 @@ extends SpecBase with ModelTestHelpers {
                          .control(Player(1))
       
       testGame.players(Player(1)) aka 
-        "assignment of player 1" mustEqual ControllingADice(tile.raised)
+        "assignment of player 1" must be equalTo ControllingADice(tile.raised)
       
       testGame.board(tile.floor) aka
-        "contents of floor space" mustEqual lowerDice
+        "contents of floor space" must be equalTo lowerDice
       
       testGame.board(tile.raised) aka
-        "contents of raised space" mustEqual SolidControlled(upperDice, Player(1))
+        "contents of raised space" must be equalTo SolidControlled(upperDice, Player(1))
     }
     
     "not grant control over dice on the raised level already controlled by another player" in {
@@ -127,13 +127,13 @@ extends SpecBase with ModelTestHelpers {
                          .control(Player(1))
       
       testGame.players(Player(1)) aka
-        "assignment of player 1" mustEqual Standing(location.tile)
+        "assignment of player 1" must be equalTo Standing(location.tile)
                          
       testGame.players(Player(2)) aka 
-        "assignment of player 2" mustEqual ControllingADice(location)
+        "assignment of player 2" must be equalTo ControllingADice(location)
       
       testGame.board(location) aka
-        "contents of dice space" mustEqual SolidControlled(dice, Player(2))
+        "contents of dice space" must be equalTo SolidControlled(dice, Player(2))
     }
     
     //TODO specifiy movement cases

@@ -8,20 +8,17 @@ class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclips
 
   val joda = "joda-time" % "joda-time" % "1.6.2"
   
-  val specs = "org.scala-tools.testing" %% "specs" % "1.6.6" % "test"
-  val scalacheck = "org.scala-tools.testing" %% "scalacheck" % "1.7"
-  val mockito = "org.mockito" % "mockito-all" % "1.8.5"
-  val cglib = "cglib" % "cglib" % "2.1_3"
-  val asm = "asm" % "asm" % "1.5.3"
-  val objenesis = "org.objenesis" % "objenesis" % "1.0"
-  val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1"
-  val junit = "junit" % "junit" % "4.7"
+  val specs2 = "org.specs2" %% "specs2" % "1.1-SNAPSHOT" % "test"
+  val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test"
+  val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
 
-  val jme = new URL("http://jmonkeyengine.com/nightly/jME3_12-22-2010.zip")
+  val jme = new URL("http://jmonkeyengine.com/nightly/jME3_2011-03-28.zip")
   
   override def compileOptions = super.compileOptions ++ Seq(Optimize)
   
-  override def testOptions = super.testOptions ++ Seq(TestFilter(_ == "ecidice.CompositeSpec"))
+  def specs2Framework = new TestFramework("org.specs2.runner.SpecsFramework")
+  override def testFrameworks = super.testFrameworks ++ Seq(specs2Framework)
+  override def includeTest(s: String) = { s == "ecidice.EcidiceSpec" }
   
   lazy val fetchJme = task {
     val target = "lib" / "jme"

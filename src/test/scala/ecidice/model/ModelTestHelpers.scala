@@ -37,8 +37,6 @@ import time._
 import scala.collection.breakOut
 
 trait ModelTestHelpers {
-  implicit def firstSystemOfSpec(spec: org.specs.Specification) = spec.systems.head
-  
   implicit def pimpMode[A <: Mode[A]](m: A) = new ModeTestHelpers(m)
   
   def anyMode[A <: Mode[A]](implicit game: A) = new AnyModeSpec(game)

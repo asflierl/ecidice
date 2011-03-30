@@ -37,9 +37,9 @@ import Transform._
 
 import scala.collection.breakOut
 
-/**
- * Informal specification of a dice matcher. 
- */
+import org.specs2._
+import matcher._
+
 object DiceMatcherSpec extends SpecBase {
   "A dice matcher" should {
     
@@ -52,7 +52,7 @@ object DiceMatcherSpec extends SpecBase {
       val separators = fourOnTop(Set(Tile(1, 1), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ similarDice ++ separators
       
-      DiceMatcher(board) find similarDice.head mustEqual similarDice
+      DiceMatcher(board) find similarDice.head must be equalTo similarDice
     }
     
     /* . . 5
@@ -66,9 +66,9 @@ object DiceMatcherSpec extends SpecBase {
       
       val matcher = DiceMatcher(board)
       
-      matcher find groupOne.head mustEqual groupOne
-      matcher find groupTwo.head mustEqual groupTwo
-      matcher find separator.head mustEqual separator
+      matcher find groupOne.head must be equalTo groupOne
+      matcher find groupTwo.head must be equalTo groupTwo
+      matcher find separator.head must be equalTo separator
     }
     
     /* 6 . 6
@@ -78,8 +78,10 @@ object DiceMatcherSpec extends SpecBase {
       val isolated = sixOnTop(Set(Tile(0, 0), Tile(2, 0), Tile(1, 1),
                                   Tile(0, 2), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ isolated
-                                  
-      isolated foreach { d => DiceMatcher(board) find d mustEqual Map(d) }
+                   
+      isolated map (
+        d => DiceMatcher(board).find(d) must be equalTo Map(d)
+      ) reduceLeft (_ and _)
     }
   }
   
