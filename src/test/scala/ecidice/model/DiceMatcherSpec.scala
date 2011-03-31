@@ -79,9 +79,9 @@ object DiceMatcherSpec extends SpecBase {
                                   Tile(0, 2), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ isolated
                    
-      isolated map (
-        d => DiceMatcher(board).find(d) must be equalTo Map(d)
-      ) reduceLeft (_ and _)
+      isolated each { dice =>
+        DiceMatcher(board).find(dice) must be equalTo Map(dice)
+      }
     }
   }
   

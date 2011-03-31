@@ -76,14 +76,14 @@ extends SpecBase with ModelTestHelpers {
       Tile(2, 2)        ! Set(Forward, Left)            | {  
         
       (corner, allowed) => 
-        Direction.values map { dir =>
+        Direction.values each { dir =>
           val desc = "game after player moving " + dir + " from " + corner
           val before = game.spawnPlayer(corner)
           val after = before.move(Player(1), dir, now)
             
           if (allowed.contains(dir)) after aka desc must not be equalTo (before)
           else after aka desc must be equalTo before
-        } reduceLeft (_ and _)
+        }
       }
     }
     
@@ -96,14 +96,14 @@ extends SpecBase with ModelTestHelpers {
       Tile(2, 1)      ! Right                           | {
         
       (pos, disallowed) =>
-        Direction.values map { dir =>
+        Direction.values each { dir =>
           val desc = "game after player moving " + dir + " from " + pos
           val before = game.spawnPlayer(pos)
           val after = before.move(Player(1), dir, now)
             
           if (disallowed == dir) after aka desc must be equalTo before
           else after aka desc must not be equalTo (before)
-        } reduceLeft (_ and _)
+        }
       }
     }
     
