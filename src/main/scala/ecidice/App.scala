@@ -61,7 +61,7 @@ class App extends Application with Logging {
   override def start() {
     setSettings(prefs.settings)
     
-    if (JmeSystem.showSettingsDialog(settings)) {
+    if (JmeSystem.showSettingsDialog(settings, false)) {
       prefs.save()
       super.start()
     } else {
@@ -97,8 +97,10 @@ class App extends Application with Logging {
     fpsText.setLocalTranslation(0, fpsText.getLineHeight(), 0)
     fpsText.setText("")
     
-    fpsText.setColor(Black)
-    fpsText.getMaterial.getAdditionalRenderState.setBlendMode(Alpha);
+    val mat = new Material(assetManager, "Common/MatDefs/Misc/SolidColor.j3md")
+    mat.setColor("m_Color", Black)
+    mat.getAdditionalRenderState.setBlendMode(Alpha);
+    fpsText.setMaterial(mat)
     guiNode.attachChild(fpsText)
   }
   
