@@ -33,7 +33,7 @@ package ecidice
 package model
 package mode
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import Direction._
 import Transform._
 
@@ -43,7 +43,7 @@ import Transform._
  * @author Andreas Flierl
  */
 class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) 
-extends SpecBase with ModelTestHelpers {
+extends UnitSpec with ModelTestHelpers {
   
   "Any mode with player and dice movement" should {
     val center = Tile(1, 1)

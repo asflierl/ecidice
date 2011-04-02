@@ -33,14 +33,14 @@ package ecidice
 package model
 package time
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 
 /**
  * Informal specification of a timespan.
  * 
  * @author Andreas Flierl
  */
-object TimespanSpec extends SpecBase {  
+object TimespanSpec extends UnitSpec {  
   "A timespan" should {
     "calculate a correct end instant if its duration is 0" in {
       Timespan(Instant(42), Duration(0)).end must be equalTo Instant(42)

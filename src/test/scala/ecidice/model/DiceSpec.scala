@@ -32,12 +32,12 @@
 package ecidice
 package model
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import Transform._
 
 import org.specs2._
 
-object DiceSpec extends SpecBase {
+object DiceSpec extends UnitSpec {
   "A dice" should {
     val dice = Dice.default
     val all = Dice.allRotations.toSet

@@ -33,12 +33,12 @@ package ecidice
 package model
 package time
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 
 /**
  * Informal specification of an instant. 
  */
-object InstantSpec extends SpecBase {
+object InstantSpec extends UnitSpec {
   "An instant" should {
     "point to time zero by default" in {
       Instant().time must be equalTo 0d

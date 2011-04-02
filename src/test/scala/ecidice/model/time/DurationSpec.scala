@@ -33,12 +33,12 @@ package ecidice
 package model
 package time
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 
 /**
  * Informal specification of a duration. 
  */
-object DurationSpec extends SpecBase {
+object DurationSpec extends UnitSpec {
   "A duration" should {
     "take 0 seconds by default" in {
       Duration().seconds must be equalTo 0d

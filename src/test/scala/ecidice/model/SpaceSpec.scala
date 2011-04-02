@@ -32,7 +32,7 @@
 package ecidice
 package model
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import org.scalacheck._
 import Prop.forAll
 import Generators._
@@ -40,7 +40,7 @@ import Level._
 
 import org.specs2._
 
-object SpaceSpec extends SpecBase {
+object SpaceSpec extends UnitSpec {
   "A space on the game board" should {
     "be consistent in equivalence and ordering" in {
       check { 

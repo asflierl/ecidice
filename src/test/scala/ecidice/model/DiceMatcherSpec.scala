@@ -32,7 +32,7 @@
 package ecidice
 package model
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import Transform._
 
 import scala.collection.breakOut
@@ -40,7 +40,7 @@ import scala.collection.breakOut
 import org.specs2._
 import matcher._
 
-object DiceMatcherSpec extends SpecBase {
+object DiceMatcherSpec extends UnitSpec {
   "A dice matcher" should {
     
     /* 6 6 4

@@ -32,11 +32,11 @@
 package ecidice
 package util
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 
 import org.specs2._
 
-object HashCodeSpec extends SpecBase {
+object HashCodeSpec extends UnitSpec {
   "The hash code object" should {
     "return a default value if no parameters are given" in {
       HashCode() must be equalTo 42

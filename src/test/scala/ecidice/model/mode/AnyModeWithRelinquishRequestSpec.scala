@@ -33,7 +33,7 @@ package ecidice
 package model
 package mode
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 
 /**
  * Informal specification of a player relinquishing control of a dice.
@@ -41,7 +41,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) 
-extends SpecBase with ModelTestHelpers {
+extends UnitSpec with ModelTestHelpers {
   
   "Any mode that allows a player to relinquish control of a dice" should {
     

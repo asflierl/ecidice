@@ -32,10 +32,10 @@
 package ecidice
 package model
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import org.specs2._
 
-object BoardSpec extends SpecBase {
+object BoardSpec extends UnitSpec {
   val board = Board.sized(5, 3) 
     
   "The game board" should {

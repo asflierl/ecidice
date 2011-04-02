@@ -32,14 +32,14 @@
 package ecidice
 package model
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import org.scalacheck._
 import Prop.forAll
 import Generators._
 
 import org.specs2._
 
-object TileSpec extends SpecBase {
+object TileSpec extends UnitSpec {
   "A tile" should {
     "be consistent in equivalence and ordering" in {
       check {

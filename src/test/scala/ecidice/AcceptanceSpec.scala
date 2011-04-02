@@ -35,20 +35,8 @@ import org.specs2._
 import org.specs2.mock._
 import org.specs2.matcher._
 
-trait SpecBase extends mutable.Specification with DataTables with Mockito with ScalaCheck {
-  val floatDelta = 1E-6f
-  val delta = 1E-12d
-  
-  implicit def combineMatchResults[A](things: Iterable[A]): MatchResultCombination[A] = 
-    MatchResultCombination(things)
-  
-  case class MatchResultCombination[A](things: Iterable[A]) {
-    def each[B](matcher: A => MatchResult[B]) = things map matcher reduceLeft (_ and _)
-  }
-  
-  implicit def stringToOneColumnHeader(name: String): OneColumnHeader = OneColumnHeader(name)
-  
-  case class OneColumnHeader(name: String) {
-    def ||>[A](xs: Iterable[A]) = Table1(List(name), xs.toList.map(toDataRow), true)
-  } 
-}
+trait AcceptanceSpec extends Specification 
+  with DataTables 
+  with Mockito 
+  with ScalaCheck 
+  with SpecHelpers

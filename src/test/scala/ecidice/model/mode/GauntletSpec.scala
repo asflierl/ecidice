@@ -33,7 +33,7 @@ package ecidice
 package model
 package mode
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 import time._
 
 import org.specs2._
@@ -43,7 +43,7 @@ import org.specs2._
  * 
  * @author Andreas Flierl
  */
-object GauntletSpec extends SpecBase with ModelTestHelpers {
+object GauntletSpec extends UnitSpec with ModelTestHelpers {
   implicit val game = Gauntlet.create(3)
   
   "A gauntlet game should" ^

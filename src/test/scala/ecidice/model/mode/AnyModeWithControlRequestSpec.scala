@@ -33,7 +33,7 @@ package ecidice
 package model
 package mode
 
-import ecidice.SpecBase
+import ecidice.UnitSpec
 
 /**
  * Informal specification of a player's request to control a dice.
@@ -41,7 +41,7 @@ import ecidice.SpecBase
  * @author Andreas Flierl
  */
 class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) 
-extends SpecBase with ModelTestHelpers {
+extends UnitSpec with ModelTestHelpers {
   
   "Any mode that allows a player to control a dice" should {
 
