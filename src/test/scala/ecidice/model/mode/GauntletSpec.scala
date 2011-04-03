@@ -43,13 +43,13 @@ import org.specs2._
  * 
  * @author Andreas Flierl
  */
-object GauntletSpec extends UnitSpec with ModelTestHelpers {
+object GauntletSpec extends AcceptanceSpec with ModelTestHelpers { def is = 
+  "A gauntlet game is specified by" ^
+    AnyModeSpec() ^
+    AnyModeWithControlRequestSpec() ^
+    AnyModeWithRelinquishRequestSpec() ^
+    AnyModeWithSpawningOfDiceSpec() ^
+    AnyModeWithMovementSpec()
+    
   implicit val game = Gauntlet.create(3)
-  
-  "A gauntlet game should" ^
-    include(anyMode)
-    include(anyModeWithControlRequest)
-    include(anyModeWithRelinquishRequest)
-    include(anyModeWithSpawningOfDice)
-    include(anyModeWithMovement)
 }

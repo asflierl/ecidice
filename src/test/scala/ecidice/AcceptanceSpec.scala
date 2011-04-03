@@ -32,11 +32,15 @@
 package ecidice
 
 import org.specs2._
-import org.specs2.mock._
-import org.specs2.matcher._
+import mock._
+import matcher._
+import specification._
 
 trait AcceptanceSpec extends Specification 
-  with DataTables 
-  with Mockito 
-  with ScalaCheck 
-  with SpecHelpers
+                        with DataTables 
+                        with Mockito
+                        with ScalaCheck 
+                        with SpecHelpers {
+  
+  implicit def autoInclude(s: SpecificationStructure): this.FragmentsFragment = include(s)
+}

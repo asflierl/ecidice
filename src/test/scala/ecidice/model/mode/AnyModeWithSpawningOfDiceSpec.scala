@@ -83,3 +83,7 @@ extends UnitSpec with ModelTestHelpers {
     //TODO specify interaction with movement
   }
 }
+object AnyModeWithSpawningOfDiceSpec {
+  def apply[A <: Mode[A] with SpawningOfDice[A]]()(implicit game: A) = 
+    new AnyModeWithSpawningOfDiceSpec(game)
+}

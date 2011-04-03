@@ -139,3 +139,8 @@ extends UnitSpec with ModelTestHelpers {
     //TODO specifiy movement cases
   }
 }
+
+object AnyModeWithControlRequestSpec {
+  def apply[A <: Mode[A] with ControlRequest[A]]()(implicit game: A) = 
+    new AnyModeWithControlRequestSpec(game)
+}

@@ -39,20 +39,6 @@ import scala.collection.breakOut
 trait ModelTestHelpers {
   implicit def pimpMode[A <: Mode[A]](m: A) = new ModeTestHelpers(m)
   
-  def anyMode[A <: Mode[A]](implicit game: A) = new AnyModeSpec(game)
-  
-  def anyModeWithControlRequest[A <: Mode[A] with ControlRequest[A]](implicit game: A) = 
-    new AnyModeWithControlRequestSpec(game)
-  
-  def anyModeWithMovement[A <: Mode[A] with Movement[A]](implicit game: A) = 
-    new AnyModeWithMovementSpec(game)
-  
-  def anyModeWithRelinquishRequest[A <: Mode[A] with RelinquishRequest[A]](implicit game: A) = 
-    new AnyModeWithRelinquishRequestSpec(game)
-  
-  def anyModeWithSpawningOfDice[A <: Mode[A] with SpawningOfDice[A]](implicit game: A) = 
-    new AnyModeWithSpawningOfDiceSpec(game)
-  
   val now = Instant()
 }
 

@@ -33,19 +33,19 @@ package ecidice
 
 import org.specs2._
 
-class EcidiceSpec extends SpecificationWithJUnit { def is =
-  "ecidice" ^
-    include(model.BoardSpec) ^
-    include(model.DiceSpec) ^
-    include(model.DiceMatcherSpec) ^
-    include(model.SpaceSpec) ^
-    include(model.TileSpec) ^
+class EcidiceSpec extends SpecificationWithJUnit with AcceptanceSpec { def is =
+  "ecidice is specified by" ^
+    model.BoardSpec ^
+    model.DiceSpec ^
+    model.DiceMatcherSpec ^
+    model.SpaceSpec ^
+    model.TileSpec ^
 //
-    include(model.mode.GauntletSpec) ^
+    model.mode.GauntletSpec ^
 //    
-    include(model.time.DurationSpec) ^
-    include(model.time.TimespanSpec) ^
-    include(model.time.InstantSpec) ^
+    model.time.DurationSpec ^
+    model.time.TimespanSpec ^
+    model.time.InstantSpec ^
 //    
-    include(util.HashCodeSpec)
+    util.HashCodeSpec
 }

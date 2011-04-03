@@ -278,3 +278,7 @@ extends UnitSpec with ModelTestHelpers {
   
   def threeOnTop = Dice.default.transform(RotateForward)
 }
+object AnyModeWithMovementSpec {
+  def apply[A <: Mode[A] with Movement[A]]()(implicit game: A) = 
+    new AnyModeWithMovementSpec(game)
+}

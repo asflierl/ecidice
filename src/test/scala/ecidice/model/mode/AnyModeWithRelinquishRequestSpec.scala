@@ -58,3 +58,7 @@ extends UnitSpec with ModelTestHelpers {
     //TODO specifiy movement cases
   }
 }
+object AnyModeWithRelinquishRequestSpec {
+  def apply[A <: Mode[A] with RelinquishRequest[A]]()(implicit game: A) = 
+    new AnyModeWithRelinquishRequestSpec(game)
+}
