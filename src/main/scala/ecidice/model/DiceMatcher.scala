@@ -65,10 +65,12 @@ class DiceMatcher(board: Board) {
     @tailrec
     def search(stack: List[(Space, Dice)], incl: Set[Tile], group: Map[Space, Dice]): Map[Space, Dice] = stack match {
       case Nil => group
+      
       case (p @ (s, Dice(`top`, _, _))) :: ps => {
         val next = surroundingsOf(s, incl) 
         search(next ++ ps, incl -- tilesOf(next), group + p)
       }
+      
       case p :: ps => search(ps, incl, group)
     }
     
