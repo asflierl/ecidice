@@ -39,9 +39,7 @@ case class Board(
 ) {
   def apply(space: Space) = spaces(space)
   
-  def contains(tile: Tile): Boolean = 
-    (tile.column >= 0 && tile.column < columns) && 
-    (tile.row >= 0 && tile.row < rows)
+  def contains(tile: Tile): Boolean = spaces.keySet.contains(tile.floor)
     
   def +(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
   def ++(contents: Map[Space, Contents]) = copy(spaces = spaces ++ contents)

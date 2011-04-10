@@ -55,6 +55,13 @@ object DiceMatcherSpec extends UnitSpec {
       DiceMatcher(board) find similarDice.head must be equalTo similarDice
     }
     
+    "be able to search a larger board" in {
+      val dice = sixOnTop(Board.sized(40, 40).spaces.keySet.map(_.tile))
+      val board = Board.sized(40, 40) ++ dice
+      
+      DiceMatcher(board) find dice.head must be equalTo dice
+    }
+    
     /* . . 5
      * . 4 5
      * 6 6 . */

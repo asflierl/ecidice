@@ -8,7 +8,7 @@ class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclips
 
   val joda = "joda-time" % "joda-time" % "1.6.2"
   
-  val specs2 = "org.specs2" %% "specs2" % "1.1-SNAPSHOT" % "test"
+  val specs2 = "org.specs2" %% "specs2" % "1.2-SNAPSHOT" % "test"
   val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test"
   val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
 

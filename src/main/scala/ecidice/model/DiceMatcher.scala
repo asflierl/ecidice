@@ -34,7 +34,8 @@ package model
 
 import Level._
 
-import scala.collection.breakOut
+import collection.breakOut
+import annotation.tailrec
 
 /**
  * Finds and returns all dice (including `startDice`) that show the same 
@@ -59,32 +60,33 @@ import scala.collection.breakOut
 class DiceMatcher(board: Board) {
   def find(startAt: (Space, Dice)) = {
     val (startSpace, startDice) = startAt
+    val top = startDice.top
     
-    def searchSurroundingsOf(s: Space, group: Map[Space, Dice]): Map[Space, Dice] =
-      Direction.values
-               .map(diceInDirection(s, _, Floor))
-               .collect { case Some(diceThere) => diceThere }
-               .foldLeft(group)((accu, next) => matchTopFaces(next, accu))
-    
-    def diceInDirection(space: Space, dir: Direction.Value, level: Level.Value) = {
-      val tile = space.tile.look(dir)
-      
-      if (! board.contains(tile)) None
-      else board(tile.floor) match {
-        case d : Dice => Some(tile.floor -> d)
-        case _ => None
+    @tailrec
+    def search(stack: List[(Space, Dice)], incl: Set[Tile], group: Map[Space, Dice]): Map[Space, Dice] = stack match {
+      case Nil => group
+      case (p @ (s, Dice(`top`, _, _))) :: ps => {
+        val next = surroundingsOf(s, incl) 
+        search(next ++ ps, incl -- tilesOf(next), group + p)
       }
+      case p :: ps => search(ps, incl, group)
     }
     
-    def matchTopFaces(pair: (Space, Dice), group: Map[Space, Dice]) = {
-      val (space, dice) = pair
-      
-      if (dice.top == startDice.top && ! group.contains(space))
-        searchSurroundingsOf(space, group + (space -> dice))
-      else group
+    def tilesOf(spaces: Iterable[(Space, Contents)]) = spaces map { case (s, d) => s.tile }
+    
+    def surroundingsOf(s: Space, incl: Set[Tile]): List[(Space, Dice)] =
+      Direction.values
+               .toList
+               .map(s.tile.look)
+               .filter(incl.contains)
+               .flatMap(t => diceInDirection(t.floor))
+    
+    def diceInDirection(space: Space) = board(space) match {
+      case d : Dice => Some(space -> d)
+      case _ => None
     }
     
-    searchSurroundingsOf(startSpace, Map(startAt))
+    search(List(startAt), tilesOf(board.spaces).toSet - startSpace.tile, Map())
   }
 }
 object DiceMatcher {
