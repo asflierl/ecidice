@@ -63,24 +63,25 @@ class DiceMatcher(board: Board) {
     val top = startDice.top
     
     @tailrec
-    def search(stack: List[(Space, Dice)], incl: Set[Tile], group: Map[Space, Dice]): Map[Space, Dice] = stack match {
+    def search(stack: List[(Space, Dice)], included: Set[Tile], group: Map[Space, Dice]): Map[Space, Dice] = stack match {
       case Nil => group
       
-      case (p @ (s, Dice(`top`, _, _))) :: ps => {
-        val next = surroundingsOf(s, incl) 
-        search(next ++ ps, incl -- tilesOf(next), group + p)
+      case (topOfStack @ (space, Dice(`top`, _, _))) :: restOfStack => {
+        val next = surroundingsOf(space, included) 
+        search(next ++ restOfStack, included -- tilesOf(next), group + topOfStack)
       }
       
-      case p :: ps => search(ps, incl, group)
+      case x :: xs => search(xs, included, group)
     }
     
-    def tilesOf(spaces: Iterable[(Space, Contents)]) = spaces map { case (s, d) => s.tile }
+    def tilesOf(spaces: Iterable[(Space, Contents)]) = spaces map { case (space, dice) => space.tile }
     
-    def surroundingsOf(s: Space, incl: Set[Tile]): List[(Space, Dice)] =
+    def surroundingsOf(space: Space, included: Set[Tile]): List[(Space, Dice)] =
       Direction.values
+               .view
+               .map(space.tile.look)
+               .filter(included.contains)
                .toList
-               .map(s.tile.look)
-               .filter(incl.contains)
                .flatMap(t => diceInDirection(t.floor))
     
     def diceInDirection(space: Space) = board(space) match {
