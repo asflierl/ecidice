@@ -76,7 +76,7 @@ class DiceMatcher(board: Board) {
     
     def tilesOf(spaces: Iterable[(Space, Contents)]) = spaces map { case (space, dice) => space.tile }
     
-    def surroundingsOf(space: Space, included: Set[Tile]): List[(Space, Dice)] =
+    def surroundingsOf(space: Space, included: Set[Tile]) =
       Direction.values
                .view
                .map(space.tile.look)
