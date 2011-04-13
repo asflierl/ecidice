@@ -85,9 +85,8 @@ final class DiceMatcher(board: Board) {
                .filter(included.contains)
                .map(_.floor)
                .map(space => (space, board(space)))
-               .collect { case s: (Space, Dice) => s }(breakOut)
-               
-    
+               .collect { case (s, d: Dice) => (s, d) }
+               .toList
 }
 object DiceMatcher {
   def apply(board: Board) = new DiceMatcher(board)
