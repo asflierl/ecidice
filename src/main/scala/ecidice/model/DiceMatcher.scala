@@ -33,6 +33,7 @@ package ecidice
 package model
 
 import Level._
+import Board.spacesToTiles
 
 import collection.breakOut
 import annotation.tailrec
@@ -57,7 +58,7 @@ import annotation.tailrec
  * from BY, it would only return BY. Starting from BZ, it would return AZ 
  * and BZ.
  */
-class DiceMatcher(board: Board) {
+final class DiceMatcher(board: Board) {
   def find(startAt: (Space, Dice)) = {
     val (startSpace, startDice) = startAt
     val top = startDice.top
@@ -68,15 +69,16 @@ class DiceMatcher(board: Board) {
       
       case (topOfStack @ (space, Dice(`top`, _, _))) :: restOfStack => {
         val next = surroundingsOf(space, included) 
-        search(next ++ restOfStack, included -- tilesOf(next), group + topOfStack)
+        search(next ++ restOfStack, included -- (next map spacesToTiles), group + topOfStack)
       }
       
       case x :: xs => search(xs, included, group)
     }
     
-    def tilesOf(spaces: Iterable[(Space, Contents)]) = spaces map { case (space, dice) => space.tile }
-    
-    def surroundingsOf(space: Space, included: Set[Tile]) =
+    search(List(startAt), board.tiles - startSpace.tile, Map())
+  }
+  
+  def surroundingsOf(space: Space, included: Set[Tile]) =
       Direction.values
                .view
                .map(space.tile.look)
@@ -84,12 +86,9 @@ class DiceMatcher(board: Board) {
                .toList
                .flatMap(t => diceInDirection(t.floor))
     
-    def diceInDirection(space: Space) = board(space) match {
-      case d : Dice => Some(space -> d)
-      case _ => None
-    }
-    
-    search(List(startAt), tilesOf(board.spaces).toSet - startSpace.tile, Map())
+  def diceInDirection(space: Space) = board(space) match {
+    case d : Dice => Some(space -> d)
+    case _ => None
   }
 }
 object DiceMatcher {

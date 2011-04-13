@@ -51,8 +51,14 @@ object BoardSpec extends UnitSpec {
       Tile(5, 3) ! false           | { 
         
       (tile, result) =>
-        board.contains(tile) must beEqualTo(result)
+        board.contains(tile) must be equalTo result
       }
+    }
+    
+    "know its tiles" in {
+      val allTiles = (for (x <- 0 to 4; y <- 0 to 2) yield Tile(x, y)) toSet
+      
+      board.tiles must be equalTo allTiles
     }
   }
 }

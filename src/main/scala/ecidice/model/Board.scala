@@ -32,6 +32,8 @@
 package ecidice
 package model
 
+import collection.breakOut
+
 case class Board(
   columns: Int,
   rows: Int,
@@ -39,10 +41,12 @@ case class Board(
 ) {
   def apply(space: Space) = spaces(space)
   
-  def contains(tile: Tile): Boolean = spaces.keySet.contains(tile.floor)
+  def contains(tile: Tile): Boolean = spaces.contains(tile.floor)
     
   def +(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
   def ++(contents: Map[Space, Contents]) = copy(spaces = spaces ++ contents)
+  
+  lazy val tiles: Set[Tile] = spaces.map(Board.spacesToTiles)(breakOut) 
 }
 object Board {
   def sized(columns: Int, rows: Int): Board =
@@ -57,4 +61,6 @@ object Board {
       y <- 0 until rows;
       l <- Level.values
     ) yield Space(Tile(x, y), l)
+  
+  val spacesToTiles = (t: (Space, Contents)) => t._1.tile
 }
