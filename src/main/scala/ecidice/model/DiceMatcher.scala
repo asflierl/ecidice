@@ -78,18 +78,16 @@ final class DiceMatcher(board: Board) {
     search(List(startAt), board.tiles - startSpace.tile, Map())
   }
   
-  def surroundingsOf(space: Space, included: Set[Tile]) =
+  def surroundingsOf(space: Space, included: Set[Tile]): List[(Space, Dice)] =
       Direction.values
                .view
                .map(space.tile.look)
                .filter(included.contains)
-               .toList
-               .flatMap(t => diceInDirection(t.floor))
+               .map(_.floor)
+               .map(space => (space, board(space)))
+               .collect { case s: (Space, Dice) => s }(breakOut)
+               
     
-  def diceInDirection(space: Space) = board(space) match {
-    case d : Dice => Some(space -> d)
-    case _ => None
-  }
 }
 object DiceMatcher {
   def apply(board: Board) = new DiceMatcher(board)
