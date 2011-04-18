@@ -86,9 +86,9 @@ object DiceMatcherSpec extends UnitSpec {
                                   Tile(0, 2), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ isolated
                    
-      isolated each { dice =>
+      ((dice: (Space, Dice)) =>
         DiceMatcher(board).find(dice) must be equalTo Map(dice)
-      }
+      ) foreach isolated.toSeq
     }
   }
   

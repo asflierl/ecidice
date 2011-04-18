@@ -36,6 +36,7 @@ package mode
 import ecidice.UnitSpec
 import Direction._
 import Transform._
+import org.specs2.matcher.Matcher
 
 /**
  * Informal specification of player and dice movement.
@@ -76,14 +77,9 @@ extends UnitSpec with ModelTestHelpers {
       Tile(2, 2)        ! Set(Forward, Left)            | {  
         
       (corner, allowed) => 
-        Direction.values each { dir =>
-          val desc = "game after player moving " + dir + " from " + corner
-          val before = game.spawnPlayer(corner)
-          val after = before.move(Player(1), dir, now)
-            
-          if (allowed.contains(dir)) after aka desc must not be equalTo (before)
-          else after aka desc must be equalTo before
-        }
+        val initial = game.spawnPlayer(corner)
+        
+        ((dir: Direction.Value) => dir must beAllowedFrom(initial, corner).iff(allowed contains dir)) foreach Direction.values.toSeq
       }
     }
     
@@ -96,19 +92,14 @@ extends UnitSpec with ModelTestHelpers {
       Tile(2, 1)      ! Right                           | {
         
       (pos, disallowed) =>
-        Direction.values each { dir =>
-          val desc = "game after player moving " + dir + " from " + pos
-          val before = game.spawnPlayer(pos)
-          val after = before.move(Player(1), dir, now)
-            
-          if (disallowed == dir) after aka desc must be equalTo before
-          else after aka desc must not be equalTo (before)
-        }
+        val initial = game.spawnPlayer(pos)
+        
+        ((dir: Direction.Value) => dir must beAllowedFrom(initial, pos).iff(dir != disallowed)) foreach Direction.values.toSeq
       }
     }
     
     "allow a player to move in any direction with a floor dice from the center" in {
-      "direction" ||> Direction.values | { somewhere =>
+      ((somewhere: Direction.Value) => {
         val origin = center.floor
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
@@ -119,11 +110,11 @@ extends UnitSpec with ModelTestHelpers {
                            .move(Player(1), somewhere, now)
         
         check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-      }
+      }) foreach Direction.values.toSeq
     }
     
     "allow a player to move in any direction with an upper dice from the center" in {
-      "direction" ||> Direction.values | { somewhere =>
+      ((somewhere: Direction.Value) => {
         val origin = center.raised
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
@@ -135,7 +126,7 @@ extends UnitSpec with ModelTestHelpers {
                            .move(Player(1), somewhere, now)
         
         check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-      }
+      }) foreach Direction.values.toSeq
     }
     
     "allow a player to move with a dice from the floor onto another dice" in {
@@ -275,6 +266,10 @@ extends UnitSpec with ModelTestHelpers {
       testGame.board(move.destination) aka "contents of destination" must be equalTo move
     )
   }
+  
+  def beAllowedFrom(initial: A, t: Tile): Matcher[Direction.Value] = 
+    ((dir: Direction.Value) => initial.move(Player(1), dir, now) != initial, 
+     (dir: Direction.Value) => dir + " is not allowed from " + t)
   
   def threeOnTop = Dice.default.transform(RotateForward)
 }

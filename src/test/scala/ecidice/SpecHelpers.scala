@@ -36,17 +36,4 @@ import org.specs2.matcher._
 trait SpecHelpers { this: DataTables =>
   val floatDelta = 1E-6f
   val delta = 1E-12d
-  
-  implicit def combineMatchResults[A](things: Iterable[A]): MatchResultCombination[A] = 
-    MatchResultCombination(things)
-  
-  case class MatchResultCombination[A](things: Iterable[A]) {
-    def each[B](matcher: A => MatchResult[B]) = things map matcher reduceLeft (_ and _)
-  }
-  
-  implicit def stringToOneColumnHeader(name: String): OneColumnHeader = OneColumnHeader(name)
-  
-  case class OneColumnHeader(name: String) {
-    def ||>[A](xs: Iterable[A]) = Table1(List(name), xs.toList.map(toDataRow), true)
-  } 
 }
