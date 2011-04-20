@@ -34,18 +34,21 @@ package ecidice
 import org.specs2._
 
 class EcidiceSpec extends SpecificationWithJUnit with AcceptanceSpec { def is =
-  "ecidice is specified by" ^
-    model.BoardSpec ^
-    model.DiceSpec ^
-    model.DiceMatcherSpec ^
-    model.SpaceSpec ^
-    model.TileSpec ^
-//
-    model.mode.GauntletSpec ^
-//    
-    model.time.DurationSpec ^
-    model.time.TimespanSpec ^
-    model.time.InstantSpec ^
-//    
-    util.HashCodeSpec
+  "ecidice".title ^
+p^
+    "... consists of" ^
+      "the game board" ~ model.BoardSpec ^
+      "dice" ~ model.DiceSpec ^
+      "the dice matcher" ~ model.DiceMatcherSpec ^
+      "spaces on the game board" ~ model.SpaceSpec ^
+      "the tiles of the board" ~ model.TileSpec ^
+p^
+      "the game mode 'Gauntlet'" ~ model.mode.GauntletSpec ^
+p^    
+      "durations" ~ model.time.DurationSpec ^
+      "timespans" ~ model.time.TimespanSpec ^
+      "instants" ~ model.time.InstantSpec ^
+p^
+      "a hash code utility" ~ util.HashCodeSpec ^
+end
 }
