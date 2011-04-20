@@ -37,6 +37,7 @@ class EcidiceSpec extends SpecificationWithJUnit with AcceptanceSpec { def is =
   "ecidice".title ^
 p^
     "... consists of" ^
+p^
       "the game board" ~ model.BoardSpec ^
       "dice" ~ model.DiceSpec ^
       "the dice matcher" ~ model.DiceMatcherSpec ^
@@ -49,6 +50,5 @@ p^
       "timespans" ~ model.time.TimespanSpec ^
       "instants" ~ model.time.InstantSpec ^
 p^
-      "a hash code utility" ~ util.HashCodeSpec ^
-end
+      "a hash code utility" ~ util.HashCodeSpec
 }
