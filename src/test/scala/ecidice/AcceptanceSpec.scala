@@ -40,7 +40,4 @@ trait AcceptanceSpec extends Specification
                         with DataTables 
                         with Mockito
                         with ScalaCheck 
-                        with SpecHelpers {
-  
-  implicit def autoInclude(s: SpecificationStructure): this.FragmentsFragment = include(s)
-}
+                        with SpecHelpers
