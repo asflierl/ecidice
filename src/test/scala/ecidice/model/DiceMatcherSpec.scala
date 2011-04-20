@@ -88,7 +88,7 @@ object DiceMatcherSpec extends UnitSpec {
                    
       ((dice: (Space, Dice)) =>
         DiceMatcher(board).find(dice) must be equalTo Map(dice)
-      ) foreach isolated.toSeq
+      ) foreach isolated
     }
   }
   

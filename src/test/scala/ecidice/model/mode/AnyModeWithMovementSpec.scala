@@ -79,7 +79,7 @@ extends UnitSpec with ModelTestHelpers {
       (corner, allowed) => 
         val initial = game.spawnPlayer(corner)
         
-        ((dir: Direction.Value) => dir must beAllowedFrom(initial, corner).iff(allowed contains dir)) foreach Direction.values.toSeq
+        ((dir: Direction.Value) => dir must beAllowedFrom(initial, corner).iff(allowed contains dir)) foreach Direction.values
       }
     }
     
@@ -94,7 +94,7 @@ extends UnitSpec with ModelTestHelpers {
       (pos, disallowed) =>
         val initial = game.spawnPlayer(pos)
         
-        ((dir: Direction.Value) => dir must beAllowedFrom(initial, pos).iff(dir != disallowed)) foreach Direction.values.toSeq
+        ((dir: Direction.Value) => dir must beAllowedFrom(initial, pos).iff(dir != disallowed)) foreach Direction.values
       }
     }
     
@@ -110,7 +110,7 @@ extends UnitSpec with ModelTestHelpers {
                            .move(Player(1), somewhere, now)
         
         check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-      }) foreach Direction.values.toSeq
+      }) foreach Direction.values
     }
     
     "allow a player to move in any direction with an upper dice from the center" in {
@@ -126,7 +126,7 @@ extends UnitSpec with ModelTestHelpers {
                            .move(Player(1), somewhere, now)
         
         check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
-      }) foreach Direction.values.toSeq
+      }) foreach Direction.values
     }
     
     "allow a player to move with a dice from the floor onto another dice" in {
