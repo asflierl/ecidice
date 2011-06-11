@@ -8,7 +8,7 @@ class EcidiceProject(info: ProjectInfo) extends DefaultProject(info) with Eclips
 
   val joda = "joda-time" % "joda-time" % "1.6.2"
   
-  val specs2 = "org.specs2" %% "specs2" % "1.2-SNAPSHOT" % "test"
+  val specs2 = "org.specs2" %% "specs2" % "1.3-SNAPSHOT" % "test"
 
   val jme = new URL("http://jmonkeyengine.com/nightly/jME3_2011-03-28.zip")
   
