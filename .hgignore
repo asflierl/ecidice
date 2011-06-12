@@ -8,11 +8,7 @@ syntax: regexp
 ^\.scala_dependencies$
 \.DS_Store$
 ^lib/
-^lib_managed/
 ^project/boot/
-^project/build/target/
-^project/plugins/target/
-^project/plugins/lib_managed/
-^project/plugins/src_managed/
-^project/plugins/project
+^project/target/
 ^liblwjgl\.jnilib$
+^libbulletjme\.jnilib$
