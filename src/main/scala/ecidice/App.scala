@@ -86,8 +86,8 @@ class App extends Application with Logging {
     
     val b = new Box(ZERO, 1, 1, 1)
     val geom = new Geometry("Box", b)
-    val mat = new Material(assetManager, "Common/MatDefs/Misc/SolidColor.j3md")
-    mat.setColor("m_Color", White)
+    val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
+    mat.setColor("Color", White)
     geom.setMaterial(mat)
     rootNode.attachChild(geom)
   }
@@ -97,8 +97,8 @@ class App extends Application with Logging {
     fpsText.setLocalTranslation(0, fpsText.getLineHeight(), 0)
     fpsText.setText("")
     
-    val mat = new Material(assetManager, "Common/MatDefs/Misc/SolidColor.j3md")
-    mat.setColor("m_Color", Black)
+    val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
+    mat.setColor("Color", Black)
     mat.getAdditionalRenderState.setBlendMode(Alpha);
     fpsText.setMaterial(mat)
     guiNode.attachChild(fpsText)
@@ -131,5 +131,10 @@ class App extends Application with Logging {
     renderManager.render(tpf)
     
     // custom render things here
+  }
+  
+  override def handleError(message: String, thrown: Throwable): Unit = {
+    logSevere(message, thrown)
+    System exit 1
   }
 }

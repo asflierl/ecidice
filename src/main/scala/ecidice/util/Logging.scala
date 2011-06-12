@@ -40,6 +40,8 @@ import java.util.logging.{ ConsoleHandler,
                            LogRecord }
 import java.util.logging.Level._
 import org.joda.time.DateTime
+import java.io.StringWriter
+import java.io.PrintWriter
 
 /**
  * Simple and thin wrapper around java.util.logging to mix logging support
@@ -88,14 +90,23 @@ private object Logger {
 private object ShortMessageFormatter extends Formatter {
   def format(r: LogRecord): String = {
     val msg = java.text.MessageFormat.format(r.getMessage, r.getParameters:_*)
-    val className = compress(r.getSourceClassName)
+    val className = compress(r.getLoggerName)
     val time = new DateTime(r.getMillis)
     
     val b = new StringBuilder
     b append time append " "
-    b append r.getLevel append " " append className append "#"
-    b append r.getSourceMethodName append ": " append msg append '\n'
-    b toString
+    b append r.getLevel append " " append className 
+    b append ": " append msg append '\n'
+    
+    val stringWriter = new StringWriter
+    
+    if (r.getThrown != null) {
+      val printWriter = new PrintWriter(stringWriter)
+      r.getThrown.printStackTrace(printWriter)
+      printWriter.flush
+    }
+    
+    b.toString + stringWriter.toString
   }
   
   private def compress(name: String) = pattern.matcher(name).replaceAll("$1.")

@@ -32,20 +32,21 @@
 package ecidice
 
 import ecidice.util.Logging
+import com.jme3.app.Application
 
 object Main extends Logging {
   def main(args: Array[String]): Unit = {
     Logging writeTo Logging.console
     Logging showWarningsAndHigher()
     
-    Thread setDefaultUncaughtExceptionHandler Terminator
-    new App() start()
+    val app = new App
+    Thread setDefaultUncaughtExceptionHandler new ExceptionProxy(app)
+    app start()
   }
   
-  private object Terminator extends Thread.UncaughtExceptionHandler {
+  private class ExceptionProxy(app: Application) extends Thread.UncaughtExceptionHandler {
     def uncaughtException(thread: Thread, thrown: Throwable): Unit = {
-      logSevere("unhandled exception in thread " + thread, thrown)
-      System exit 1
+      app.handleError("unhandled exception in thread " + thread, thrown)
     }
   }
 }
