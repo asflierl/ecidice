@@ -88,25 +88,23 @@ private object Logger {
 }
 
 private object ShortMessageFormatter extends Formatter {
-  def format(r: LogRecord): String = {
-    val msg = java.text.MessageFormat.format(r.getMessage, r.getParameters:_*)
-    val className = compress(r.getLoggerName)
-    val time = new DateTime(r.getMillis)
+  def format(record: LogRecord): String = {
+    val msg = java.text.MessageFormat.format(record.getMessage, record.getParameters:_*)
+    val className = compress(record.getLoggerName)
+    val time = new DateTime(record.getMillis)
     
-    val b = new StringBuilder
-    b append time append " "
-    b append r.getLevel append " " append className 
-    b append ": " append msg append '\n'
-    
-    val stringWriter = new StringWriter
-    
-    if (r.getThrown != null) {
+    val builder = new StringBuilder
+    builder append time append " "
+    builder append record.getLevel append " " append className 
+    builder append ": " append msg append '\n'
+      
+    if (record.getThrown != null) {
+      val stringWriter = new StringWriter
       val printWriter = new PrintWriter(stringWriter)
-      r.getThrown.printStackTrace(printWriter)
-      printWriter.flush
-    }
-    
-    b.toString + stringWriter.toString
+      record.getThrown printStackTrace printWriter
+      printWriter flush()
+      builder.toString + stringWriter.toString
+    } else builder.toString
   }
   
   private def compress(name: String) = pattern.matcher(name).replaceAll("$1.")
