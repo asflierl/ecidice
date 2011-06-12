@@ -43,10 +43,10 @@ import matcher._
 object DiceMatcherSpec extends UnitSpec {
   "A dice matcher" should {
     
-    /* 6 6 4
-     * 6 4 6
-     * 6 6 6 */
-    "correctly find a group of matching dice" in {
+    """correctly find a group of matching dice on this 3 x 3 board:
+       6 6 4
+       6 4 6
+       6 6 6 """ in {
       val similarDice = sixOnTop(Set(Tile(0,0), Tile(1,0), Tile(2,0), Tile(0,1),
                                      Tile(2,1), Tile(0,2), Tile(1,2)))
       val separators = fourOnTop(Set(Tile(1, 1), Tile(2, 2)))
@@ -62,10 +62,10 @@ object DiceMatcherSpec extends UnitSpec {
       DiceMatcher(board) find dice.head must be equalTo dice
     }
     
-    /* . . 5
-     * . 4 5
-     * 6 6 . */
-    "correctly find only one of two (separated) groups of matching dice" in {
+    """correctly find only one of two (separated) groups of matching dice on this 3 x 3 board:
+       . . 5
+       . 4 5 
+       6 6 . """ in {
       val groupOne = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
       val groupTwo = fiveOnTop(Set(Tile(2, 2), Tile(2, 1)))
       val separator = fourOnTop(Set(Tile(1, 1)))
@@ -78,10 +78,10 @@ object DiceMatcherSpec extends UnitSpec {
       matcher find separator.head must be equalTo separator
     }
     
-    /* 6 . 6
-     * . 6 .
-     * 6 . 6 */
-    "correctly find no matches of isolated dice" in {
+    """correctly find no matches of isolated dice on this 3 x 3 board:
+       6 . 6 
+       . 6 .
+       6 . 6 """ in {
       val isolated = sixOnTop(Set(Tile(0, 0), Tile(2, 0), Tile(1, 1),
                                   Tile(0, 2), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ isolated
