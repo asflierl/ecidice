@@ -32,11 +32,14 @@
 package ecidice
 
 import org.specs2._
+import org.junit.runner._
+import runner._
 
-class EcidiceSpec extends SpecificationWithJUnit with AcceptanceSpec { def is =
+@RunWith(classOf[JUnitRunner])
+class EcidiceSpec extends AcceptanceSpec { def is =
   "ecidice".title ^
 p^
-    "... consists of" ^
+    "ecidice consists of" ^
 p^
       "the game board" ~ model.BoardSpec ^
       "dice" ~ model.DiceSpec ^

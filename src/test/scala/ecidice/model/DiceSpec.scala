@@ -40,7 +40,6 @@ import org.specs2._
 object DiceSpec extends UnitSpec {
   "A dice" should {
     val dice = Dice.default
-    val all = Dice.allRotations.toSet
     
     "initially look like this: top = 6, right = 5, front = 4" in {
       dice.top must be equalTo 6 
@@ -48,7 +47,7 @@ object DiceSpec extends UnitSpec {
       dice.front must be equalTo 4
     }
     
-    "initially be consistent" in {
+    "initially be consistent " in {
       dice.top must be equalTo (7 - dice.bottom)
       dice.left must be equalTo (7 - dice.right)
       dice.front must be equalTo (7 - dice.back)
@@ -58,16 +57,6 @@ object DiceSpec extends UnitSpec {
       all.size must be equalTo 24
     }
     
-    def check(changed: Dice, top: Int, right: Int, front: Int) = {
-      changed.top must be equalTo top
-      changed.right must be equalTo right
-      changed.front must be equalTo front
-      changed.bottom must be equalTo (7 - top)
-      changed.left must be equalTo (7 - right)
-      changed.back must be equalTo (7 - front)
-      all must contain(changed)
-    }
-
     "correctly rotate backward" in {
       val changed = dice.transform(RotateBackward)
       check(changed, 4, 5, 1)
@@ -108,4 +97,16 @@ object DiceSpec extends UnitSpec {
       check(changed, 1, 2, 4)
     }
   }
+  
+  def check(changed: Dice, top: Int, right: Int, front: Int) = {
+    (changed.top must be equalTo top) and
+    (changed.right must be equalTo right) and
+    (changed.front must be equalTo front) and
+    (changed.bottom must be equalTo (7 - top)) and
+    (changed.left must be equalTo (7 - right)) and
+    (changed.back must be equalTo (7 - front)) and
+    (all must contain(changed))
+  }
+  
+  val all = Dice.allRotations.toSet
 }
