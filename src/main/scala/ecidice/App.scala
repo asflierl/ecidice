@@ -95,12 +95,9 @@ class App extends Application with Logging {
   def loadFPSText() {
     fpsText.setSize(guiFont.getCharSet().getRenderedSize())
     fpsText.setLocalTranslation(0, fpsText.getLineHeight(), 0)
+    fpsText.setColor(Black)
     fpsText.setText("")
     
-    val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
-    mat.setColor("Color", Black)
-    mat.getAdditionalRenderState.setBlendMode(Alpha);
-    fpsText.setMaterial(mat)
     guiNode.attachChild(fpsText)
   }
   
