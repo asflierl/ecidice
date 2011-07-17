@@ -25,10 +25,10 @@ testOptions <+= crossTarget map { ct =>
 }
 
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "1.5-SNAPSHOT" % "test",
+  "org.specs2" %% "specs2" % "1.5" % "test",
   "joda-time" % "joda-time" % "1.6.2",
-  "org.scalaz" %% "scalaz-core" % "6.0",
-  "se.scalablesolutions.akka" % "akka" % "1.1.2"
+  "org.scalaz" %% "scalaz-core" % "6.0.1",
+  "se.scalablesolutions.akka" % "akka" % "1.1.3"
 )
 
 unmanagedJars in Compile <<= baseDirectory map { base => (base ** "*.jar").classpath }
