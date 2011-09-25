@@ -27,7 +27,7 @@ testOptions <+= crossTarget map { ct =>
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "6.0.3",
   "org.scala-tools.time" %% "time" % "0.5",
-  "se.scalablesolutions.akka" % "akka" % "1.1.3",
+  "se.scalablesolutions.akka" % "akka" % "1.2",
   //
   "org.specs2" %% "specs2" % "1.6.1" % "test",
   "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
@@ -50,5 +50,5 @@ TaskKey[Set[File]]("fetch-jme") <<= (unmanagedBase, streams) map { (libs, out) =
 
 resolvers ++= Seq(
   "snapshots" at "http://scala-tools.org/repo-snapshots",
-  "Akka Repo" at "http://akka.io/repository"
+  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 )
