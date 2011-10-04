@@ -4,6 +4,7 @@ syntax: regexp
 ^bin$
 ^\.settings$
 ^target$
+^.target$
 ^reports$
 ^\.scala_dependencies$
 \.DS_Store$
