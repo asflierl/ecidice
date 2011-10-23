@@ -32,19 +32,19 @@ class App extends Application with Logging {
   private lazy val fpsText = new BitmapText(guiFont, false)
   private lazy val guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt")
   
-  override def start() {
+  override def start {
     setSettings(prefs.settings)
     
     if (JmeSystem.showSettingsDialog(settings, false)) {
-      prefs.save()
-      super.start()
+      prefs.save
+      super.start
     } else {
       logInfo("game startup cancelled")
     }
   }
   
-  override def initialize() {
-    super.initialize()
+  override def initialize {
+    super.initialize
     
     renderer.applyRenderState(DEFAULT)
 
@@ -53,7 +53,7 @@ class App extends Application with Logging {
     
     // custom initialization here
     viewPort.setBackgroundColor(White)
-    loadFPSText()
+    loadFPSText
     
     viewPort.attachScene(rootNode)
     guiViewPort.attachScene(guiNode)
@@ -66,19 +66,19 @@ class App extends Application with Logging {
     rootNode.attachChild(geom)
   }
   
-  def loadFPSText() {
-    fpsText.setSize(guiFont.getCharSet().getRenderedSize())
-    fpsText.setLocalTranslation(0, fpsText.getLineHeight(), 0)
+  def loadFPSText {
+    fpsText.setSize(guiFont.getCharSet.getRenderedSize)
+    fpsText.setLocalTranslation(0, fpsText.getLineHeight, 0)
     fpsText.setColor(Black)
     fpsText.setText("")
     
     guiNode.attachChild(fpsText)
   }
   
-  override def update() {
+  override def update {
     if (speed == 0 || paused) return
         
-    super.update()
+    super.update
     val tpf = timer.getTimePerFrame * speed
 
     secondCounter += timer.getTimePerFrame
@@ -99,7 +99,7 @@ class App extends Application with Logging {
 
     stateManager.render(renderManager)
 
-    renderManager.render(tpf)
+    renderManager.render(tpf, true)
     
     // custom render things here
   }

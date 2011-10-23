@@ -28,7 +28,7 @@ object SpaceSpec extends UnitSpec {
                         Space(Tile(0, 1), Raised),
                         Space(Tile(3, 0), Floor))
       
-      spaces.sortWith(_ < _) aka "the ordered spaces" must be equalTo (
+      spaces.sorted aka "the ordered spaces" must be equalTo (
           List(Space(Tile(3, 0), Floor),
                Space(Tile(5, 0), Floor),
                Space(Tile(0, 1), Raised),

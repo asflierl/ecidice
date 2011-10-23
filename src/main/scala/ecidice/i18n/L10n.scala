@@ -6,6 +6,8 @@
 package ecidice
 package i18n
 
+import scala.concurrent.SyncVar
+
 
 /**
  * Defines the words and phrases that require localization.
@@ -23,14 +25,14 @@ trait L10n {
  * @author Andreas Flierl
  */
 object L10n {
-  @volatile private var loc: L10n = English
+  private val loc = new SyncVar[L10n]()
+  
+  loc set English
   
   /**
    * Returns the current localization (default English).
    */
-  def of = loc
+  def of = loc get
   
-  def set(loc: L10n) {
-    this.loc = loc
-  }
+  def set(l: L10n) = loc set l
 }

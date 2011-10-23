@@ -11,18 +11,14 @@ import Prop.forAll
 import Arbitrary.arbitrary
 import Gen._
 
-/**
- * Defines generators for various model classes to be used with ScalaCheck
- * specifications.
- */
 object Generators {
-  implicit def arbitraryTile: Arbitrary[Tile] = Arbitrary(
+  implicit val arbitraryTile = Arbitrary[Tile](
     for (
       col <- arbitrary[Int];
       row <- arbitrary[Int]
     ) yield Tile(col, row))
 
-  implicit def arbitrarySpace: Arbitrary[Space] = Arbitrary(
+  implicit val arbitrarySpace = Arbitrary[Space](
     for (
       t <- arbitrary[Tile];
       l <- oneOf(Level.values.toSeq)

@@ -25,7 +25,7 @@ object TileSpec extends UnitSpec {
       val tiles = List(Tile(3, 1), Tile(-1, -2), Tile(4, 0), Tile(0, 1), 
           Tile(-1, 2), Tile(3, 5), Tile(3, -2), Tile(2, 0))
       
-      tiles.sortWith(_ < _) aka "the ordered tiles" must be equalTo (
+      tiles.sorted aka "the ordered tiles" must be equalTo (
           List(Tile(-1, -2), Tile(3, -2), Tile(2, 0), Tile(4, 0), Tile(0, 1), 
               Tile(3, 1), Tile(-1, 2), Tile(3, 5))
       )

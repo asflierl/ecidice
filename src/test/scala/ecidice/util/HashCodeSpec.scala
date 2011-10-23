@@ -21,7 +21,7 @@ object HashCodeSpec extends UnitSpec {
     }
     
     "calculate a good hash code for several given parameters" in {
-      HashCode(1, 2L, " ") must be equalTo (((17 + 1) * 41 + 2) * 41 + 32)
+      HashCode(1, 2L, " ") must be equalTo (((17 + 1) * 41 + 2) * 41 + ' ')
     }
     
     "be equal if the objects passed to it are equal" in {

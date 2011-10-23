@@ -16,21 +16,19 @@ class Prefs(root: Preferences) {
   private val jme = root.node("jME3")
   val settings = new AppSettings(true)
 
-  for ((key, value) <- settings) value match {
-    case v : java.lang.Integer => 
-      settings.putInteger(key, jme.getInt(key, v.intValue))
-    case v : java.lang.Boolean =>
-      settings.putBoolean(key, jme.getBoolean(key, v.booleanValue))
+  for ((key, value) <- settings) (value: Any) match {
+    case v: Int => settings.putInteger(key, jme.getInt(key, v))
+    case v: Boolean => settings.putBoolean(key, jme.getBoolean(key, v))
     case v => settings.putString(key, jme.get(key, v.toString))
   }
   
-  def save() = {
-    for ((key, value) <- settings) value match {
-      case v : java.lang.Integer => jme.putInt(key, v.intValue)
-      case v : java.lang.Boolean => jme.putBoolean(key, v.booleanValue)
+  def save = {
+    for ((key, value) <- settings) (value: Any) match {
+      case v: Int => jme.putInt(key, v)
+      case v: Boolean => jme.putBoolean(key, v)
       case v => jme.put(key, v.toString)
     }
-    root.sync()
+    root.sync
   }
 }
 object Prefs {

@@ -11,11 +11,11 @@ import com.jme3.app.Application
 object Main extends Logging {
   def main(args: Array[String]): Unit = {
     Logging writeTo Logging.console
-    Logging showWarningsAndHigher()
+    Logging showWarningsAndHigher
     
     val app = new App
     Thread setDefaultUncaughtExceptionHandler new ExceptionProxy(app)
-    app start()
+    app start
   }
   
   private class ExceptionProxy(app: Application) extends Thread.UncaughtExceptionHandler {
