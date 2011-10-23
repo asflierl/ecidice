@@ -37,10 +37,10 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-all" % "1.8.5" % "test"
 )
 
-unmanagedJars in Compile <<= baseDirectory map { base => (base ** "*.jar").classpath }
+unmanagedJars in Compile <<= unmanagedBase map { libs => (libs ** "*.jar").classpath }
 
 TaskKey[Set[File]]("fetch-jme") <<= (unmanagedBase, streams) map { (libs, out) =>
-  val jme = url("http://jmonkeyengine.com/nightly/jME3_2011-08-29.zip")
+  val jme = url("http://jmonkeyengine.com/nightly/jME3_2011-10-23.zip")
   val target = libs / "jme"
   IO.delete(target)
   IO.createDirectory(target)
