@@ -3,6 +3,7 @@ syntax: regexp
 ^\.project$
 ^bin$
 ^\.settings$
+^\.cache$
 ^target$
 ^.target$
 ^reports$
