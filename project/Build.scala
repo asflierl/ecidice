@@ -33,21 +33,22 @@ object EcidiceBuild extends Build {
     },
 
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core" % "6.0.3",
+      "org.scalaz" %% "scalaz-core" % "6.0.4",
       "org.scala-tools.time" %% "time" % "0.5",
       "se.scalablesolutions.akka" % "akka" % "1.2",
-      //
-      "org.specs2" %% "specs2" % "1.6.1" % "test",
+      
+      "org.specs2" %% "specs2" % "1.8" % "test",
       "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",
       "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
-      "org.mockito" % "mockito-all" % "1.8.5" % "test"),
+      "org.mockito" % "mockito-all" % "1.9.0" % "test"),
 
     jmonkey.targetVersion := "2011-02-14",
     
     resolvers ++= Seq(
-      "snapshots" at "http://scala-tools.org/repo-snapshots",
-      "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/")
+      "Typesafe Repository"   at "http://repo.typesafe.com/typesafe/releases/",
+      "sonatype snapshots"    at "http://oss.sonatype.org/content/repositories/snapshots",
+      "sonatype releases"     at "http://oss.sonatype.org/content/repositories/releases")
   )
 }
