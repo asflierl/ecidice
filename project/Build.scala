@@ -1,13 +1,12 @@
 import sbt._
 import Keys._
 import Project.Setting
-import JMonkeyProject._
 
 object EcidiceBuild extends Build {
   lazy val root = Project(
     id = "ecidice",
     base = file("."),
-    settings = Project.defaultSettings ++ buildSettings ++ jmonkeySettings)
+    settings = Project.defaultSettings ++ buildSettings)
     
   def buildSettings: Seq[Setting[_]] = Seq(
     name := "ecidice",
@@ -44,11 +43,31 @@ object EcidiceBuild extends Build {
       "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
       "org.mockito" % "mockito-all" % "1.9.0" % "test"),
 
-    jmonkey.targetVersion := "2011-02-14",
+    unmanagedJars in Compile <<= unmanagedBase map { libs => (libs ** "*.jar").classpath },
+      
+    fetchJME <<= (unmanagedBase, streams, sbtVersion) map { (libs, out, version) =>
+      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-02-14.zip")
+      val target = libs / "jme"
+      IO delete target
+      IO createDirectory target
+      out.log.info("Fetching jME3 from " + jme)
+      
+      val conn = jme.openConnection
+      conn.setRequestProperty("User-Agent", "sbt/" + version);
+      val stream = conn.getInputStream
+      
+      try {
+        IO.unzipStream(stream, target, AllPassFilter)
+      } finally {
+        stream.close
+      }
+    },
     
     resolvers ++= Seq(
       "Typesafe Repository"   at "http://repo.typesafe.com/typesafe/releases/",
       "sonatype snapshots"    at "http://oss.sonatype.org/content/repositories/snapshots",
       "sonatype releases"     at "http://oss.sonatype.org/content/repositories/releases")
   )
+  
+  val fetchJME = TaskKey[Set[File]]("fetch-jme")
 }
