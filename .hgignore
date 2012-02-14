@@ -10,6 +10,7 @@ syntax: regexp
 ^\.scala_dependencies$
 \.DS_Store$
 ^lib/
+^project/project/
 ^project/boot/
 ^project/target/
 ^liblwjgl\.(jnilib|so|dll)$
