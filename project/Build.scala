@@ -34,9 +34,9 @@ object EcidiceBuild extends Build {
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core" % "6.0.4",
       "org.scala-tools.time" %% "time" % "0.5",
-      "se.scalablesolutions.akka" % "akka" % "1.2",
+      "com.typesafe.akka" % "akka-actor" % "2.0-RC1",
       
-      "org.specs2" %% "specs2" % "1.8" % "test",
+      "org.specs2" %% "specs2" % "1.8.1" % "test",
       "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",
@@ -65,8 +65,8 @@ object EcidiceBuild extends Build {
     
     resolvers ++= Seq(
       "Typesafe Repository"   at "http://repo.typesafe.com/typesafe/releases/",
-      "sonatype snapshots"    at "http://oss.sonatype.org/content/repositories/snapshots",
-      "sonatype releases"     at "http://oss.sonatype.org/content/repositories/releases")
+      "Sonatype Snapshots"    at "http://oss.sonatype.org/content/repositories/snapshots",
+      "Sonatype Releases"     at "http://oss.sonatype.org/content/repositories/releases")
   )
   
   val fetchJME = TaskKey[Set[File]]("fetch-jme")
