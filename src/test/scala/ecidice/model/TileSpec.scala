@@ -8,7 +8,6 @@ package model
 
 import ecidice.UnitSpec
 import org.scalacheck._
-import Prop.forAll
 import Generators._
 
 import org.specs2._

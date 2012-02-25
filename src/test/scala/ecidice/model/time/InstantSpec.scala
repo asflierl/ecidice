@@ -22,6 +22,10 @@ object InstantSpec extends UnitSpec {
       Instant(-42) must throwAn[IllegalArgumentException]
     }
     
+    "be based on a number" in {
+      Instant(Double.NaN) must throwAn[IllegalArgumentException]
+    }
+    
     "be comparable" in {
       "instant a" | "instant b" | "result" |>
       Instant(1)  ! Instant(0)  ! 1        |

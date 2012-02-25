@@ -22,6 +22,10 @@ object DurationSpec extends UnitSpec {
       Duration(-42) must throwAn[IllegalArgumentException]
     }
     
+    "be based on a number" in {
+      Duration(Double.NaN) must throwAn[IllegalArgumentException]
+    }
+    
     "result in a new duration when a duration is added to it" in {
       Duration(42) + Duration(7) must be equalTo Duration(49)
     }

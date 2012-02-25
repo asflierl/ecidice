@@ -7,6 +7,9 @@ package ecidice
 package model
 package time
 
+import org.scalacheck._
+import Generators._
+
 import ecidice.UnitSpec
 
 /**
@@ -43,12 +46,19 @@ object TimespanSpec extends UnitSpec {
     "report 100% progress if the current time equals the timespan end" in {
       val t = Timespan(Instant(42), Duration(8))
       t.progress(Instant(50)) must be equalTo 1d
-      
     }
     
     "report 100% progress if the current time is after the timespan end" in {
       val t = Timespan(Instant(2), Duration(1))
       t.progress(Instant(42)) must be equalTo 1d
+    }
+    
+    "exclude its end instant" in check { (t: Timespan) => 
+      t isOverAt t.end must beTrue 
+    }
+    
+    "end never before it started" in check { (t: Timespan) => 
+      t.end must beGreaterThanOrEqualTo(t.start) 
     }
     
     "still be able to represent a microsecond duration after 100 years" in {

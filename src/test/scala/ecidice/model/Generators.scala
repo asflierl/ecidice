@@ -10,17 +10,33 @@ import org.scalacheck._
 import Prop.forAll
 import Arbitrary.arbitrary
 import Gen._
+import time._
 
 object Generators {
-  implicit val arbitraryTile = Arbitrary[Tile](
-    for (
-      col <- arbitrary[Int];
+  implicit val tiles = Arbitrary[Tile](
+    for {
+      col <- arbitrary[Int]
       row <- arbitrary[Int]
-    ) yield Tile(col, row))
+    } yield Tile(col, row))
 
-  implicit val arbitrarySpace = Arbitrary[Space](
-    for (
-      t <- arbitrary[Tile];
+  implicit val spaces = Arbitrary[Space](
+    for {
+      t <- arbitrary[Tile]
       l <- oneOf(Level.values.toSeq)
-    ) yield Space(t, l))
+    } yield Space(t, l))
+    
+  implicit val instants = Arbitrary[Instant](positive(Double) map Instant)
+    
+  implicit val durations = Arbitrary[Duration](positive(Double) map Duration)
+  
+  implicit val timespans = Arbitrary[Timespan](
+    for {
+      i <- arbitrary[Instant]
+      d <- arbitrary[Duration]
+    } yield Timespan(i, d))
+    
+  type Finite[A] = { def MaxValue: A; def MinValue: A }
+  
+  def positive[A](bounds: Finite[A])(implicit n: Numeric[A], c: Choose[A]): Gen[A] =
+    chooseNum(n.zero, bounds.MaxValue)
 }
