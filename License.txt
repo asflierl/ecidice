@@ -14,7 +14,7 @@ visit http://creativecommons.org/licenses/by-sa/3.0/
 
 (1) Project license: 
 
-Copyright (c) 2009-2011 Andreas Flierl
+Copyright (c) 2009-2012 Andreas Flierl
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
