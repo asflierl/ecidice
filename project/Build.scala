@@ -36,7 +36,7 @@ object EcidiceBuild extends Build {
       "org.scala-tools.time" %% "time" % "0.5",
       "com.typesafe.akka" % "akka-actor" % "2.0-RC1",
       
-      "org.specs2" %% "specs2" % "1.8.1" % "test",
+      "org.specs2" %% "specs2" % "1.8.2" % "test",
       "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",
