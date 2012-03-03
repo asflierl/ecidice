@@ -83,8 +83,8 @@ object TimespanSpec extends UnitSpec {
       t isOverAt t.end must beTrue 
     }
     
-    "end never before it started" in check { (t: Timespan) => 
-      t.end must beGreaterThanOrEqualTo(t.start) 
+    "never end before it started" in check { (t: Timespan) => 
+      t.end must be greaterThanOrEqualTo t.start 
     }
     
     "still be able to represent a microsecond duration after 100 years" in {

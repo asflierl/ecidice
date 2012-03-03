@@ -39,28 +39,13 @@ import Gen._
 import time._
 
 object Generators {
-  implicit lazy val tiles = Arbitrary[Tile](
-    for {
-      col <- arbitrary[Int]
-      row <- arbitrary[Int]
-    } yield Tile(col, row))
-
-  implicit lazy val spaces = Arbitrary[Space](
-    for {
-      t <- arbitrary[Tile]
-      l <- enumerated(Level)
-    } yield Space(t, l))
-    
+  implicit lazy val tiles = Arbitrary[Tile](resultOf(Tile))
+  implicit lazy val levels = Arbitrary[Level.Value](enumerated(Level))
+  implicit lazy val spaces = Arbitrary[Space](resultOf(Space))
   implicit lazy val instants = Arbitrary[Instant](positive(Double) map Instant)
-    
   implicit lazy val durations = Arbitrary[Duration](positive(Double) map Duration)
-  
-  implicit lazy val timespans = Arbitrary[Timespan](
-    for {
-      i <- arbitrary[Instant]
-      d <- arbitrary[Duration]
-    } yield Timespan(i, d))
-  
+  implicit lazy val timespans = Arbitrary[Timespan](resultOf(Timespan))
+
   def enumerated[A <: Enumeration](a: A): Gen[A#Value] = oneOf(a.values.toSeq)
   
   type Finite[A] = { def MaxValue: A; def MinValue: A }

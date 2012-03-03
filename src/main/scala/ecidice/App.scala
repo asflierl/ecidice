@@ -87,7 +87,7 @@ class App extends Application with Logging {
     val b = new Box(ZERO, 1, 1, 1)
     val geom = new Geometry("Box", b)
     val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
-    mat.setColor("Color", White)
+    mat.setColor("Color", Blue)
     geom.setMaterial(mat)
     rootNode.attachChild(geom)
   }
@@ -110,7 +110,7 @@ class App extends Application with Logging {
     secondCounter += timer.getTimePerFrame
     val fps = timer.getFrameRate.toInt
     if (secondCounter >= 1.0f) {
-        fpsText.setText("%d fps".format(fps))
+        fpsText.setText("%4d fps".format(fps))
         secondCounter = 0.0f
     }
 
