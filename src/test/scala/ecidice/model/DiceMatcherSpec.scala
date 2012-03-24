@@ -43,9 +43,6 @@ import org.specs2.mutable._
 import specification._
 
 object DiceMatcherSpec extends UnitSpec {
-  
-  args(markdown = true)
-  
   "A dice matcher" should {
     
     """ 
@@ -75,9 +72,9 @@ object DiceMatcherSpec extends UnitSpec {
     correctly find only one of two (separated) groups of matching dice on this 3 x 3 board:
     
     |---|---|---|
-    | . | . | 5 |
-    | . | 4 | 5 |
-    | 6 | 6 | . |
+    |   |   | 5 |
+    |   | 4 | 5 |
+    | 6 | 6 |   |
     """.m in {
       val groupOne = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
       val groupTwo = fiveOnTop(Set(Tile(2, 2), Tile(2, 1)))
@@ -95,9 +92,9 @@ object DiceMatcherSpec extends UnitSpec {
     correctly find no matches of isolated dice on this 3 x 3 board:
     
     |---|---|---|
-    | 6 | . | 6 |
-    | . | 6 | . |
-    | 6 | . | 6 |  
+    | 6 |   | 6 |
+    |   | 6 |   |
+    | 6 |   | 6 |  
     """.m in {
       val isolated = sixOnTop(Set(Tile(0, 0), Tile(2, 0), Tile(1, 1),
                                   Tile(0, 2), Tile(2, 2)))
