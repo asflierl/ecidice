@@ -32,6 +32,7 @@
 package ecidice
 
 import org.specs2.matcher._
+import scala.util.Properties.lineSeparator
 
 trait SpecHelpers { this: DataTables =>
   val floatDelta = 1E-6f
@@ -41,4 +42,10 @@ trait SpecHelpers { this: DataTables =>
 
 class EnrichedString(pre: String) {
   def /(post: String) = pre + "\n" + post
+  
+  def m = {
+    val text = pre.lines.dropWhile(_.trim.isEmpty).toList.reverse.dropWhile(_.trim.isEmpty).reverse
+    val indentation = text.head.takeWhile(' '==)
+    text.view.map(_.stripPrefix(indentation)).mkString("", lineSeparator, lineSeparator)
+  }
 }
