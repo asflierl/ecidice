@@ -43,16 +43,11 @@ import org.specs2.mutable._
 import specification._
 
 object DiceMatcherSpec extends UnitSpec {
+  args(noindent = true)
+  
   "A dice matcher" should {
     
-    """ 
-    correctly find a group of matching dice on this 3 x 3 board:
-    
-    |---|---|---|
-    | 6 | 6 | 4 |
-    | 6 | 4 | 6 |
-    | 6 | 6 | 6 |
-    """.m in {
+    "correctly find a group of matching dice on this 3 x 3 board: " in {
       val similarDice = sixOnTop(Set(Tile(0,0), Tile(1,0), Tile(2,0), Tile(0,1),
                                      Tile(2,1), Tile(0,2), Tile(1,2)))
       val separators = fourOnTop(Set(Tile(1, 1), Tile(2, 2)))
@@ -61,6 +56,16 @@ object DiceMatcherSpec extends UnitSpec {
       DiceMatcher(board) find similarDice.head must be equalTo similarDice
     }
     
+    """ 
+    |---|---|---|
+    | 6 | 6 | 4 |
+    | 6 | 4 | 6 |
+    | 6 | 6 | 6 |
+    """§
+    
+    
+    
+    
     "be able to search a larger board" in {
       val dice = sixOnTop(Board.sized(40, 40).spaces.keySet.map(_.tile))
       val board = Board.sized(40, 40) ++ dice
@@ -68,14 +73,10 @@ object DiceMatcherSpec extends UnitSpec {
       DiceMatcher(board) find dice.head must be equalTo dice
     }
     
-    """ 
-    correctly find only one of two (separated) groups of matching dice on this 3 x 3 board:
     
-    |---|---|---|
-    |   |   | 5 |
-    |   | 4 | 5 |
-    | 6 | 6 |   |
-    """.m in {
+    
+    
+    "correctly find only one of two (separated) groups of matching dice on this 3 x 3 board:" in {
       val groupOne = sixOnTop(Set(Tile(0, 0), Tile(1, 0)))
       val groupTwo = fiveOnTop(Set(Tile(2, 2), Tile(2, 1)))
       val separator = fourOnTop(Set(Tile(1, 1)))
@@ -88,14 +89,17 @@ object DiceMatcherSpec extends UnitSpec {
       matcher find separator.head must be equalTo separator
     }
     
-    """ 
-    correctly find no matches of isolated dice on this 3 x 3 board:
-    
+    """  
     |---|---|---|
-    | 6 |   | 6 |
-    |   | 6 |   |
-    | 6 |   | 6 |  
-    """.m in {
+    |   |   | 5 |
+    |   | 4 | 5 |
+    | 6 | 6 |   |
+    """§
+    
+    
+    
+    
+    "correctly find no matches of isolated dice on this 3 x 3 board:" in {
       val isolated = sixOnTop(Set(Tile(0, 0), Tile(2, 0), Tile(1, 1),
                                   Tile(0, 2), Tile(2, 2)))
       val board = Board.sized(3, 3) ++ isolated
@@ -104,6 +108,15 @@ object DiceMatcherSpec extends UnitSpec {
         DiceMatcher(board).find(dice) must be equalTo Map(dice)
       ) foreach isolated
     }
+    
+    """ 
+    |---|---|---|
+    | 6 |   | 6 |
+    |   | 6 |   |
+    | 6 |   | 6 |  
+    """§
+    
+    success
   }
   
   def sixOnTop(locs: Set[Tile]) = place(locs, Dice.default)

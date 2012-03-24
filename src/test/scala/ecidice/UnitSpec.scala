@@ -40,4 +40,11 @@ trait UnitSpec extends mutable.Specification
                   with DataTables 
                   with Mockito 
                   with ScalaCheck 
-                  with SpecHelpers
+                  with SpecHelpers {
+
+  implicit def enrichUnitSpecString(s: String) = new EnrichedUnitSpecString(s)
+  
+  class EnrichedUnitSpecString(pre: String) {
+    def § = textFragment(pre.m)
+  }
+}
