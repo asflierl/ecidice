@@ -38,14 +38,18 @@ trait SpecHelpers { this: DataTables =>
   val floatDelta = 1E-6f
   val delta = 1E-12d
   implicit def enrichString(s: String) = new EnrichedString(s)
-}
-
-class EnrichedString(pre: String) {
-  def /(post: String) = pre + "\n" + post
   
-  def m = {
-    val text = pre.lines.dropWhile(_.trim.isEmpty).toList.reverse.dropWhile(_.trim.isEmpty).reverse
+  def detectAndStripMargin(s: String): List[String] = {
+    val text = s.lines.dropWhile(_.trim.isEmpty).toList.reverse.dropWhile(_.trim.isEmpty).reverse
     val indentation = text.head.takeWhile(' '==)
-    text.view.map(_.stripPrefix(indentation)).mkString("", lineSeparator, lineSeparator)
+    text.map(_.stripPrefix(indentation))
+  }
+  
+  def joinLines(lines: List[String]) = lines.mkString("", lineSeparator, lineSeparator)
+  
+  class EnrichedString(pre: String) {
+    def /(post: String) = pre + "\n" + post
+    
+    def m = joinLines(detectAndStripMargin(pre))
   }
 }

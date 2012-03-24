@@ -34,7 +34,10 @@ package ecidice
 import org.specs2._
 import mock._
 import matcher._
-import specification._
+import org.specs2.execute.Result
+import org.specs2.specification.Example
+import org.specs2.specification.FormattingFragments
+import org.specs2.specification.StandardFragments
 
 trait UnitSpec extends mutable.Specification
                   with DataTables 
@@ -42,9 +45,21 @@ trait UnitSpec extends mutable.Specification
                   with ScalaCheck 
                   with SpecHelpers {
 
-  implicit def enrichUnitSpecString(s: String) = new EnrichedUnitSpecString(s)
+  implicit def enrichUnitSpecString(s: String) = new EnrichedString(s)
   
-  class EnrichedUnitSpecString(pre: String) {
+  class EnrichedString(pre: String) {
     def § = textFragment(pre.m)
+    
+    def forExample[A](r: => A)(implicit ev: A => Result): Example = {
+      val lines = detectAndStripMargin(pre)
+      
+      val example = lines.head in r
+      
+      addFragments(bt)
+      
+      textFragment(joinLines(lines.tail))
+      
+      example
+    }
   }
 }
