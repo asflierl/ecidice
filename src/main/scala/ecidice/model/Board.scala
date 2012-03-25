@@ -56,11 +56,11 @@ object Board {
     spaces(columns, rows).map(_ -> Empty)
     
   private def spaces(columns: Int, rows: Int) = 
-    for (
-      x <- 0 until columns;
-      y <- 0 until rows;
+    for {
+      x <- 0 until columns
+      y <- 0 until rows
       l <- Level.values
-    ) yield Space(Tile(x, y), l)
+    } yield Space(Tile(x, y), l)
   
   val spacesToTiles = (t: (Space, Contents)) => t._1.tile
 }
