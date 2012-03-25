@@ -29,6 +29,10 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import ecidice.util.NotYetImplementedException
+
 package object ecidice {
   def init[A](a: A)(f: A => Any) = { f(a); a }
+  
+  def ??? = throw new NotYetImplementedException
 }

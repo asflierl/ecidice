@@ -58,7 +58,7 @@ trait ControlRequest[A <: Mode[A]] extends Helpers { this: A =>
       else controlSpace(loc.floor)
     
     def controlSpace(space: Space) = board(space) match {
-      case d : Dice => controlDice(space, d)
+      case d @ Dice(_,_,_) => controlDice(space, d)
       case _ => this
     }
     

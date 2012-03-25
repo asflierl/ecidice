@@ -63,7 +63,7 @@ trait Logging {
 object Logging {
   private lazy val rootLogger = JLogger.getLogger("")
   
-  def disable(): Unit = removeAllHandlers()
+  def disable: Unit = removeAllHandlers()
     
   def showInfoAndHigher(): Unit = rootLogger setLevel INFO
   def showWarningsAndHigher(): Unit = rootLogger setLevel WARNING
