@@ -54,7 +54,7 @@ class Prefs(root: Preferences) {
       case v: Boolean => jme.putBoolean(key, v)
       case v => jme.put(key, v.toString)
     }
-    root.sync
+    root sync
   }
 }
 object Prefs {

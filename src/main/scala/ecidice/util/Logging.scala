@@ -63,20 +63,20 @@ trait Logging {
 object Logging {
   private lazy val rootLogger = JLogger.getLogger("")
   
-  def disable: Unit = removeAllHandlers()
+  def disable: Unit = removeAllHandlers
     
-  def showInfoAndHigher(): Unit = rootLogger setLevel INFO
-  def showWarningsAndHigher(): Unit = rootLogger setLevel WARNING
-  def showSevereOnly(): Unit = rootLogger setLevel SEVERE
+  def showInfoAndHigher: Unit = rootLogger setLevel INFO
+  def showWarningsAndHigher: Unit = rootLogger setLevel WARNING
+  def showSevereOnly: Unit = rootLogger setLevel SEVERE
 
   def writeTo(handlers: Handler*) = {
-    removeAllHandlers()
+    removeAllHandlers
     handlers foreach rootLogger.addHandler
   }
   
   def console: Handler = init(new ConsoleHandler())(_ setFormatter ShortMessageFormatter)
   
-  private def removeAllHandlers(): Unit = rootLogger.getHandlers foreach rootLogger.removeHandler 
+  private def removeAllHandlers: Unit = rootLogger.getHandlers foreach rootLogger.removeHandler 
 }
 
 private object Logger {
@@ -102,7 +102,7 @@ private object ShortMessageFormatter extends Formatter {
       val stringWriter = new StringWriter
       val printWriter = new PrintWriter(stringWriter)
       record.getThrown printStackTrace printWriter
-      printWriter flush()
+      printWriter.flush
       builder.toString + stringWriter.toString
     } else builder.toString
   }

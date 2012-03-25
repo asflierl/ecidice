@@ -30,9 +30,18 @@
  */
 
 import ecidice.util.NotYetImplementedException
+import scala.util.MurmurHash
 
 package object ecidice {
   def init[A](a: A)(f: A => Any) = { f(a); a }
   
   def ??? = throw new NotYetImplementedException
+  
+  private[this] val seed = "ecidice"##
+  
+  def murmurHash[A](args: A*): Int = {
+    val generator = new MurmurHash[A](seed)
+    args foreach generator
+    generator hash
+  }
 }

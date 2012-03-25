@@ -52,6 +52,5 @@ class EcidiceSpec extends AcceptanceSpec { def is =
       "durations" ~ model.time.DurationSpec                                                        ^
       "timespans" ~ model.time.TimespanSpec                                                        ^
       "instants" ~ model.time.InstantSpec                                                          ^
-                                                                                                  p^
-      "a hash code utility" ~ util.HashCodeSpec
+                                                                                                end
 }
