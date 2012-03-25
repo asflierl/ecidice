@@ -34,14 +34,14 @@ package model
 package mode
 
 import ecidice.UnitSpec
+import ModelTestHelpers._
 
 /**
  * Informal specification of any game mode that supports control requests.
  * 
  * @author Andreas Flierl
  */
-class AnyModeWithSpawningOfDiceSpec[A <: Mode[A] with SpawningOfDice[A]](game: A) 
-extends UnitSpec with ModelTestHelpers {
+class AnyModeWithSpawningOfDiceSpec[A <: Mode[A] with SpawningOfDice[A]](game: A) extends UnitSpec {
   
   "Any mode that supports the spawning of dice" should {
 

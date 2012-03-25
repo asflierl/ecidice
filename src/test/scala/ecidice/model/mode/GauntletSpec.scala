@@ -35,6 +35,7 @@ package mode
 
 import ecidice.UnitSpec
 import time._
+import ModelTestHelpers._
 
 import org.specs2._
 
@@ -43,7 +44,7 @@ import org.specs2._
  * 
  * @author Andreas Flierl
  */
-object GauntletSpec extends AcceptanceSpec with ModelTestHelpers { def is = 
+object GauntletSpec extends AcceptanceSpec { def is = 
   "The game mode 'Gauntlet'".title ^
 p^
     "...is specified by..." ^

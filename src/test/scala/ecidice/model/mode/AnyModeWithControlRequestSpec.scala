@@ -34,14 +34,14 @@ package model
 package mode
 
 import ecidice.UnitSpec
+import ModelTestHelpers._
 
 /**
  * Informal specification of a player's request to control a dice.
  * 
  * @author Andreas Flierl
  */
-class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) 
-extends UnitSpec with ModelTestHelpers {
+class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) extends UnitSpec {
   
   "Any mode that allows a player to control a dice" should {
 

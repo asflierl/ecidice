@@ -32,7 +32,9 @@
 package ecidice
 
 import org.specs2.matcher._
+
 import scala.util.Properties.lineSeparator
+import collection.breakOut
 
 trait SpecHelpers { this: DataTables =>
   val floatDelta = 1E-6f

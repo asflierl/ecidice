@@ -40,8 +40,8 @@ import Direction._
  * @author Andreas Flierl
  */
 object Transform extends Enumeration {
-  val RotateBackward = Value("rotate backward")
-  val RotateForward = Value("rotate forward")
+  val RotateBackward = Value("rotate backward, away from the player")
+  val RotateForward = Value("rotate forward, towards the player")
   val RotateLeft = Value("rotate left")
   val RotateRight = Value("rotate right")
   val SpinClockwise = Value("spin clockwise")

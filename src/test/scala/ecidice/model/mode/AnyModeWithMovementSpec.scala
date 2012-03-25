@@ -37,14 +37,14 @@ import ecidice.UnitSpec
 import Direction._
 import Transform._
 import org.specs2.matcher.Matcher
+import ModelTestHelpers._
 
 /**
  * Informal specification of player and dice movement.
  * 
  * @author Andreas Flierl
  */
-class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) 
-extends UnitSpec with ModelTestHelpers {
+class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends UnitSpec {
   
   "Any mode with player and dice movement" should {
     val center = Tile(1, 1)

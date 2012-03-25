@@ -34,14 +34,14 @@ package model
 package mode
 
 import ecidice.UnitSpec
+import ModelTestHelpers._
 
 /**
  * Informal specification of a player relinquishing control of a dice.
  * 
  * @author Andreas Flierl
  */
-class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) 
-extends UnitSpec with ModelTestHelpers {
+class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) extends UnitSpec {
   
   "Any mode that allows a player to relinquish control of a dice" should {
     

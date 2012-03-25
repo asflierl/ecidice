@@ -50,15 +50,12 @@ trait UnitSpec extends mutable.Specification
   class EnrichedString(pre: String) {
     def § = textFragment(pre.m)
     
-    def forExample[A](r: => A)(implicit ev: A => Result): Example = {
+    def forExample[A](r: String => A)(implicit ev: A => Result): Example = {
       val lines = detectAndStripMargin(pre)
-      
-      val example = lines.head in r
-      
+      val board = joinLines(lines.tail)
+      val example = lines.head in r(board)
       addFragments(bt)
-      
-      textFragment(joinLines(lines.tail))
-      
+      textFragment(board)
       example
     }
   }
