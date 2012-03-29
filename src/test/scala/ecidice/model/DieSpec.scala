@@ -41,7 +41,7 @@ object DieSpec extends UnitSpec {
   "A die" should {
     val die = Die.default
     
-    "initially look like this: top = 6, right = 5, front = 4, bottom: 1, left: 2, back: 3" in {
+    "initially look like this: top = 6, right = 5, front = 4, bottom = 1, left = 2, back = 3" in {
       die must lookLike (6, 5, 4)
     }
     
@@ -49,45 +49,29 @@ object DieSpec extends UnitSpec {
       Die.allRotations must haveSize (24)
     }
     
-    "correctly rotate backward" in {
-      die transform RotateBackward must lookLike (4, 5, 1)
-    }
-    
-    "correctly rotate forward" in {
-      die transform RotateForward must lookLike (3, 5, 6)
-    }
-    
-    "correctly rotate to the right" in {
-      die transform RotateRight must lookLike (2, 6, 4)
-    }
-    
-    "correctly rotate to the left" in {
-      die transform RotateLeft must lookLike (5, 1, 4)
-    }
-    
-    "correctly spin clockwise" in {
-      die transform SpinClockwise must lookLike (6, 3, 5)
-    }
-    
-    "correctly spin counter-clockwise" in {
-      die transform SpinCounterclockwise must lookLike (6, 4, 2)
-    }
-    
-    "correctly flip up/down" in {
-      die transform FlipUpOrDown must lookLike (1, 5, 3)
-    }
-    
-    "correctly flip left or right" in {
-      die transform FlipLeftOrRight must lookLike (1, 2, 4)
+    "spin and rotate correctly" in {
+      "transformation"     | "expected dice rotation" |>
+      RotateBackward       ! (4, 5, 1)                |
+      RotateForward        ! (3, 5, 6)                |
+      RotateRight          ! (2, 6, 4)                |
+      RotateLeft           ! (5, 1, 4)                |
+      SpinClockwise        ! (6, 3, 5)                |
+      SpinCounterclockwise ! (6, 4, 2)                |
+      FlipUpOrDown         ! (1, 5, 3)                |
+      FlipLeftOrRight      ! (1, 2, 4)                | {
+        (inSomeWay, someRotation) => die transform inSomeWay must lookLike(someRotation)
+      }
     }
   }
   
-  def lookLike(top: Int, right: Int, front: Int) =
-    (equalTo(top)       ^^ ((_: Die).top)) and
-    (equalTo(right)     ^^ ((_: Die).right)) and
-    (equalTo(front)     ^^ ((_: Die).front)) and
-    (equalTo(7 - top)   ^^ ((_: Die).bottom)) and
-    (equalTo(7 - right) ^^ ((_: Die).left)) and
-    (equalTo(7 - front) ^^ ((_: Die).back)) and
-    (beOneOf(Die.allRotations:_*)) 
+  def lookLike(t: (Int, Int, Int)) = t match { 
+    case (top: Int, right: Int, front: Int) =>
+      (equalTo(top)       ^^ ((_: Die).top)) and
+      (equalTo(right)     ^^ ((_: Die).right)) and
+      (equalTo(front)     ^^ ((_: Die).front)) and
+      (equalTo(7 - top)   ^^ ((_: Die).bottom)) and
+      (equalTo(7 - right) ^^ ((_: Die).left)) and
+      (equalTo(7 - front) ^^ ((_: Die).back)) and
+      (beOneOf(Die.allRotations:_*)) 
+  }
 }
