@@ -34,11 +34,9 @@ package model
 
 import collection.breakOut
 
-case class Board(
-  columns: Int,
-  rows: Int,
-  spaces: Map[Space, Contents]
-) {
+case class Board(columns: Int, rows: Int, spaces: Map[Space, Contents]) {
+  import Board._
+  
   def apply(space: Space) = spaces(space)
   
   def contains(tile: Tile): Boolean = spaces.contains(tile.floor)
@@ -46,14 +44,14 @@ case class Board(
   def +(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
   def ++(contents: Map[Space, Contents]) = copy(spaces = spaces ++ contents)
   
-  lazy val tiles: Set[Tile] = spaces.map(Board.spacesToTiles)(breakOut) 
+  lazy val tiles: Set[Tile] = spaces.map(spacesToTiles)(breakOut)
+  def floorSpaces = floor(spaces) 
+  def raisedSpaces = raised(spaces)
 }
 object Board {
-  def sized(columns: Int, rows: Int): Board =
-    Board(columns, rows, Map.empty ++ contentMappings(columns, rows))
+  def sized(columns: Int, rows: Int) = Board(columns, rows, Map.empty ++ contentMappings(columns, rows))
     
-  private def contentMappings(columns: Int, rows: Int) =
-    spaces(columns, rows).map(_ -> Empty)
+  private def contentMappings(columns: Int, rows: Int) = spaces(columns, rows).map(_ -> Empty)
     
   private def spaces(columns: Int, rows: Int) = 
     for {
@@ -63,4 +61,6 @@ object Board {
     } yield Space(Tile(x, y), l)
   
   val spacesToTiles = (t: (Space, Contents)) => t._1.tile
+  val floor = (spaces: Map[Space, Contents]) => spaces filterKeys (_.isFloor == true)
+  val raised = (spaces: Map[Space, Contents]) => spaces filterKeys (_.isRaised == true)
 }

@@ -36,8 +36,6 @@ import ecidice.UnitSpec
 import org.specs2._
 
 object BoardSpec extends UnitSpec {
-  val board = Board.sized(5, 3) 
-    
   "The game board" should {
     "correctly indicate board bounds" in {
       
@@ -56,9 +54,26 @@ object BoardSpec extends UnitSpec {
     }
     
     "know its tiles" in {
-      val allTiles = (for (x <- 0 to 4; y <- 0 to 2) yield Tile(x, y)) toSet
-      
       board.tiles must be equalTo allTiles
     }
+    
+    "know all its floor spaces" in {
+      board.floorSpaces.keySet must be equalTo allTiles.map(_.floor)
+    }
+    
+    "know all its raised spaces" in {
+      board.raisedSpaces.keySet must be equalTo allTiles.map(_.raised)
+    }
+    
+    "have spaces that can be divided into floor and raised spaces" in {
+      board.spaces must be equalTo (board.floorSpaces ++ board.raisedSpaces)
+    }
+    
+    "initially have empty spaces" in {
+      forall(board.spaces.values) { _ must be(Empty) } 
+    }
   }
+  
+  val board = Board.sized(5, 3)
+  val allTiles = (for (x <- 0 to 4; y <- 0 to 2) yield Tile(x, y)) toSet
 }

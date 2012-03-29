@@ -35,8 +35,6 @@ package model
 import ecidice.UnitSpec
 import ModelTestHelpers._
 
-import scala.collection.breakOut
-
 import org.specs2._
 import matcher._
 import org.specs2.mutable._
@@ -57,8 +55,9 @@ object DiceMatcherSpec extends UnitSpec {
     }
     
     "be able to search a larger board" in {
-      val dice: Map[Space, Dice] = Board.sized(40, 40).spaces.keySet.map(_.tile).map(_.floor -> Dice.default)(breakOut)
-      val board = Board.sized(40, 40) ++ dice
+      val empty = Board.sized(40, 40)
+      val dice = empty.floorSpaces.mapValues(_ => Dice.default)
+      val board = empty ++ dice
       
       DiceMatcher(board) find dice.head must be equalTo dice
     }
