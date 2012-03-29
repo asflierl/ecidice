@@ -65,11 +65,11 @@ object DieSpec extends UnitSpec {
   }
   
   def lookLike(top: Int, right: Int, front: Int) =
-    (equalTo(top)       ^^ ((_: Die).top)) and
-    (equalTo(right)     ^^ ((_: Die).right)) and
-    (equalTo(front)     ^^ ((_: Die).front)) and
-    (equalTo(7 - top)   ^^ ((_: Die).bottom)) and
-    (equalTo(7 - right) ^^ ((_: Die).left)) and
-    (equalTo(7 - front) ^^ ((_: Die).back)) and
+    (be_===(top)       ^^ ((_: Die).top    aka "top face of the die")) and
+    (be_===(right)     ^^ ((_: Die).right  aka "right face of the die")) and
+    (be_===(front)     ^^ ((_: Die).front  aka "front face of the die")) and
+    (be_===(7 - top)   ^^ ((_: Die).bottom aka "bottom face of the die")) and
+    (be_===(7 - right) ^^ ((_: Die).left   aka "left face of the die")) and
+    (be_===(7 - front) ^^ ((_: Die).back   aka "back face of the die")) and
     (beOneOf(Die.allRotations:_*)) 
 }
