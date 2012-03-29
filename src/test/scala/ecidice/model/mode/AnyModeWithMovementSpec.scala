@@ -250,10 +250,10 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     }
   }
   
-  def moveLike(move: DieMovement) =
-    (equalTo(MovingWithADie(move, false)) ^^ ((_: A).players(move.controller) aka "assignment of " + move.controller)) and
-    (equalTo(move)                        ^^ ((_: A).board(move.origin)       aka "contents of origin")) and
-    (equalTo(move)                        ^^ ((_: A).board(move.destination)  aka "contents of destination"))
+  def moveLike(move: DieMovement) = //TODO re-enable aliases after specs2 issue has been dealt with
+    (equalTo(MovingWithADie(move, false)) ^^ ((_: A).players(move.controller) /*aka "assignment of " + move.controller*/)) and
+    (equalTo(move)                        ^^ ((_: A).board(move.origin)       /*aka "contents of origin"*/)) and
+    (equalTo(move)                        ^^ ((_: A).board(move.destination)  /*aka "contents of destination"*/))
   
   def beAllowedFrom(initial: A, t: Tile): Matcher[Direction.Value] = 
     ((dir: Direction.Value) => initial.move(Player(1), dir, now) != initial, 
