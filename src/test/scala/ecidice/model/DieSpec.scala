@@ -50,28 +50,26 @@ object DieSpec extends UnitSpec {
     }
     
     "spin and rotate correctly" in {
-      "transformation"     | "expected dice rotation" |>
-      RotateBackward       ! (4, 5, 1)                |
-      RotateForward        ! (3, 5, 6)                |
-      RotateRight          ! (2, 6, 4)                |
-      RotateLeft           ! (5, 1, 4)                |
-      SpinClockwise        ! (6, 3, 5)                |
-      SpinCounterclockwise ! (6, 4, 2)                |
-      FlipUpOrDown         ! (1, 5, 3)                |
-      FlipLeftOrRight      ! (1, 2, 4)                | {
-        (inSomeWay, someRotation) => die transform inSomeWay must lookLike(someRotation)
+      "transformation"     | "top" | "right" | "front" |>
+      RotateBackward       ! 4     ! 5       ! 1       |
+      RotateForward        ! 3     ! 5       ! 6       |
+      RotateRight          ! 2     ! 6       ! 4       |
+      RotateLeft           ! 5     ! 1       ! 4       |
+      SpinClockwise        ! 6     ! 3       ! 5       |
+      SpinCounterclockwise ! 6     ! 4       ! 2       |
+      FlipUpOrDown         ! 1     ! 5       ! 3       |
+      FlipLeftOrRight      ! 1     ! 2       ! 4       | {
+        (inSomeWay, top, right, front) => die transform inSomeWay must lookLike (top, right, front)
       }
     }
   }
   
-  def lookLike(t: (Int, Int, Int)) = t match { 
-    case (top: Int, right: Int, front: Int) =>
-      (equalTo(top)       ^^ ((_: Die).top)) and
-      (equalTo(right)     ^^ ((_: Die).right)) and
-      (equalTo(front)     ^^ ((_: Die).front)) and
-      (equalTo(7 - top)   ^^ ((_: Die).bottom)) and
-      (equalTo(7 - right) ^^ ((_: Die).left)) and
-      (equalTo(7 - front) ^^ ((_: Die).back)) and
-      (beOneOf(Die.allRotations:_*)) 
-  }
+  def lookLike(top: Int, right: Int, front: Int) =
+    (equalTo(top)       ^^ ((_: Die).top)) and
+    (equalTo(right)     ^^ ((_: Die).right)) and
+    (equalTo(front)     ^^ ((_: Die).front)) and
+    (equalTo(7 - top)   ^^ ((_: Die).bottom)) and
+    (equalTo(7 - right) ^^ ((_: Die).left)) and
+    (equalTo(7 - front) ^^ ((_: Die).back)) and
+    (beOneOf(Die.allRotations:_*)) 
 }
