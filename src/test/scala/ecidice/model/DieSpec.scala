@@ -41,72 +41,53 @@ object DieSpec extends UnitSpec {
   "A die" should {
     val die = Die.default
     
-    "initially look like this: top = 6, right = 5, front = 4" in {
-      die.top must be equalTo 6 
-      die.right must be equalTo 5
-      die.front must be equalTo 4
-    }
-    
-    "initially be consistent " in {
-      die.top must be equalTo (7 - die.bottom)
-      die.left must be equalTo (7 - die.right)
-      die.front must be equalTo (7 - die.back)
+    "initially look like this: top = 6, right = 5, front = 4, bottom: 1, left: 2, back: 3" in {
+      die must lookLike (6, 5, 4)
     }
     
     "know about all different die rotations" in {
-      all.size must be equalTo 24
+      Die.allRotations must haveSize (24)
     }
     
     "correctly rotate backward" in {
-      val changed = die.transform(RotateBackward)
-      check(changed, 4, 5, 1)
+      die transform RotateBackward must lookLike (4, 5, 1)
     }
     
     "correctly rotate forward" in {
-      val changed = die.transform(RotateForward)
-      check(changed, 3, 5, 6)
+      die transform RotateForward must lookLike (3, 5, 6)
     }
     
     "correctly rotate to the right" in {
-      val changed = die.transform(RotateRight)
-      check(changed, 2, 6, 4)
+      die transform RotateRight must lookLike (2, 6, 4)
     }
     
     "correctly rotate to the left" in {
-      val changed = die.transform(RotateLeft)
-      check(changed, 5, 1, 4)
+      die transform RotateLeft must lookLike (5, 1, 4)
     }
     
     "correctly spin clockwise" in {
-      val changed = die.transform(SpinClockwise)
-      check(changed, 6, 3, 5)
+      die transform SpinClockwise must lookLike (6, 3, 5)
     }
     
     "correctly spin counter-clockwise" in {
-      val changed = die.transform(SpinCounterclockwise)
-      check(changed, 6, 4, 2)
+      die transform SpinCounterclockwise must lookLike (6, 4, 2)
     }
     
     "correctly flip up/down" in {
-      val changed = die.transform(FlipUpOrDown)
-      check(changed, 1, 5, 3)
+      die transform FlipUpOrDown must lookLike (1, 5, 3)
     }
     
     "correctly flip left or right" in {
-      val changed = die.transform(FlipLeftOrRight)
-      check(changed, 1, 2, 4)
+      die transform FlipLeftOrRight must lookLike (1, 2, 4)
     }
   }
   
-  def check(changed: Die, top: Int, right: Int, front: Int) = {
-    (changed.top must be equalTo top) and
-    (changed.right must be equalTo right) and
-    (changed.front must be equalTo front) and
-    (changed.bottom must be equalTo (7 - top)) and
-    (changed.left must be equalTo (7 - right)) and
-    (changed.back must be equalTo (7 - front)) and
-    (all must contain(changed))
-  }
-  
-  val all = Die.allRotations.toSet
+  def lookLike(top: Int, right: Int, front: Int) =
+    (equalTo(top)       ^^ ((_: Die).top)) and
+    (equalTo(right)     ^^ ((_: Die).right)) and
+    (equalTo(front)     ^^ ((_: Die).front)) and
+    (equalTo(7 - top)   ^^ ((_: Die).bottom)) and
+    (equalTo(7 - right) ^^ ((_: Die).left)) and
+    (equalTo(7 - front) ^^ ((_: Die).back)) and
+    (beOneOf(Die.allRotations:_*)) 
 }

@@ -104,7 +104,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                            .control(Player(1))
                            .move(Player(1), somewhere, now)
         
-        check(DieMovement(die, origin, destination, transform, Player(1), now), testGame)
+        testGame must moveLike(DieMovement(die, origin, destination, transform, Player(1), now))
       }) foreach Direction.values
     }
     
@@ -120,7 +120,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                            .control(Player(1))
                            .move(Player(1), somewhere, now)
         
-        check(DieMovement(die, origin, destination, transform, Player(1), now), testGame)
+        testGame must moveLike(DieMovement(die, origin, destination, transform, Player(1), now))
       }) foreach Direction.values
     }
     
@@ -134,7 +134,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                          .control(Player(1))
                          .move(Player(1), Backward, now)
       
-      check(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now), testGame)
+      testGame must moveLike(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now))
     }
     
     "allow a player to grab the upper of 2 dice and move onto another die" in {
@@ -148,7 +148,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                          .control(Player(1))
                          .move(Player(1), Left, now)
       
-      check(DieMovement(die, origin, destination, RotateLeft, Player(1), now), testGame)
+      testGame must moveLike(DieMovement(die, origin, destination, RotateLeft, Player(1), now))
     }
     
     "allow a player to grab the upper of 2 dice and move to an empty tile" in {
@@ -161,7 +161,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                          .control(Player(1))
                          .move(Player(1), Right, now)
       
-      check(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
+      testGame must moveLike(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now))
     }
     
     "allow a player to move onto an appearing die" in {
@@ -174,7 +174,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                          .control(Player(1))
                          .move(Player(1), Left, now)
       
-      check(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
+      testGame must moveLike(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now))
     }
     
     "allow a player to move onto a charging die" in {
@@ -188,7 +188,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
                          .control(Player(1))
                          .move(Player(1), Forward, now)
       
-      check(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now), testGame)
+      testGame must moveLike(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now))
     }
     
     "not let a player move with a die from the floor onto a " +
@@ -250,17 +250,10 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     }
   }
   
-  def check(move: DieMovement, testGame: A) = {
-    val p = move.controller
-    
-    (
-      testGame.players(p) aka "assignment of player " + p.id must be equalTo MovingWithADie(move, false)
-    ) and (
-      testGame.board(move.origin)      aka "contents of origin"      must be equalTo move
-    ) and (
-      testGame.board(move.destination) aka "contents of destination" must be equalTo move
-    )
-  }
+  def moveLike(move: DieMovement) =
+    (equalTo(MovingWithADie(move, false)) ^^ ((_: A).players(move.controller) aka "assignment of " + move.controller)) and
+    (equalTo(move)                        ^^ ((_: A).board(move.origin)       aka "contents of origin")) and
+    (equalTo(move)                        ^^ ((_: A).board(move.destination)  aka "contents of destination"))
   
   def beAllowedFrom(initial: A, t: Tile): Matcher[Direction.Value] = 
     ((dir: Direction.Value) => initial.move(Player(1), dir, now) != initial, 
