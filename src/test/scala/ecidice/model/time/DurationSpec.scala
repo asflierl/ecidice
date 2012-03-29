@@ -35,9 +35,6 @@ package time
 
 import ecidice.UnitSpec
 
-/**
- * Informal specification of a duration. 
- */
 object DurationSpec extends UnitSpec {
   "A duration" should {
     "take 0 seconds by default" in {

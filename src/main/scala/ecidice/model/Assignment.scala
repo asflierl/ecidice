@@ -39,6 +39,6 @@ sealed trait Assignment
 
 case class Standing(location: Tile) extends Assignment
 case class MovingAlone(activity: PlayerMovement) extends Assignment
-case class ControllingADice(location: Space) extends Assignment
-case class MovingWithADice(activity: DiceMovement, relinquishAfter: Boolean) extends Assignment
-case class FallingWithADice(activity: DiceFalling) extends Assignment
+case class ControllingADie(location: Space) extends Assignment
+case class MovingWithADie(activity: DieMovement, relinquishAfter: Boolean) extends Assignment
+case class FallingWithADie(activity: DieFalling) extends Assignment

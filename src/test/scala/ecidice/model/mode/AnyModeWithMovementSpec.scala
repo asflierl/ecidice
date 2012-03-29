@@ -39,16 +39,11 @@ import Transform._
 import org.specs2.matcher.Matcher
 import ModelTestHelpers._
 
-/**
- * Informal specification of player and dice movement.
- * 
- * @author Andreas Flierl
- */
 class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends UnitSpec {
   
   "Any mode with player and dice movement" should {
     val center = Tile(1, 1)
-    val dice = Dice.random
+    val die = Die.random
     
     "allow a player in the center to move in all directions" in {
       "direction" | "destination" |>
@@ -98,62 +93,62 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       }
     }
     
-    "allow a player to move in any direction with a floor dice from the center" in {
+    "allow a player to move in any direction with a floor die from the center" in {
       ((somewhere: Direction.Value) => {
         val origin = center.floor
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
       
         val testGame = game.spawnPlayer(origin.tile)
-                           .addSolidDice(origin -> dice)
+                           .addSolidDie(origin -> die)
                            .control(Player(1))
                            .move(Player(1), somewhere, now)
         
-        check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
+        check(DieMovement(die, origin, destination, transform, Player(1), now), testGame)
       }) foreach Direction.values
     }
     
-    "allow a player to move in any direction with an upper dice from the center" in {
+    "allow a player to move in any direction with an upper die from the center" in {
       ((somewhere: Direction.Value) => {
         val origin = center.raised
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
         
         val testGame = game.spawnPlayer(origin.tile)
-                           .addSolidDice(origin.floor -> Dice.random)
-                           .addSolidDice(origin -> dice)
+                           .addSolidDie(origin.floor -> Die.random)
+                           .addSolidDie(origin -> die)
                            .control(Player(1))
                            .move(Player(1), somewhere, now)
         
-        check(DiceMovement(dice, origin, destination, transform, Player(1), now), testGame)
+        check(DieMovement(die, origin, destination, transform, Player(1), now), testGame)
       }) foreach Direction.values
     }
     
-    "allow a player to move with a dice from the floor onto another dice" in {
+    "allow a player to move with a die from the floor onto another die" in {
       val origin = center.floor
       val destination = center.look(Backward).raised
       
       val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDice(origin -> dice)
-                         .addSolidDice(destination.floor -> Dice.random)
+                         .addSolidDie(origin -> die)
+                         .addSolidDie(destination.floor -> Die.random)
                          .control(Player(1))
                          .move(Player(1), Backward, now)
       
-      check(DiceMovement(dice, origin, destination, FlipUpOrDown, Player(1), now), testGame)
+      check(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now), testGame)
     }
     
-    "allow a player to grab the upper of 2 dice and move onto another dice" in {
+    "allow a player to grab the upper of 2 dice and move onto another die" in {
       val origin = center.raised
       val destination = center.look(Left).raised
       
       val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDice(origin.floor -> Dice.random)
-                         .addSolidDice(origin -> dice)
-                         .addSolidDice(destination.floor -> Dice.random)
+                         .addSolidDie(origin.floor -> Die.random)
+                         .addSolidDie(origin -> die)
+                         .addSolidDie(destination.floor -> Die.random)
                          .control(Player(1))
                          .move(Player(1), Left, now)
       
-      check(DiceMovement(dice, origin, destination, RotateLeft, Player(1), now), testGame)
+      check(DieMovement(die, origin, destination, RotateLeft, Player(1), now), testGame)
     }
     
     "allow a player to grab the upper of 2 dice and move to an empty tile" in {
@@ -161,48 +156,48 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       val destination = center.look(Right).floor
       
       val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDice(origin.floor -> Dice.random)
-                         .addSolidDice(origin -> dice)
+                         .addSolidDie(origin.floor -> Die.random)
+                         .addSolidDie(origin -> die)
                          .control(Player(1))
                          .move(Player(1), Right, now)
       
-      check(DiceMovement(dice, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
+      check(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
     }
     
-    "allow a player to move onto an appearing dice" in {
+    "allow a player to move onto an appearing die" in {
       val origin = center.floor
       val destination = center.look(Left).raised
       
       val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDice(origin -> dice)
-                         .spawnDice(destination.tile, now)
+                         .addSolidDie(origin -> die)
+                         .spawnDie(destination.tile, now)
                          .control(Player(1))
                          .move(Player(1), Left, now)
       
-      check(DiceMovement(dice, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
+      check(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now), testGame)
     }
     
-    "allow a player to move onto a charging dice" in {
+    "allow a player to move onto a charging die" in {
       val origin = center.floor
       val destination = center.look(Forward).raised
       
       val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDice(origin -> dice)
+                         .addSolidDie(origin -> die)
                          .addChargeGroup(threeOnTop, Set(
                              Tile(0, 0), Tile(1, 0), Tile(2, 0)))
                          .control(Player(1))
                          .move(Player(1), Forward, now)
       
-      check(DiceMovement(dice, origin, destination, FlipUpOrDown, Player(1), now), testGame)
+      check(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now), testGame)
     }
     
-    "not let a player move with a dice from the floor onto a " +
-    "dice that is controlled by another player" in {
+    "not let a player move with a die from the floor onto a " +
+    "die that is controlled by another player" in {
       val before = game.spawnPlayer(Tile(1, 1))
-                       .addSolidDice(Tile(1, 1).floor)
+                       .addSolidDie(Tile(1, 1).floor)
                        .control(Player(1))
                        .spawnPlayer(Tile(2, 1))
-                       .addSolidDice(Tile(2, 1).floor)
+                       .addSolidDie(Tile(2, 1).floor)
                        .control(Player(2))
 
       val after = before.move(Player(1), Right, now)
@@ -210,14 +205,14 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       after aka "after move request" must be equalTo before
     }
     
-    "not let a player move with a dice from the raised level " +
-    "onto a dice that is controlled by another player" in {
+    "not let a player move with a die from the raised level " +
+    "onto a die that is controlled by another player" in {
       val before = game.spawnPlayer(Tile(1, 1))
-                       .addSolidDice(Tile(1, 1).floor)
-                       .addSolidDice(Tile(1, 1).raised)
+                       .addSolidDie(Tile(1, 1).floor)
+                       .addSolidDie(Tile(1, 1).raised)
                        .control(Player(1))
                        .spawnPlayer(Tile(2, 1))
-                       .addSolidDice(Tile(2, 1).floor)
+                       .addSolidDie(Tile(2, 1).floor)
                        .control(Player(2))
 
       val after = before.move(Player(1), Right, now)
@@ -227,11 +222,11 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     
     "not let 2 players move onto the same floor space" in {
       val before = game.spawnPlayer(Tile(0, 2))
-                       .addSolidDice(Tile(0, 2).floor)
+                       .addSolidDie(Tile(0, 2).floor)
                        .control(Player(1))
                        .move(Player(1), Right, now)
                        .spawnPlayer(Tile(1, 1))
-                       .addSolidDice(Tile(1, 1).floor)
+                       .addSolidDie(Tile(1, 1).floor)
                        .control(Player(2))
 
       val after = before.move(Player(2), Backward, now)
@@ -240,13 +235,13 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     }
     
     "not let 2 players move onto the same raised space" in {
-      val before = game.addSolidDice(Tile(1, 2).floor)
+      val before = game.addSolidDie(Tile(1, 2).floor)
                        .spawnPlayer(Tile(0, 2))
-                       .addSolidDice(Tile(0, 2).floor)
+                       .addSolidDie(Tile(0, 2).floor)
                        .control(Player(1))
                        .move(Player(1), Right, now)
                        .spawnPlayer(Tile(1, 1))
-                       .addSolidDice(Tile(1, 1).floor)
+                       .addSolidDie(Tile(1, 1).floor)
                        .control(Player(2))
 
       val after = before.move(Player(2), Backward, now)
@@ -255,11 +250,11 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     }
   }
   
-  def check(move: DiceMovement, testGame: A) = {
+  def check(move: DieMovement, testGame: A) = {
     val p = move.controller
     
     (
-      testGame.players(p) aka "assignment of player " + p.id must be equalTo MovingWithADice(move, false)
+      testGame.players(p) aka "assignment of player " + p.id must be equalTo MovingWithADie(move, false)
     ) and (
       testGame.board(move.origin)      aka "contents of origin"      must be equalTo move
     ) and (
@@ -271,7 +266,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     ((dir: Direction.Value) => initial.move(Player(1), dir, now) != initial, 
      (dir: Direction.Value) => dir + " is not allowed from " + t)
   
-  def threeOnTop = Dice.default.transform(RotateForward)
+  def threeOnTop = Die.default.transform(RotateForward)
 }
 object AnyModeWithMovementSpec {
   def apply[A <: Mode[A] with Movement[A]]()(implicit game: A) = 

@@ -36,7 +36,7 @@ package mode
 import time._
 
 /**
- * Defines the (partially quite complex) rules for movement.
+ * Defines the (partially quite complicated) rules for movement.
  * 
  * Players may move alone, which is rather simple: a player can move to any
  * tile on the game board. If she's already moving, movement continues.
@@ -47,7 +47,7 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
     case Standing(tile) => 
       movePlayer(PlayerMovement(player, tile, tile.look(dir), now))
       
-    case ControllingADice(origin) => moveDice(player, origin, dir, now)
+    case ControllingADie(origin) => moveDie(player, origin, dir, now)
     
     case _ => this
   }
@@ -58,23 +58,23 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
     else this
   }
   
-  private def moveDice(player: Player, origin: Space, dir: Direction.Value, now: Instant) = {
+  private def moveDie(player: Player, origin: Space, dir: Direction.Value, now: Instant) = {
     val destinationTile = origin.tile.look(dir)
     
     def decideLevel = board(destinationTile.floor) match {
       case Empty => moveTo(destinationTile.floor)
       
-      case Dice(_, _, _) | DiceAppearing(_, _, _) | Charging => 
+      case Die(_, _, _) | DieAppearing(_, _, _) | Charging => 
         moveTo(destinationTile.raised)
         
       case _ => this
     }
 
     def moveTo(destination: Space) = {
-      val move = DiceMovement(diceAt(origin), origin, destination,
-                              Transform(origin, destination, dir), player, now)
+      val move = DieMovement(dieAt(origin), origin, destination,
+                             Transform(origin, destination, dir), player, now)
                               
-      dupe(players = players + (player -> MovingWithADice(move, false)),
+      dupe(players = players + (player -> MovingWithADie(move, false)),
            board   = board   + (origin -> move) + (destination -> move))
     }
     
@@ -82,7 +82,7 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
     else this
   }
   
-  private def diceAt(loc: Space) = board(loc) match { 
-    case SolidControlled(dice, _) => dice
+  private def dieAt(loc: Space) = board(loc) match { 
+    case SolidControlled(die, _) => die
   }
 }

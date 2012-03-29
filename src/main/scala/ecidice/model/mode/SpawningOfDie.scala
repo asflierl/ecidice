@@ -31,20 +31,27 @@
 
 package ecidice
 package model
+package mode
 
-sealed trait DiceGroup[T <: DiceGroup[T]] { this: T =>
-  def dice: Map[Space, Dice]
-  protected def create(dice: Map[Space, Dice]): T
+import time._
+import Level._
 
-  def +(kv: (Space, Dice)) = create(dice = dice + kv)
-  def ++(otherGroup: DiceGroup[_]) = create(dice = dice ++ otherGroup.dice)
-  def contains(s: Space) = dice.contains(s)
-}
-
-case class ChargeGroup(dice: Map[Space, Dice]) extends DiceGroup[ChargeGroup] {
-  def create(m: Map[Space, Dice]) = copy(m)
-}
-
-case class BurstGroup(dice: Map[Space, Dice]) extends DiceGroup[BurstGroup] {
-  def create(m: Map[Space, Dice]) = copy(m)
+/**
+ * Defines the rules for spawning a new die.
+ * 
+ * A new die is only spawned if and only if both spaces at a given tile are
+ * empty. The new dice always appears on the floor.
+ * 
+ * @author Andreas Flierl
+ */
+trait SpawningOfDie[A <: Mode[A]] extends Helpers { this: A =>
+  def spawnDie(tile: Tile, now: Instant, die: Die = Die.random) = {
+    val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
+    
+    if (free) {
+      val space = Space(tile, Floor)
+      val activity = DieAppearing(Die.default, space, now)
+      dupe(board = board + (space -> activity))
+    } else this
+  }
 }

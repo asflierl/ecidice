@@ -36,18 +36,13 @@ package mode
 import ecidice.UnitSpec
 import ModelTestHelpers._
 
-/**
- * Informal specification of a player relinquishing control of a dice.
- * 
- * @author Andreas Flierl
- */
 class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) extends UnitSpec {
   
-  "Any mode that allows a player to relinquish control of a dice" should {
+  "Any mode that allows a player to relinquish control of a die" should {
     
-    "allow relinquishing when the player is controlling a dice" in {
+    "allow relinquishing when the player is controlling a die" in {
       val beforeControl = game.spawnPlayer(Tile(1, 1))
-                         .addSolidDice(Tile(1, 1).floor)
+                         .addSolidDie(Tile(1, 1).floor)
                          
       val afterRelinquish =
         beforeControl.control(Player(1))

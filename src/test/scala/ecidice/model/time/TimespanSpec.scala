@@ -38,11 +38,6 @@ import Generators._
 
 import ecidice.UnitSpec
 
-/**
- * Informal specification of a timespan.
- * 
- * @author Andreas Flierl
- */
 object TimespanSpec extends UnitSpec {  
   "A timespan" should {
     "calculate a correct end instant if its duration is 0" in {

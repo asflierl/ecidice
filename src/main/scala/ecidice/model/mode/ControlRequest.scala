@@ -34,18 +34,18 @@ package model
 package mode
 
 /**
- * Defines the rules for how and when a player may gain control over a dice.
+ * Defines the rules for how and when a player may gain control over a die.
  * 
- * If the player is already controlling a dice, control is retained on that
- * dice.
+ * If the player is already controlling a die, control is retained on that
+ * die.
  * 
- * If there's two dice at the player's location and the upper dice is solid
+ * If there's two dice at the player's location and the upper die is solid
  * and not under the control of another player, control will be granted on
- * that upper dice.
+ * that upper die.
  * 
- * If there's only one dice at the player's location (which must be on the
+ * If there's only one die at the player's location (which must be on the
  * floor level) that is solid and not under the control of any player,
- * control is granted on that dice.
+ * control is granted on that die.
  * 
  * In all other cases, the control request will be rejected.
  * 
@@ -58,19 +58,19 @@ trait ControlRequest[A <: Mode[A]] extends Helpers { this: A =>
       else controlSpace(loc.floor)
     
     def controlSpace(space: Space) = board(space) match {
-      case d @ Dice(_,_,_) => controlDice(space, d)
+      case d @ Die(_,_,_) => controlDie(space, d)
       case _ => this
     }
     
-    def controlDice(space: Space, dice: Dice) =
-      dupe(board = board + (space -> SolidControlled(dice, player)),
-           players = players + (player -> ControllingADice(space)))
+    def controlDie(space: Space, die: Die) =
+      dupe(board = board + (space -> SolidControlled(die, player)),
+           players = players + (player -> ControllingADie(space)))
     
-    def retainControl(mov: DiceMovement) =
-      dupe(players = players + (player -> MovingWithADice(mov, true)))
+    def retainControl(mov: DieMovement) =
+      dupe(players = players + (player -> MovingWithADie(mov, true)))
            
     players(player) match {
-      case MovingWithADice(mov, _) => retainControl(mov)   
+      case MovingWithADie(mov, _) => retainControl(mov)   
       case Standing(t) => controlTile(t)
       case _ => this
     }

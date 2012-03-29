@@ -40,7 +40,7 @@ trait Contents
 case object Empty extends Contents
 
 case class SolidControlled(
-  dice: Dice,
+  die: Die,
   controller: Player
 ) extends Contents
 

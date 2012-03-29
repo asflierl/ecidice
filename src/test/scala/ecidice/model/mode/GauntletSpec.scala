@@ -39,20 +39,15 @@ import ModelTestHelpers._
 
 import org.specs2._
 
-/**
- * Informal specification of the "Gauntlet" game mode.
- * 
- * @author Andreas Flierl
- */
 object GauntletSpec extends AcceptanceSpec { def is = 
-  "The game mode 'Gauntlet'".title ^
-p^
-    "...is specified by..." ^
-p^
-      AnyModeSpec() ^
-      AnyModeWithControlRequestSpec() ^
-      AnyModeWithRelinquishRequestSpec() ^
-      AnyModeWithSpawningOfDiceSpec() ^
+  "The game mode 'Gauntlet'".title                           ^
+                                                            p^
+    "...is specified by..."                                  ^
+                                                            p^
+      AnyModeSpec()                                          ^
+      AnyModeWithControlRequestSpec()                        ^
+      AnyModeWithRelinquishRequestSpec()                     ^
+      AnyModeWithSpawningOfDieSpec()                         ^
       AnyModeWithMovementSpec()
       
   implicit val game = Gauntlet.create(3)

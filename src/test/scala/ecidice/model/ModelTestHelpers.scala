@@ -42,17 +42,17 @@ object ModelTestHelpers {
   
   val now = Instant()
   
-  val diceWithTop: PartialFunction[Int, Dice] = {
-    case 1 => Dice.default transform RotateLeft transform RotateLeft
-    case 2 => Dice.default transform RotateRight
-    case 3 => Dice.default transform RotateForward
-    case 4 => Dice.default transform RotateBackward
-    case 5 => Dice.default transform RotateLeft
-    case 6 => Dice.default
+  val dieWithTop: PartialFunction[Int, Die] = {
+    case 1 => Die.default transform RotateLeft transform RotateLeft
+    case 2 => Die.default transform RotateRight
+    case 3 => Die.default transform RotateForward
+    case 4 => Die.default transform RotateBackward
+    case 5 => Die.default transform RotateLeft
+    case 6 => Die.default
   }
   
   object TestBoard {
-    def unapply(desc: String): Option[(Board, List[Map[Space, Dice]])] = {
+    def unapply(desc: String): Option[(Board, List[Map[Space, Die]])] = {
       val rows = desc.lines.dropWhile(_.trim.isEmpty).toList.tail.map(_.trim.split('|').tail.map(_.trim).toSeq)
   
       if (rows.exists(_.size != rows.head.size)) None
@@ -60,37 +60,37 @@ object ModelTestHelpers {
         val parsedBoard = for {
           (row, y) <- rows.zipWithIndex
           (content, x) <- row.zipWithIndex
-          (group, dice) <- parse(content)
-        } yield (group, dice, Tile(x, y))
+          (group, die) <- parse(content)
+        } yield (group, die, Tile(x, y))
         
         Some((Board.sized(rows.head.size, rows.size) ++ groupBySpace(parsedBoard),
              parsedBoard.groupBy(_._1).toList.sortBy(_._1).map(_._2).map(groupBySpace)))
       } 
     }
     
-    private def groupBySpace(s: Seq[(String, Dice, Tile)]): Map[Space, Dice] = (s map { case (g, d, t) => t.floor -> d })(breakOut)
+    private def groupBySpace(s: Seq[(String, Die, Tile)]): Map[Space, Die] = (s map { case (g, d, t) => t.floor -> d })(breakOut)
     
-    private def parse(tileContent: String): Option[(String, Dice)] = 
+    private def parse(tileContent: String): Option[(String, Die)] = 
       for {
         contentPattern(top, group) <- Some(tileContent)
-        dice <- (diceWithTop lift)(top toInt)
-      } yield (group, dice)
+        die <- (dieWithTop lift)(top toInt)
+      } yield (group, die)
         
     private val contentPattern = "([1-6])([a-z])".r 
   }
 }
 
 class ModeTestHelpers[A <: Mode[A]](m: A) {
-  def addSolidDice(contents: (Space, Dice)) = 
+  def addSolidDie(contents: (Space, Die)) = 
     m.dupe(board = m.board + (contents))
     
-  def addSolidDice(sp: Space) =
-    m.dupe(board = m.board + (sp -> Dice.random))
+  def addSolidDie(sp: Space) =
+    m.dupe(board = m.board + (sp -> Die.random))
     
-  def addChargeGroup(dice: => Dice, tiles: Set[Tile]) = {
+  def addChargeGroup(die: => Die, tiles: Set[Tile]) = {
     val spaces = tiles.map(_.floor)
     val newBoard = m.board ++ spaces.map((_, Charging))(breakOut)
-    val lock = ChargeLock(ChargeGroup(spaces.map((_, dice))(breakOut)), Instant())
+    val lock = ChargeLock(ChargeGroup(spaces.map((_, die))(breakOut)), Instant())
     
     m.dupe(board = newBoard, locks = m.locks + lock)
   }

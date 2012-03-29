@@ -36,14 +36,9 @@ package mode
 import ecidice.UnitSpec
 import ModelTestHelpers._
 
-/**
- * Informal specification of a player's request to control a dice.
- * 
- * @author Andreas Flierl
- */
 class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A) extends UnitSpec {
   
-  "Any mode that allows a player to control a dice" should {
+  "Any mode that allows a player to control a die" should {
 
     "not grant control when player stands on an empty tile" in {
       val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
@@ -52,37 +47,37 @@ class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A
       assignment must be equalTo Standing(Tile(0, 0))
     }
     
-    "not grant control over an appearing dice" in {
+    "not grant control over an appearing die" in {
       val before = game.spawnPlayer(Tile(0, 0))
-                       .spawnDice(Tile(0, 0), now)
+                       .spawnDie(Tile(0, 0), now)
                        
       val after = before.control(Player(1))
       
       after must be equalTo before
     }
     
-    "grant control over a single dice on the floor" in {
-      val dice = Dice.random
+    "grant control over a single die on the floor" in {
+      val die = Die.random
       val location = Tile(0, 0).floor
 
       val testGame = game.spawnPlayer(location.tile)
-                         .addSolidDice(location -> dice)
+                         .addSolidDie(location -> die)
                          .control(Player(1))
       
       testGame.players(Player(1)) aka 
-        "assignment of player 1" must be equalTo ControllingADice(location)
+        "assignment of player 1" must be equalTo ControllingADie(location)
       
       testGame.board(location) aka
-        "contents of dice space" must be equalTo SolidControlled(dice, Player(1))
+        "contents of dice space" must be equalTo SolidControlled(die, Player(1))
     }
     
     "not grant control over dice on the floor level already controlled by another player" in {
-      val dice = Dice.random
+      val die = Die.random
       val location = Tile(0, 0).floor
       
       val testGame = game.spawnPlayer(location.tile)
                          .spawnPlayer(location.tile)
-                         .addSolidDice(location -> dice)
+                         .addSolidDie(location -> die)
                          .control(Player(1))
                          .control(Player(2))
       
@@ -90,39 +85,39 @@ class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A
         "assignment of player 2" must be equalTo Standing(location.tile)
                          
       testGame.players(Player(1)) aka 
-        "assignment of player 1" must be equalTo ControllingADice(location)
+        "assignment of player 1" must be equalTo ControllingADie(location)
       
       testGame.board(location) aka
-        "contents of dice space" must be equalTo SolidControlled(dice, Player(1))
+        "contents of die space" must be equalTo SolidControlled(die, Player(1))
     }
     
     "grant control over the upper of 2 stacked dice" in {
-      val lowerDice, upperDice = Dice.random
+      val lowerDie, upperDie = Die.random
       val tile = Tile(0, 0)
       
       val testGame = game.spawnPlayer(tile)
-                         .addSolidDice(tile.floor -> lowerDice)
-                         .addSolidDice(tile.raised -> upperDice)
+                         .addSolidDie(tile.floor -> lowerDie)
+                         .addSolidDie(tile.raised -> upperDie)
                          .control(Player(1))
       
       testGame.players(Player(1)) aka 
-        "assignment of player 1" must be equalTo ControllingADice(tile.raised)
+        "assignment of player 1" must be equalTo ControllingADie(tile.raised)
       
       testGame.board(tile.floor) aka
-        "contents of floor space" must be equalTo lowerDice
+        "contents of floor space" must be equalTo lowerDie
       
       testGame.board(tile.raised) aka
-        "contents of raised space" must be equalTo SolidControlled(upperDice, Player(1))
+        "contents of raised space" must be equalTo SolidControlled(upperDie, Player(1))
     }
     
     "not grant control over dice on the raised level already controlled by another player" in {
-      val dice = Dice.random
+      val die = Die.random
       val location = Tile(0, 0).raised
       
       val testGame = game.spawnPlayer(location.tile)
                          .spawnPlayer(location.tile)
-                         .addSolidDice(location.floor -> Dice.random)
-                         .addSolidDice(location -> dice)
+                         .addSolidDie(location.floor -> Die.random)
+                         .addSolidDie(location -> die)
                          .control(Player(2))
                          .control(Player(1))
       
@@ -130,10 +125,10 @@ class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A
         "assignment of player 1" must be equalTo Standing(location.tile)
                          
       testGame.players(Player(2)) aka 
-        "assignment of player 2" must be equalTo ControllingADice(location)
+        "assignment of player 2" must be equalTo ControllingADie(location)
       
       testGame.board(location) aka
-        "contents of dice space" must be equalTo SolidControlled(dice, Player(2))
+        "contents of dice space" must be equalTo SolidControlled(die, Player(2))
     }
     
     //TODO specifiy movement cases

@@ -36,11 +36,6 @@ package mode
 import ecidice.UnitSpec
 import ModelTestHelpers._
 
-/**
- * Informal specification of basic stuff in any game mode.
- * 
- * @author Andreas Flierl
- */
 class AnyModeSpec[A <: Mode[A]](game: A) extends UnitSpec {
   "Any mode" should {
     "correctly dupe itself" in {

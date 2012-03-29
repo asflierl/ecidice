@@ -39,8 +39,8 @@ import collection.breakOut
 import annotation.tailrec
 
 /**
- * Finds and returns all dice (including `startDice`) that show the same 
- * top face as `startDice` and that are reachable from `startDice`
+ * Finds and returns all dice (including `startDie`) that show the same 
+ * top face as `startDie` and that are reachable from `startDie`
  * via other such dice (by only moving up, down, left or right once or 
  * several times). Only solid dice that are uncontrolled are considered.
  * 
@@ -58,16 +58,16 @@ import annotation.tailrec
  * from BY, it would only return BY. Starting from BZ, it would return AZ 
  * and BZ.
  */
-final class DiceMatcher(board: Board) {
-  def find(startAt: (Space, Dice)) = {
-    val (startSpace, startDice) = startAt
-    val top = startDice.top
+final class DieMatcher(board: Board) {
+  def find(startAt: (Space, Die)) = {
+    val (startSpace, startDie) = startAt
+    val top = startDie.top
     
     @tailrec
-    def search(stack: List[(Space, Dice)], included: Set[Tile], group: Map[Space, Dice]): Map[Space, Dice] = stack match {
+    def search(stack: List[(Space, Die)], included: Set[Tile], group: Map[Space, Die]): Map[Space, Die] = stack match {
       case Nil => group
       
-      case (topOfStack @ (space, Dice(`top`, _, _))) :: restOfStack => {
+      case (topOfStack @ (space, Die(`top`, _, _))) :: restOfStack => {
         val next = surroundingsOf(space, included) 
         search(next ++ restOfStack, included -- (next map spacesToTiles), group + topOfStack)
       }
@@ -78,16 +78,16 @@ final class DiceMatcher(board: Board) {
     search(List(startAt), board.tiles - startSpace.tile, Map())
   }
   
-  def surroundingsOf(space: Space, included: Set[Tile]): List[(Space, Dice)] =
+  def surroundingsOf(space: Space, included: Set[Tile]): List[(Space, Die)] =
       Direction.values
                .view
                .map(space.tile.look)
                .filter(included.contains)
                .map(_.floor)
                .map(space => (space, board(space)))
-               .collect { case (s, d: Dice) => (s, d) }
+               .collect { case (s, d: Die) => (s, d) }
                .toList
 }
-object DiceMatcher {
-  def apply(board: Board) = new DiceMatcher(board)
+object DieMatcher {
+  def apply(board: Board) = new DieMatcher(board)
 }

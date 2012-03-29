@@ -37,68 +37,68 @@ import Transform._
 
 import org.specs2._
 
-object DiceSpec extends UnitSpec {
-  "A dice" should {
-    val dice = Dice.default
+object DieSpec extends UnitSpec {
+  "A die" should {
+    val die = Die.default
     
     "initially look like this: top = 6, right = 5, front = 4" in {
-      dice.top must be equalTo 6 
-      dice.right must be equalTo 5
-      dice.front must be equalTo 4
+      die.top must be equalTo 6 
+      die.right must be equalTo 5
+      die.front must be equalTo 4
     }
     
     "initially be consistent " in {
-      dice.top must be equalTo (7 - dice.bottom)
-      dice.left must be equalTo (7 - dice.right)
-      dice.front must be equalTo (7 - dice.back)
+      die.top must be equalTo (7 - die.bottom)
+      die.left must be equalTo (7 - die.right)
+      die.front must be equalTo (7 - die.back)
     }
     
-    "know about all different dice rotations" in {
+    "know about all different die rotations" in {
       all.size must be equalTo 24
     }
     
     "correctly rotate backward" in {
-      val changed = dice.transform(RotateBackward)
+      val changed = die.transform(RotateBackward)
       check(changed, 4, 5, 1)
     }
     
     "correctly rotate forward" in {
-      val changed = dice.transform(RotateForward)
+      val changed = die.transform(RotateForward)
       check(changed, 3, 5, 6)
     }
     
     "correctly rotate to the right" in {
-      val changed = dice.transform(RotateRight)
+      val changed = die.transform(RotateRight)
       check(changed, 2, 6, 4)
     }
     
     "correctly rotate to the left" in {
-      val changed = dice.transform(RotateLeft)
+      val changed = die.transform(RotateLeft)
       check(changed, 5, 1, 4)
     }
     
     "correctly spin clockwise" in {
-      val changed = dice.transform(SpinClockwise)
+      val changed = die.transform(SpinClockwise)
       check(changed, 6, 3, 5)
     }
     
     "correctly spin counter-clockwise" in {
-      val changed = dice.transform(SpinCounterclockwise)
+      val changed = die.transform(SpinCounterclockwise)
       check(changed, 6, 4, 2)
     }
     
     "correctly flip up/down" in {
-      val changed = dice.transform(FlipUpOrDown)
+      val changed = die.transform(FlipUpOrDown)
       check(changed, 1, 5, 3)
     }
     
     "correctly flip left or right" in {
-      val changed = dice.transform(FlipLeftOrRight)
+      val changed = die.transform(FlipLeftOrRight)
       check(changed, 1, 2, 4)
     }
   }
   
-  def check(changed: Dice, top: Int, right: Int, front: Int) = {
+  def check(changed: Die, top: Int, right: Int, front: Int) = {
     (changed.top must be equalTo top) and
     (changed.right must be equalTo right) and
     (changed.front must be equalTo front) and
@@ -108,5 +108,5 @@ object DiceSpec extends UnitSpec {
     (all must contain(changed))
   }
   
-  val all = Dice.allRotations.toSet
+  val all = Die.allRotations.toSet
 }

@@ -34,23 +34,23 @@ package model
 package mode
 
 /**
- * A player that has control over a dice can relinquish control over that dice.
- * If the player is currently moving with a dice, the control will be 
+ * A player that has control over a die can relinquish control over that die.
+ * If the player is currently moving with a die, control will be 
  * relinquished after the move finishes.
  */
 trait RelinquishRequest[A <: Mode[A]] { this: A =>
   def relinquish(player: Player) = players(player) match {
-    case ControllingADice(somewhere) => relinquishSolidDice(player, somewhere)
-    case move @ MovingWithADice(_, _) => relinquishMovement(player, move)
+    case ControllingADie(somewhere) => relinquishSolidDie(player, somewhere)
+    case move @ MovingWithADie(_, _) => relinquishMovement(player, move)
     case _ => this
   }
   
-  private def relinquishSolidDice(player: Player, space: Space) = {
-    val dice = board(space) match { case SolidControlled(d, _) => d }
-    dupe(board = board + (space -> dice),
+  private def relinquishSolidDie(player: Player, space: Space) = {
+    val die = board(space) match { case SolidControlled(d, _) => d }
+    dupe(board = board + (space -> die),
          players = players + (player -> Standing(space.tile)))
   }
   
-  private def relinquishMovement(player: Player, move: MovingWithADice) =
-    dupe(players = players + (player -> MovingWithADice(move.activity, true)))
+  private def relinquishMovement(player: Player, move: MovingWithADie) =
+    dupe(players = players + (player -> MovingWithADie(move.activity, true)))
 }

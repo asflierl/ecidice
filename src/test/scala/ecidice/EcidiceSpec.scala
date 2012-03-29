@@ -42,8 +42,8 @@ class EcidiceSpec extends AcceptanceSpec { def is =
     "ecidice consists of"                                                                          ^
                                                                                                   p^
       "the game board" ~ model.BoardSpec                                                           ^
-      "dice" ~ model.DiceSpec                                                                      ^
-      "the dice matcher" ~ model.DiceMatcherSpec                                                   ^
+      "dice" ~ model.DieSpec                                                                       ^
+      "the die matcher" ~ model.DieMatcherSpec                                                     ^
       "spaces on the game board" ~ model.SpaceSpec                                                 ^
       "the tiles of the board" ~ model.TileSpec                                                    ^
                                                                                                   p^

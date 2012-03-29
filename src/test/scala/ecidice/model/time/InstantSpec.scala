@@ -35,9 +35,6 @@ package time
 
 import ecidice.UnitSpec
 
-/**
- * Informal specification of an instant. 
- */
 object InstantSpec extends UnitSpec {
   "An instant" should {
     "point to time zero by default" in {

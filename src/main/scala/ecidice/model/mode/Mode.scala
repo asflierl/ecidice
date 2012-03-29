@@ -35,8 +35,8 @@ package mode
 
 import time._
 
-// 2-player situation: player 1 upon a charging dice, dice bursts, player 2
-// wants to move where the dice burst; it must be ensured that player 2 won't 
+// 2-player situation: player 1 upon a charging die, die bursts, player 2
+// wants to move where the die burst; it must be ensured that player 2 won't 
 // move there
 
 //TODO some kind of scoring system 
@@ -48,17 +48,17 @@ import time._
  */
 trait Mode[A <: Mode[A]] { this: A =>
   def board: Board
-  def locks: Set[DiceLock[_]]
+  def locks: Set[DieLock[_]]
   def players: Map[Player, Assignment]
   
   def spawnPlayer(tile: Tile): A
-  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random): A
+  def spawnDie(tile: Tile, now: Instant, die: Die = Die.random): A
   
   def control(player: Player): A
   def relinquish(player: Player): A
   def move(player: Player, dir: Direction.Value, now: Instant): A
   
   def dupe(board: Board = board, 
-           locks: Set[DiceLock[_]] = locks,
+           locks: Set[DieLock[_]] = locks,
            players: Map[Player, Assignment] = players): A
 }

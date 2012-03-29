@@ -33,25 +33,52 @@ package ecidice
 package model
 package mode
 
-import time._
-import Level._
+import ecidice.UnitSpec
+import ModelTestHelpers._
 
-/**
- * Defines the rules for spawning a new dice.
- * 
- * A new dice is only spawned if and only if both spaces at a given tile are
- * empty. The new dice always appears on the floor.
- * 
- * @author Andreas Flierl
- */
-trait SpawningOfDice[A <: Mode[A]] extends Helpers { this: A =>
-  def spawnDice(tile: Tile, now: Instant, dice: Dice = Dice.random) = {
-    val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
+class AnyModeWithSpawningOfDieSpec[A <: Mode[A] with SpawningOfDie[A]](game: A) extends UnitSpec {
+  
+  "Any mode that supports the spawning of die" should {
+
+    "spawn a new die on an empty tile" in {
+      val tile = Tile(1, 2)
+      val die = Die(6, 5, 4)
+      
+      val contents = game.spawnDie(tile, now, die)
+                         .board(tile.floor)
+                         
+      contents aka "contents" must be equalTo DieAppearing(die, tile.floor, now)
+    }
     
-    if (free) {
-      val space = Space(tile, Floor)
-      val activity = DiceAppearing(Dice.default, space, now)
-      dupe(board = board + (space -> activity))
-    } else this
+    "not spawn a die on a tile with an appearing die" in {
+      val tile = Tile(1, 0)
+      val before = game.spawnDie(tile, now)
+      val after = before.spawnDie(tile, now)
+      
+      after must be equalTo before
+    }
+    
+    "not spawn a die on a tile with a solid die" in {
+      val tile = Tile(1, 0)
+      val before = game.addSolidDie(tile.floor)
+      val after = before.spawnDie(tile, now)
+      
+      after must be equalTo before
+    }
+    
+    "not spawn a die on a tile with two solid die" in {
+      val tile = Tile(1, 0)
+      val before = game.addSolidDie(tile.floor)
+                       .addSolidDie(tile.raised)
+      val after = before.spawnDie(tile, now)
+      
+      after must be equalTo before
+    }
+    
+    //TODO specify interaction with movement
   }
+}
+object AnyModeWithSpawningOfDieSpec {
+  def apply[A <: Mode[A] with SpawningOfDie[A]]()(implicit game: A) = 
+    new AnyModeWithSpawningOfDieSpec(game)
 }

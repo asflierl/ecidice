@@ -42,10 +42,8 @@ import org.specs2._
 
 object SpaceSpec extends UnitSpec {
   "A space on the game board" should {
-    "be consistent in equivalence and ordering" in {
-      check { 
-        (a: Space, b: Space) => (a == b) must be equalTo ((a compare b) == 0)
-      }
+    "be consistent in equivalence and ordering" in check {
+      (a: Space, b: Space) => (a == b) must be equalTo ((a compare b) == 0)
     }
     
     "have correct ordering behaviour" in {

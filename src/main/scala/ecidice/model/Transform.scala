@@ -35,7 +35,7 @@ package model
 import Direction._
 
 /**
- * Lists possible transformations of a dice.
+ * Lists possible transformations of a die.
  * 
  * @author Andreas Flierl
  */

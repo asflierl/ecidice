@@ -46,51 +46,51 @@ sealed trait Activity {
   val time = Timespan(start, duration)
 }
 
-case class DiceAppearing(
-  dice: Dice,
+case class DieAppearing(
+  die: Die,
   location: Space,
   start: Instant
 ) extends Activity with Contents {
-  def duration = DiceAppearing.duration
+  def duration = DieAppearing.duration
 }
-object DiceAppearing {
+object DieAppearing {
   val duration = Duration(5d)
 }
   
-case class DiceMovement(
-  dice: Dice,
+case class DieMovement(
+  die: Die,
   origin: Space,
   destination: Space, 
   transform: Transform.Value,
   controller: Player,
   start: Instant
 ) extends Activity with Contents {
-  def duration = DiceMovement.duration
+  def duration = DieMovement.duration
 }
-object DiceMovement {
+object DieMovement {
   val duration = Duration(.25d)
 }
 
-case class DiceFalling(
-  dice: Dice,
+case class DieFalling(
+  die: Die,
   location: Tile,
   controller: Option[Player],
   start: Instant
 ) extends Activity with Contents {
-  def duration = DiceFalling.duration
+  def duration = DieFalling.duration
 }
-object DiceFalling {
+object DieFalling {
   val duration = Duration(.25d)
 }
 
-sealed trait DiceLock[T <: DiceGroup[T]] extends Activity {
+sealed trait DieLock[T <: DieGroup[T]] extends Activity {
   def group: T
 }
 
 case class ChargeLock(
   group: ChargeGroup,
   start: Instant
-) extends DiceLock[ChargeGroup] {
+) extends DieLock[ChargeGroup] {
   def duration = ChargeLock.duration
 }
 object ChargeLock {
@@ -100,7 +100,7 @@ object ChargeLock {
 case class BurstLock(
   group: BurstGroup,
   start: Instant
-) extends DiceLock[BurstGroup] {
+) extends DieLock[BurstGroup] {
   def duration = BurstLock.duration
 }
 object BurstLock {

@@ -40,8 +40,8 @@ import matcher._
 import org.specs2.mutable._
 import specification._
 
-object DiceMatcherSpec extends UnitSpec {
-  "A dice matcher" should {
+object DieMatcherSpec extends UnitSpec {
+  "A die matcher" should {
     
     """
     find group 'a' on this 3 x 3 board:
@@ -51,15 +51,15 @@ object DiceMatcherSpec extends UnitSpec {
     | 6a | 4b | 6a |
     | 6a | 6a | 6a |
     """ forExample { case TestBoard(board, List(similarDice, separators)) =>
-      forall(similarDice)(die => DiceMatcher(board) find die must be equalTo similarDice)
+      forall(similarDice)(die => DieMatcher(board) find die must be equalTo similarDice)
     }
     
     "be able to search a larger board" in {
       val empty = Board.sized(40, 40)
-      val dice = empty.floorSpaces.mapValues(_ => Dice.default)
+      val dice = empty.floorSpaces.mapValues(_ => Die.default)
       val board = empty ++ dice
       
-      DiceMatcher(board) find dice.head must be equalTo dice
+      DieMatcher(board) find dice.head must be equalTo dice
     }
     
     """ 
@@ -72,7 +72,7 @@ object DiceMatcherSpec extends UnitSpec {
     """ forExample { case TestBoard(board, groups) =>
       forall(groups)(dice => 
         forall(dice)(die => 
-          DiceMatcher(board) find die must be equalTo dice))
+          DieMatcher(board) find die must be equalTo dice))
     }
     
     """ 
@@ -83,7 +83,7 @@ object DiceMatcherSpec extends UnitSpec {
     |    | 6a |    |
     | 6a |    | 6a |
     """ forExample { case TestBoard(board, List(isolatedDice)) =>
-      forall(isolatedDice)(die => DiceMatcher(board).find(die) must be equalTo Map(die))
+      forall(isolatedDice)(die => DieMatcher(board).find(die) must be equalTo Map(die))
     }
   }
 }

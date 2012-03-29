@@ -31,59 +31,20 @@
 
 package ecidice
 package model
-package mode
 
-import ecidice.UnitSpec
-import ModelTestHelpers._
+sealed trait DieGroup[T <: DieGroup[T]] { this: T =>
+  def dice: Map[Space, Die]
+  protected def create(dice: Map[Space, Die]): T
 
-/**
- * Informal specification of any game mode that supports control requests.
- * 
- * @author Andreas Flierl
- */
-class AnyModeWithSpawningOfDiceSpec[A <: Mode[A] with SpawningOfDice[A]](game: A) extends UnitSpec {
-  
-  "Any mode that supports the spawning of dice" should {
-
-    "spawn a new dice on an empty tile" in {
-      val tile = Tile(1, 2)
-      val dice = Dice(6, 5, 4)
-      
-      val contents = game.spawnDice(tile, now, dice)
-                         .board(tile.floor)
-                         
-      contents aka "contents" must be equalTo DiceAppearing(dice, tile.floor, now)
-    }
-    
-    "not spawn a dice on a tile with an appearing dice" in {
-      val tile = Tile(1, 0)
-      val before = game.spawnDice(tile, now)
-      val after = before.spawnDice(tile, now)
-      
-      after must be equalTo before
-    }
-    
-    "not spawn a dice on a tile with a solid dice" in {
-      val tile = Tile(1, 0)
-      val before = game.addSolidDice(tile.floor)
-      val after = before.spawnDice(tile, now)
-      
-      after must be equalTo before
-    }
-    
-    "not spawn a dice on a tile with two solid dice" in {
-      val tile = Tile(1, 0)
-      val before = game.addSolidDice(tile.floor)
-                       .addSolidDice(tile.raised)
-      val after = before.spawnDice(tile, now)
-      
-      after must be equalTo before
-    }
-    
-    //TODO specify interaction with movement
-  }
+  def +(kv: (Space, Die)) = create(dice + kv)
+  def ++(otherGroup: DieGroup[_]) = create(dice ++ otherGroup.dice)
+  def contains(s: Space) = dice.contains(s)
 }
-object AnyModeWithSpawningOfDiceSpec {
-  def apply[A <: Mode[A] with SpawningOfDice[A]]()(implicit game: A) = 
-    new AnyModeWithSpawningOfDiceSpec(game)
+
+case class ChargeGroup(dice: Map[Space, Die]) extends DieGroup[ChargeGroup] {
+  def create(m: Map[Space, Die]) = copy(m)
+}
+
+case class BurstGroup(dice: Map[Space, Die]) extends DieGroup[BurstGroup] {
+  def create(m: Map[Space, Die]) = copy(m)
 }
