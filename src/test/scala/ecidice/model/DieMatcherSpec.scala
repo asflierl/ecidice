@@ -43,7 +43,35 @@ import specification._
 object DieMatcherSpec extends UnitSpec {
   "A die matcher" should {
     
-    """
+    """ 
+    find the correct groups of dice
+    
+    In particular, it should find and return all dice (including `startDie`) that show the same 
+    top face as `startDie` and that are reachable from `startDie` via other such dice (by only 
+    moving up, down, left or right once or several times). Only solid dice that are uncontrolled
+    are to be considered.
+    
+    As an example consider the following 3 x 3 board:
+      
+    |----|----|----|
+    | 6a | 4b | 6d |
+    | 6a | 3c | 6d |
+    | 6a | 6a | 3e |
+    
+    Starting from any die in group "a", it should return all dice in that group, i.e. the dice at
+    `(x: 1, y: 1)`, `(x: 1, y: 2)`, `(x: 1, y: 3)`, `(x: 2, y: 3)` . Starting from the die at `(x: 2, y: 1)`
+    it should only return that die (group "b"). Same thing for the die at `(x: 2, y: 2)` (group "c")
+    and `(x: 3, y: 3)` (group "e"). Group "d" consists of the dice at `(x: 3, y: 1)` and `(x: 3, y: 2)`
+    and should be found if and only if the search starts at one of those 2 dice.
+
+    """ forExample { case TestBoard(board, groups) =>
+      forall(groups)(dice => 
+        forall(dice)(die => 
+          DieMatcher(board) find die must be equalTo dice))
+    }
+ 
+    
+    """ 
     find group 'a' on this 3 x 3 board:
     
     |----|----|----|

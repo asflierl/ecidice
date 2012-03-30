@@ -49,7 +49,7 @@ case class Tile(column: Int, row: Int) extends Ordered[Tile] {
   * @param dir the direction to move in
   * @return the tile resulting from the movement
   */
-  def look(dir: Direction.Value) = dir match {
+  def look(dir: Direction.Value): Tile = dir match {
     case Backward => Tile(column, row + 1)
     case Forward => Tile(column, row - 1)
     case Right => Tile(column + 1, row)

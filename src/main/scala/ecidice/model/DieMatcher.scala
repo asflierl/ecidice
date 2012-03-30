@@ -38,26 +38,6 @@ import Board.spacesToTiles
 import collection.breakOut
 import annotation.tailrec
 
-/**
- * Finds and returns all dice (including `startDie`) that show the same 
- * top face as `startDie` and that are reachable from `startDie`
- * via other such dice (by only moving up, down, left or right once or 
- * several times). Only solid dice that are uncontrolled are considered.
- * 
- * As an example consider the following 3 x 3 board:
- * <pre>
- *     X Y Z
- *   ---------
- * A | 6 4 6 |
- * B | 6 3 6 |
- * C | 6 6 3 |
- *   ---------
- * </pre>
- * 
- * Starting from CX, the find method would return AX, BX, CX and CY. Starting
- * from BY, it would only return BY. Starting from BZ, it would return AZ 
- * and BZ.
- */
 final class DieMatcher(board: Board) {
   def find(startAt: (Space, Die)) = {
     val (startSpace, startDie) = startAt

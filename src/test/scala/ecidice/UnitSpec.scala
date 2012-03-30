@@ -44,7 +44,8 @@ trait UnitSpec extends mutable.Specification
                   with Mockito 
                   with ScalaCheck 
                   with SpecHelpers {
-
+  import UnitSpec._
+  
   implicit def enrichUnitSpecString(s: String) = new EnrichedString(s)
   
   class EnrichedString(pre: String) {
@@ -52,11 +53,17 @@ trait UnitSpec extends mutable.Specification
     
     def forExample[A](r: String => A)(implicit ev: A => Result): Example = {
       val lines = detectAndStripMargin(pre)
-      val board = joinLines(lines.tail)
-      val example = lines.head in r(board)
+      val exampleText = lines.head
+      val preBoardText = joinLines(lines.tail.dropWhile(_.trim.isEmpty).takeWhile(line => ! tableHeaderLine.matcher(line).matches))
+      val boardAndFollowingText = lines.dropWhile(line => ! tableHeaderLine.matcher(line).matches)
+      val board = joinLines(boardAndFollowingText.takeWhile(! _.trim.isEmpty))
+      val example = exampleText in r(board)
       addFragments(bt)
-      textFragment(board)
+      textFragment(preBoardText + joinLines(boardAndFollowingText))
       example
     }
   }
+}
+object UnitSpec {
+  private[UnitSpec] val tableHeaderLine = """\s*[|-]+\s*""".r.pattern
 }
