@@ -78,6 +78,7 @@ object DieMatcherSpec extends UnitSpec {
     | 6a | 6a | 4b |
     | 6a | 4b | 6a |
     | 6a | 6a | 6a |
+    
     """ forExample { case TestBoard(board, List(similarDice, separators)) =>
       forall(similarDice)(die => Dice on board resemblingAndConnectedTo die must be equalTo similarDice)
     }
@@ -97,6 +98,7 @@ object DieMatcherSpec extends UnitSpec {
     |    |    | 5a |
     |    | 4c | 5a |
     | 6b | 6b |    |
+    
     """ forExample { case TestBoard(board, groups) =>
       forall(groups)(diceInGroup => 
         forall(diceInGroup)(die => 
@@ -110,6 +112,7 @@ object DieMatcherSpec extends UnitSpec {
     | 6a |    | 6a |
     |    | 6a |    |
     | 6a |    | 6a |
+    
     """ forExample { case TestBoard(board, List(isolatedDice)) =>
       forall(isolatedDice)(die => Dice on board resemblingAndConnectedTo die must be equalTo Map(die))
     }
