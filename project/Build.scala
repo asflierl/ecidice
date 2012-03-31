@@ -27,14 +27,14 @@ object EcidiceBuild extends Build {
 
     testOptions <+= crossTarget map { ct =>
       Tests.Setup { () => 
-        System.setProperty("specs2.outDir", new File(ct, "specs2").getAbsolutePath)
+        System.setProperty("specs2.outDir", (ct / "specs2") absolutePath)
       }
     },
 
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core" % "6.0.4",
       "org.scala-tools.time" %% "time" % "0.5",
-      "com.typesafe.akka" % "akka-actor" % "2.0-RC1",
+      "com.typesafe.akka" % "akka-actor" % "2.0",
       
       "org.specs2" %% "specs2" % "1.8.2" % "test",
       "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
