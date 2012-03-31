@@ -39,7 +39,7 @@ import collection.breakOut
 import annotation.tailrec
 
 final class DieMatcher(board: Board) {
-  def find(startAt: (Space, Die)) = {
+  def resemblingAndConnectedTo(startAt: (Space, Die)) = {
     val (startSpace, startDie) = startAt
     val top = startDie.top
     
@@ -68,6 +68,6 @@ final class DieMatcher(board: Board) {
                .collect { case (s, d: Die) => (s, d) }
                .toList
 }
-object DieMatcher {
+object DieMatcher extends (Board => DieMatcher) {
   def apply(board: Board) = new DieMatcher(board)
 }

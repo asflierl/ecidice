@@ -65,9 +65,9 @@ object DieMatcherSpec extends UnitSpec {
     and should be found if and only if the search starts at one of those 2 dice.
 
     """ forExample { case TestBoard(board, groups) =>
-      forall(groups)(dice => 
-        forall(dice)(die => 
-          DieMatcher(board) find die must be equalTo dice))
+      forall(groups)(diceInGroup => 
+        forall(diceInGroup)(die => 
+          Dice on board resemblingAndConnectedTo die must be equalTo diceInGroup))
     }
  
     
@@ -79,7 +79,7 @@ object DieMatcherSpec extends UnitSpec {
     | 6a | 4b | 6a |
     | 6a | 6a | 6a |
     """ forExample { case TestBoard(board, List(similarDice, separators)) =>
-      forall(similarDice)(die => DieMatcher(board) find die must be equalTo similarDice)
+      forall(similarDice)(die => Dice on board resemblingAndConnectedTo die must be equalTo similarDice)
     }
     
     "be able to search a larger board" in {
@@ -87,7 +87,7 @@ object DieMatcherSpec extends UnitSpec {
       val dice = empty.floorSpaces.mapValues(_ => Die.default)
       val board = empty ++ dice
       
-      DieMatcher(board) find dice.head must be equalTo dice
+      Dice on board resemblingAndConnectedTo dice.head must be equalTo dice
     }
     
     """ 
@@ -98,9 +98,9 @@ object DieMatcherSpec extends UnitSpec {
     |    | 4c | 5a |
     | 6b | 6b |    |
     """ forExample { case TestBoard(board, groups) =>
-      forall(groups)(dice => 
-        forall(dice)(die => 
-          DieMatcher(board) find die must be equalTo dice))
+      forall(groups)(diceInGroup => 
+        forall(diceInGroup)(die => 
+          Dice on board resemblingAndConnectedTo die must be equalTo diceInGroup))
     }
     
     """ 
@@ -111,7 +111,7 @@ object DieMatcherSpec extends UnitSpec {
     |    | 6a |    |
     | 6a |    | 6a |
     """ forExample { case TestBoard(board, List(isolatedDice)) =>
-      forall(isolatedDice)(die => DieMatcher(board).find(die) must be equalTo Map(die))
+      forall(isolatedDice)(die => Dice on board resemblingAndConnectedTo die must be equalTo Map(die))
     }
   }
 }
