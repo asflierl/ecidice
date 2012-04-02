@@ -53,10 +53,10 @@ case class DieAppearing(
 ) extends Activity with Contents {
   def duration = DieAppearing.duration
 }
-object DieAppearing {
+object DieAppearing extends ((Die, Space, Instant) => DieAppearing) {
   val duration = Duration(5d)
 }
-  
+
 case class DieMovement(
   die: Die,
   origin: Space,
@@ -67,7 +67,7 @@ case class DieMovement(
 ) extends Activity with Contents {
   def duration = DieMovement.duration
 }
-object DieMovement {
+object DieMovement extends ((Die, Space, Space, Transform.Value, Player, Instant) => DieMovement) {
   val duration = Duration(.25d)
 }
 
@@ -79,7 +79,7 @@ case class DieFalling(
 ) extends Activity with Contents {
   def duration = DieFalling.duration
 }
-object DieFalling {
+object DieFalling extends ((Die, Tile, Option[Player], Instant) => DieFalling){
   val duration = Duration(.25d)
 }
 
@@ -93,7 +93,7 @@ case class ChargeLock(
 ) extends DieLock[ChargeGroup] {
   def duration = ChargeLock.duration
 }
-object ChargeLock {
+object ChargeLock extends ((ChargeGroup, Instant) => ChargeLock){
   val duration = Duration(10d)
 }
 
@@ -103,7 +103,7 @@ case class BurstLock(
 ) extends DieLock[BurstGroup] {
   def duration = BurstLock.duration
 }
-object BurstLock {
+object BurstLock extends ((BurstGroup, Instant) => BurstLock) {
   val duration = Duration(1d)
 }
 
@@ -115,6 +115,6 @@ case class PlayerMovement(
 ) extends Activity {
   def duration = PlayerMovement.duration
 }
-object PlayerMovement {
+object PlayerMovement extends ((Player, Tile, Tile, Instant) => PlayerMovement) {
   val duration = Duration(.25d)
 }

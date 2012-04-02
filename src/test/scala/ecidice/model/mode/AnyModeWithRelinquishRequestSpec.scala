@@ -54,6 +54,5 @@ class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](g
   }
 }
 object AnyModeWithRelinquishRequestSpec {
-  def apply[A <: Mode[A] with RelinquishRequest[A]]()(implicit game: A) = 
-    new AnyModeWithRelinquishRequestSpec(game)
+  def apply[A <: Mode[A] with RelinquishRequest[A]]()(implicit game: A) = new AnyModeWithRelinquishRequestSpec(game)
 }

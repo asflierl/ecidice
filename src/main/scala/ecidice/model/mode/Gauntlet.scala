@@ -52,6 +52,6 @@ case class Gauntlet(
   def dupe(board: Board, locks: Set[DieLock[_]], players: Map[Player, Assignment]) = 
     Gauntlet(board, locks, players)
 }
-object Gauntlet {
+object Gauntlet extends ((Board, Set[DieLock[_]], Map[Player, Assignment]) => Gauntlet) {
   def create(d: Int) = Gauntlet(Board.sized(d, d), Set.empty, Map.empty)
 }

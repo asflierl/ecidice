@@ -79,6 +79,5 @@ class AnyModeWithSpawningOfDieSpec[A <: Mode[A] with SpawningOfDie[A]](game: A) 
   }
 }
 object AnyModeWithSpawningOfDieSpec {
-  def apply[A <: Mode[A] with SpawningOfDie[A]]()(implicit game: A) = 
-    new AnyModeWithSpawningOfDieSpec(game)
+  def apply[A <: Mode[A] with SpawningOfDie[A]]()(implicit game: A) = new AnyModeWithSpawningOfDieSpec(game)
 }

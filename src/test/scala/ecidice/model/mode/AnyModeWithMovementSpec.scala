@@ -262,6 +262,5 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
   def threeOnTop = Die.default.transform(RotateForward)
 }
 object AnyModeWithMovementSpec {
-  def apply[A <: Mode[A] with Movement[A]]()(implicit game: A) = 
-    new AnyModeWithMovementSpec(game)
+  def apply[A <: Mode[A] with Movement[A]]()(implicit game: A) = new AnyModeWithMovementSpec(game)
 }

@@ -70,7 +70,7 @@ case class Die(top: Int, right: Int, front: Int) extends Contents {
     case FlipLeftOrRight => Die(bottom, left, front)
   }
 }
-object Die {
+object Die extends ((Int, Int, Int) => Die){
   val default = Die(6, 5, 4)
   
   val allRotations = next(default, 0, 0, List.empty)

@@ -136,6 +136,5 @@ class AnyModeWithControlRequestSpec[A <: Mode[A] with ControlRequest[A]](game: A
 }
 
 object AnyModeWithControlRequestSpec {
-  def apply[A <: Mode[A] with ControlRequest[A]]()(implicit game: A) = 
-    new AnyModeWithControlRequestSpec(game)
+  def apply[A <: Mode[A] with ControlRequest[A]]()(implicit game: A) = new AnyModeWithControlRequestSpec(game)
 }
