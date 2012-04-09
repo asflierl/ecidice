@@ -41,4 +41,5 @@ case class Standing(location: Tile) extends Assignment
 case class MovingAlone(activity: PlayerMovement) extends Assignment
 case class ControllingADie(location: Space) extends Assignment
 case class MovingWithADie(activity: DieMovement, relinquishAfter: Boolean) extends Assignment
-case class FallingWithADie(activity: DieFalling) extends Assignment
+case class FallingWithADie(activity: DieFalling, relinquishAfter: Boolean) extends Assignment
+

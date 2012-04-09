@@ -49,7 +49,7 @@ case class Gauntlet(
      with RelinquishRequest[Gauntlet]
      with Movement[Gauntlet] {
   
-  def dupe(board: Board, locks: Set[DieLock[_]], players: Map[Player, Assignment]) = 
+  def copy(board: Board, locks: Set[DieLock[_]], players: Map[Player, Assignment]) = 
     Gauntlet(board, locks, players)
 }
 object Gauntlet extends ((Board, Set[DieLock[_]], Map[Player, Assignment]) => Gauntlet) {

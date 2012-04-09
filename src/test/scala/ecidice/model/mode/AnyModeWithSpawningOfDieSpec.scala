@@ -35,6 +35,8 @@ package mode
 
 import ecidice.UnitSpec
 import ModelTestHelpers._
+import scalaz.Success
+import scalaz.Failure
 
 class AnyModeWithSpawningOfDieSpec[A <: Mode[A] with SpawningOfDie[A]](game: A) extends UnitSpec {
   
@@ -44,35 +46,33 @@ class AnyModeWithSpawningOfDieSpec[A <: Mode[A] with SpawningOfDie[A]](game: A) 
       val tile = Tile(1, 2)
       val die = Die(6, 5, 4)
       
-      val contents = game.spawnDie(tile, now, die)
-                         .board(tile.floor)
+      val contents = for {
+        g <- game.spawnDie(tile, now, die)
+      } yield g.board(tile.floor)
                          
-      contents aka "contents" must be equalTo DieAppearing(die, tile.floor, now)
+      contents aka "contents" must succeedWith(DieAppearing(die, tile.floor, now))
     }
     
     "not spawn a die on a tile with an appearing die" in {
       val tile = Tile(1, 0)
       val before = game.spawnDie(tile, now)
-      val after = before.spawnDie(tile, now)
       
-      after must be equalTo before
+      before.flatMap(_.spawnDie(tile, now)) must fail
     }
     
     "not spawn a die on a tile with a solid die" in {
       val tile = Tile(1, 0)
       val before = game.addSolidDie(tile.floor)
-      val after = before.spawnDie(tile, now)
       
-      after must be equalTo before
+      before.spawnDie(tile, now) must fail
     }
     
     "not spawn a die on a tile with two solid die" in {
       val tile = Tile(1, 0)
       val before = game.addSolidDie(tile.floor)
                        .addSolidDie(tile.raised)
-      val after = before.spawnDie(tile, now)
       
-      after must be equalTo before
+      before.spawnDie(tile, now) must fail
     }
     
     //TODO specify interaction with movement

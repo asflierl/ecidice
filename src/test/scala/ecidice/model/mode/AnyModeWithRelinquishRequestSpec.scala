@@ -35,22 +35,22 @@ package mode
 
 import ecidice.UnitSpec
 import ModelTestHelpers._
+import scalaz.Success
 
 class AnyModeWithRelinquishRequestSpec[A <: Mode[A] with RelinquishRequest[A]](game: A) extends UnitSpec {
   
   "Any mode that allows a player to relinquish control of a die" should {
     
     "allow relinquishing when the player is controlling a die" in {
-      val beforeControl = game.spawnPlayer(Tile(1, 1))
-                         .addSolidDie(Tile(1, 1).floor)
-                         
-      val afterRelinquish =
-        beforeControl.control(Player(1))
-                     .relinquish(Player(1))
+      val Success((beforeControl, afterRelinquish)) = for {
+        g1 <- game.spawnPlayer(Tile(1, 1))
+        g2 =  g1.addSolidDie(Tile(1, 1).floor)
+        g3 <- g2.control(Player(1))
+        g4 =  g3.relinquish(Player(1))
+      } yield (g2, g4)
       
       afterRelinquish must be equalTo beforeControl
     }
-    //TODO specifiy movement cases
   }
 }
 object AnyModeWithRelinquishRequestSpec {

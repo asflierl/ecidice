@@ -33,9 +33,10 @@ package ecidice
 package model
 package mode
 
+import scalaz.Scalaz.ToValidationV
+
 trait SpawningOfPlayer[A <: Mode[A]] { this: A =>
-  def spawnPlayer(there: Tile) =
-    dupe(players = players + (Player(nextPlayerID) -> Standing(there))) 
+  def spawnPlayer(there: Tile): Valid[A] = copy(players = players + (Player(nextPlayerID) -> Standing(there))).success //TODO check max number of players
   
   private def nextPlayerID = 
     if (players isEmpty) 1

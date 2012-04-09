@@ -51,14 +51,14 @@ trait Mode[A <: Mode[A]] { this: A =>
   def locks: Set[DieLock[_]]
   def players: Map[Player, Assignment]
   
-  def spawnPlayer(tile: Tile): A
-  def spawnDie(tile: Tile, now: Instant, die: Die = Die.random): A
+  def spawnPlayer(tile: Tile): Valid[A]
+  def spawnDie(tile: Tile, now: Instant, die: Die = Die.random): Valid[A]
   
-  def control(player: Player): A
+  def control(player: Player): Valid[A]
   def relinquish(player: Player): A
-  def move(player: Player, dir: Direction.Value, now: Instant): A
+  def move(player: Player, dir: Direction.Value, now: Instant): Valid[A]
   
-  def dupe(board: Board = board, 
+  def copy(board: Board = board, 
            locks: Set[DieLock[_]] = locks,
            players: Map[Player, Assignment] = players): A
 }

@@ -47,10 +47,10 @@ trait RelinquishRequest[A <: Mode[A]] { this: A =>
   
   private def relinquishSolidDie(player: Player, space: Space) = {
     val die = board(space) match { case SolidControlled(d, _) => d }
-    dupe(board = board + (space -> die),
+    copy(board = board + (space -> die),
          players = players + (player -> Standing(space.tile)))
   }
   
   private def relinquishMovement(player: Player, move: MovingWithADie) =
-    dupe(players = players + (player -> MovingWithADie(move.activity, true)))
+    copy(players = players + (player -> MovingWithADie(move.activity, true)))
 }

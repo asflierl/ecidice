@@ -82,16 +82,16 @@ object ModelTestHelpers {
 
 class ModeTestHelpers[A <: Mode[A]](m: A) {
   def addSolidDie(contents: (Space, Die)) = 
-    m.dupe(board = m.board + (contents))
+    m.copy(board = m.board + (contents))
     
   def addSolidDie(sp: Space) =
-    m.dupe(board = m.board + (sp -> Die.random))
+    m.copy(board = m.board + (sp -> Die.random))
     
   def addChargeGroup(die: => Die, tiles: Set[Tile]) = {
     val spaces = tiles.map(_.floor)
     val newBoard = m.board ++ spaces.map((_, Charging))(breakOut)
     val lock = ChargeLock(ChargeGroup(spaces.map((_, die))(breakOut)), Instant())
     
-    m.dupe(board = newBoard, locks = m.locks + lock)
+    m.copy(board = newBoard, locks = m.locks + lock)
   }
 }

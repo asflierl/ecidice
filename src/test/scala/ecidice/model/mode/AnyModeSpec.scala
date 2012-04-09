@@ -35,20 +35,23 @@ package mode
 
 import ecidice.UnitSpec
 import ModelTestHelpers._
+import scalaz.Success
 
 class AnyModeSpec[A <: Mode[A]](game: A) extends UnitSpec {
   "Any mode" should {
     "correctly dupe itself" in {
-      game.dupe() aka "the duped game" must be equalTo game
+      game.copy() aka "the duped game" must be equalTo game
     }
     
     "correctly spawn new players" in {
-      val gameWithOnePlayer = game.spawnPlayer(Tile(0, 0))
-      val gameWithTwoPlayers = gameWithOnePlayer.spawnPlayer(Tile(2, 1))
+      val players = for {
+        gameWithOne <- game spawnPlayer Tile(0, 0)
+        gameWithTwo <- gameWithOne spawnPlayer Tile(2, 1)
+      } yield gameWithTwo players
       
-      gameWithTwoPlayers.players must be equalTo 
+      players must succeedWith(
         Map(Player(1) -> Standing(Tile(0, 0)),
-            Player(2) -> Standing(Tile(2, 1)))
+            Player(2) -> Standing(Tile(2, 1))))
     }
   }
 }

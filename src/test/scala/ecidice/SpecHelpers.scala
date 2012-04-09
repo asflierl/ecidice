@@ -34,9 +34,12 @@ package ecidice
 import org.specs2.matcher._
 
 import scala.util.Properties.lineSeparator
-import collection.breakOut
+import scala.collection.breakOut
+import scalaz.Validation
+import scalaz.Success
+import scalaz.Failure
 
-trait SpecHelpers { this: DataTables =>
+trait SpecHelpers { this: DataTables with Matchers with StandardMatchResults =>
   val floatDelta = 1E-6f
   val delta = 1E-12d
   implicit def enrichString(s: String) = new EnrichedString(s)
@@ -54,4 +57,13 @@ trait SpecHelpers { this: DataTables =>
     
     def m = joinLines(detectAndStripMargin(pre))
   }
+  
+  def succeedWith[A](a: A) = be_===(Success(a): Valid[A])
+  
+  def fail[A]: Matcher[Valid[A]] = (v: Valid[A]) => (
+    v match { 
+      case Failure(_) => true
+      case _ => false
+    }, 
+    v.toString + " is not a failure")
 }

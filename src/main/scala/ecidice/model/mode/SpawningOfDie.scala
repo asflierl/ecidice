@@ -35,6 +35,7 @@ package mode
 
 import time._
 import Level._
+import scalaz.Scalaz.ToValidationV
 
 /**
  * Defines the rules for spawning a new die.
@@ -45,13 +46,13 @@ import Level._
  * @author Andreas Flierl
  */
 trait SpawningOfDie[A <: Mode[A]] extends Helpers { this: A =>
-  def spawnDie(tile: Tile, now: Instant, die: Die = Die.random) = {
+  def spawnDie(tile: Tile, now: Instant, die: Die = Die.random): Valid[A] = {
     val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
     
     if (free) {
       val space = Space(tile, Floor)
       val activity = DieAppearing(Die.default, space, now)
-      dupe(board = board + (space -> activity))
-    } else this
+      copy(board = board + (space -> activity)).success
+    } else (tile.toString + " is not empty").failNel
   }
 }

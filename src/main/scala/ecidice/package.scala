@@ -31,8 +31,17 @@
 
 import ecidice.util.NotYetImplementedException
 import scala.util.MurmurHash
+import scalaz.ValidationNEL
+import scalaz.Validation.failure
+import scalaz.Validation.validationMonad
+import scalaz.NonEmptyList
+import scalaz.NonEmptyList.nel
 
 package object ecidice {
+  type =/>[-A, +B] = PartialFunction[A, B]
+  
+  type Valid[A] = ValidationNEL[String, A]
+  
   def init[A](a: A)(f: A => Any) = { f(a); a }
   
   def ??? = throw new NotYetImplementedException
@@ -44,4 +53,16 @@ package object ecidice {
     args foreach generator
     generator hash
   }
+  
+  //implicit val gameValidationMonad = scalaz.Validation.validationMonad[scalaz.NonEmptyList[String]]
+  
+  /** TODO evaluate facilitating something like this:
+    * import scalaz._
+    * import scalaz.syntax.monad._
+    *  
+    * val y = success(game) ∘
+    *         spawnPlayer(Tile(0, 2)) ∘
+    *         addSolidDie(Tile(0, 2).floor) >>=
+    *         control(Player(1))
+    */
 }

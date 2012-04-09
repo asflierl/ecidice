@@ -33,6 +33,8 @@ package ecidice
 package model
 package mode
 
+import scalaz.Scalaz.ToValidationV
+
 /**
  * Defines the rules for how and when a player may gain control over a die.
  * 
@@ -52,27 +54,28 @@ package mode
  * @author Andreas Flierl
  */
 trait ControlRequest[A <: Mode[A]] extends Helpers { this: A =>
-  def control(player: Player) = {
-    def controlTile(loc: Tile) = 
+  def control(player: Player): Valid[A] = {
+    def controlTile(loc: Tile): Valid[A] = 
       if (! isEmpty(board(loc.raised))) controlSpace(loc.raised)  
       else controlSpace(loc.floor)
     
-    def controlSpace(space: Space) = board(space) match {
-      case d @ Die(_,_,_) => controlDie(space, d)
-      case _ => this
+    def controlSpace(space: Space): Valid[A] = board(space) match {
+      case d @ Die(_,_,_) => (controlDie(space, d)).success
+      case _ => ("no controllable die at " + space).failNel
     }
     
-    def controlDie(space: Space, die: Die) =
-      dupe(board = board + (space -> SolidControlled(die, player)),
+    def controlDie(space: Space, die: Die): A =
+      copy(board = board + (space -> SolidControlled(die, player)),
            players = players + (player -> ControllingADie(space)))
     
-    def retainControl(mov: DieMovement) =
-      dupe(players = players + (player -> MovingWithADie(mov, true)))
+    def retainControl(assignment: Assignment): A = copy(players = players + (player -> assignment))
            
     players(player) match {
-      case MovingWithADie(mov, _) => retainControl(mov)   
       case Standing(t) => controlTile(t)
-      case _ => this
+      case ControllingADie(s) => this.success
+      case MovingWithADie(mov, _) => retainControl(MovingWithADie(mov, false)).success
+      case FallingWithADie(fall, _) => (retainControl(FallingWithADie(fall, false))).success 
+      case x => (player.toString + " may not control anything right now: " + x).failNel
     }
   }
 }

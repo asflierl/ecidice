@@ -34,7 +34,7 @@ package model
 
 import Direction._
 
-case class Tile(column: Int, row: Int) extends Ordered[Tile] {
+final case class Tile(column: Int, row: Int) extends Ordered[Tile] {
   def floor = Space(this, Level.Floor)
   def raised = Space(this, Level.Raised)
   

@@ -34,6 +34,7 @@ package model
 package mode
 
 import time._
+import scalaz.Scalaz.ToValidationV
 
 /**
  * Defines the (partially quite complicated) rules for movement.
@@ -43,43 +44,44 @@ import time._
  */
 trait Movement[A <: Mode[A]] extends Helpers { this: A =>
 
-  def move(player: Player, dir: Direction.Value, now: Instant) = players(player) match {
+  def move(player: Player, dir: Direction.Value, now: Instant): Valid[A] = players(player) match {
     case Standing(tile) => 
       movePlayer(PlayerMovement(player, tile, tile.look(dir), now))
       
     case ControllingADie(origin) => moveDie(player, origin, dir, now)
     
-    case _ => this
+    case MovingAlone(_) | MovingWithADie(_, _) => this.success
+    
+    case _ => (player.toString + " may not move " + dir).failNel
   }
   
-  private def movePlayer(move: PlayerMovement) = {
+  private def movePlayer(move: PlayerMovement): Valid[A] =
     if (board.contains(move.destination))
-      dupe(players = players + (move.player -> MovingAlone(move)))
-    else this
-  }
+      copy(players = players + (move.player -> MovingAlone(move))).success
+    else (move.destination.toString + " outside of " + board).failNel
   
-  private def moveDie(player: Player, origin: Space, dir: Direction.Value, now: Instant) = {
+  private def moveDie(player: Player, origin: Space, dir: Direction.Value, now: Instant): Valid[A] = {
     val destinationTile = origin.tile.look(dir)
     
     def decideLevel = board(destinationTile.floor) match {
-      case Empty => moveTo(destinationTile.floor)
+      case Empty => moveTo(destinationTile.floor).success
       
       case Die(_, _, _) | DieAppearing(_, _, _) | Charging => 
-        moveTo(destinationTile.raised)
+        moveTo(destinationTile.raised).success
         
-      case _ => this
+      case _ => (destinationTile.floor.toString + " does not allow movement onto the tile").failNel
     }
 
     def moveTo(destination: Space) = {
       val move = DieMovement(dieAt(origin), origin, destination,
                              Transform(origin, destination, dir), player, now)
                               
-      dupe(players = players + (player -> MovingWithADie(move, false)),
+      copy(players = players + (player -> MovingWithADie(move, false)),
            board   = board   + (origin -> move) + (destination -> move))
     }
     
     if (isEmpty(board(destinationTile.raised))) decideLevel
-    else this
+    else (destinationTile.raised.toString + " is not empty").failNel
   }
   
   private def dieAt(loc: Space) = board(loc) match { 

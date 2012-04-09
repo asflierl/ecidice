@@ -32,11 +32,11 @@ object EcidiceBuild extends Build {
     },
 
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core" % "6.0.4",
+      "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT",
       "org.scala-tools.time" %% "time" % "0.5",
       "com.typesafe.akka" % "akka-actor" % "2.0",
       
-      "org.specs2" %% "specs2" % "1.8.2" % "test",
+      "org.specs2" %% "specs2" % "1.9" % "test",
       "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",

@@ -38,9 +38,9 @@ import Direction._
 import Transform._
 import org.specs2.matcher.Matcher
 import ModelTestHelpers._
+import scalaz.Success
 
 class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends UnitSpec {
-  
   "Any mode with player and dice movement" should {
     val center = Tile(1, 1)
     val die = Die.random
@@ -53,12 +53,14 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       Left        ! Tile(0, 1)    | {
         
         (direction, destination) => {
-          val testGame = game.spawnPlayer(Tile(1, 1))
-                             .move(Player(1), direction, now)
+          val testGame = for {
+            g1 <- game spawnPlayer Tile(1, 1)
+            g2 <- g1 move(Player(1), direction, now)
+          } yield g2
                              
-          testGame.players(Player(1)) aka
-            "assignment of player 1" must be equalTo
-            MovingAlone(PlayerMovement(Player(1), center, destination, now))
+          testGame.map(_.players(Player(1))) aka
+            "assignment of player 1" must succeedWith(
+            MovingAlone(PlayerMovement(Player(1), center, destination, now)))
         }
       }
     }
@@ -72,7 +74,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       Tile(2, 2)        ! Set(Forward, Left)            | {  
         
       (corner, allowed) => 
-        val initial = game.spawnPlayer(corner)
+        val Success(initial) = game spawnPlayer corner
         
         ((dir: Direction.Value) => dir must beAllowedFrom(initial, corner).iff(allowed contains dir)) foreach Direction.values
       }
@@ -87,7 +89,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       Tile(2, 1)      ! Right                           | {
         
       (pos, disallowed) =>
-        val initial = game.spawnPlayer(pos)
+        val Success(initial) = game spawnPlayer pos
         
         ((dir: Direction.Value) => dir must beAllowedFrom(initial, pos).iff(dir != disallowed)) foreach Direction.values
       }
@@ -99,10 +101,12 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
       
-        val testGame = game.spawnPlayer(origin.tile)
-                           .addSolidDie(origin -> die)
-                           .control(Player(1))
-                           .move(Player(1), somewhere, now)
+        val testGame = for {
+          g1 <- game spawnPlayer origin.tile
+          g2 =  g1 addSolidDie (origin -> die)
+          g3 <- g2 control Player(1)
+          g4 <- g3 move (Player(1), somewhere, now)
+        } yield g4
         
         testGame must moveLike(DieMovement(die, origin, destination, transform, Player(1), now))
       }) foreach Direction.values
@@ -114,11 +118,13 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
         
-        val testGame = game.spawnPlayer(origin.tile)
-                           .addSolidDie(origin.floor -> Die.random)
-                           .addSolidDie(origin -> die)
-                           .control(Player(1))
-                           .move(Player(1), somewhere, now)
+        val testGame = for {
+          g1 <- game spawnPlayer origin.tile
+          g2 =  g1 addSolidDie (origin.floor -> Die.random)
+          g3 =  g2 addSolidDie (origin -> die)
+          g4 <- g3 control Player(1)
+          g5 <- g4 move (Player(1), somewhere, now)
+        } yield g5
         
         testGame must moveLike(DieMovement(die, origin, destination, transform, Player(1), now))
       }) foreach Direction.values
@@ -128,11 +134,13 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       val origin = center.floor
       val destination = center.look(Backward).raised
       
-      val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDie(origin -> die)
-                         .addSolidDie(destination.floor -> Die.random)
-                         .control(Player(1))
-                         .move(Player(1), Backward, now)
+      val testGame = for {
+        g1 <- game spawnPlayer origin.tile
+        g2 =  g1 addSolidDie (origin -> die)
+        g3 =  g2 addSolidDie (destination.floor -> Die.random)
+        g4 <- g3 control Player(1)
+        g5 <- g4 move (Player(1), Backward, now)
+      } yield g5
       
       testGame must moveLike(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now))
     }
@@ -141,12 +149,14 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       val origin = center.raised
       val destination = center.look(Left).raised
       
-      val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDie(origin.floor -> Die.random)
-                         .addSolidDie(origin -> die)
-                         .addSolidDie(destination.floor -> Die.random)
-                         .control(Player(1))
-                         .move(Player(1), Left, now)
+      val testGame = for {
+        g1 <- game spawnPlayer origin.tile
+        g2 =  g1 addSolidDie (origin.floor -> Die.random)
+        g3 =  g2 addSolidDie (origin -> die)
+        g4 =  g3 addSolidDie (destination.floor -> Die.random)
+        g5 <- g4 control Player(1)
+        g6 <- g5 move (Player(1), Left, now)
+      } yield g6
       
       testGame must moveLike(DieMovement(die, origin, destination, RotateLeft, Player(1), now))
     }
@@ -155,12 +165,14 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       val origin = center.raised
       val destination = center.look(Right).floor
       
-      val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDie(origin.floor -> Die.random)
-                         .addSolidDie(origin -> die)
-                         .control(Player(1))
-                         .move(Player(1), Right, now)
-      
+      val testGame = for {
+        g1 <- game spawnPlayer origin.tile
+        g2 =  g1 addSolidDie (origin.floor -> Die.random)
+        g3 =  g2 addSolidDie (origin -> die)
+        g4 <- g3 control Player(1)
+        g5 <- g4 move (Player(1), Right, now)
+      } yield g5
+
       testGame must moveLike(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now))
     }
     
@@ -168,11 +180,13 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       val origin = center.floor
       val destination = center.look(Left).raised
       
-      val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDie(origin -> die)
-                         .spawnDie(destination.tile, now)
-                         .control(Player(1))
-                         .move(Player(1), Left, now)
+      val testGame = for {
+        g1 <- game spawnPlayer origin.tile
+        g2 =  g1 addSolidDie (origin -> die)
+        g3 <- g2 spawnDie (destination.tile, now)
+        g4 <- g3 control Player(1)
+        g5 <- g4 move (Player(1), Left, now)
+      } yield g5
       
       testGame must moveLike(DieMovement(die, origin, destination, FlipLeftOrRight, Player(1), now))
     }
@@ -181,82 +195,90 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       val origin = center.floor
       val destination = center.look(Forward).raised
       
-      val testGame = game.spawnPlayer(origin.tile)
-                         .addSolidDie(origin -> die)
-                         .addChargeGroup(threeOnTop, Set(
-                             Tile(0, 0), Tile(1, 0), Tile(2, 0)))
-                         .control(Player(1))
-                         .move(Player(1), Forward, now)
+      val testGame = for { 
+        g1 <- game spawnPlayer origin.tile
+        g2 =  g1 addSolidDie (origin -> die)
+        g3 =  g2 addChargeGroup(threeOnTop, Set(Tile(0, 0), Tile(1, 0), Tile(2, 0)))
+        g4 <- g3 control Player(1)
+        g5 <- g4 move (Player(1), Forward, now)
+      } yield g5
       
       testGame must moveLike(DieMovement(die, origin, destination, FlipUpOrDown, Player(1), now))
     }
     
     "not let a player move with a die from the floor onto a " +
     "die that is controlled by another player" in {
-      val before = game.spawnPlayer(Tile(1, 1))
-                       .addSolidDie(Tile(1, 1).floor)
-                       .control(Player(1))
-                       .spawnPlayer(Tile(2, 1))
-                       .addSolidDie(Tile(2, 1).floor)
-                       .control(Player(2))
-
-      val after = before.move(Player(1), Right, now)
+      val request = for {
+        g1 <- game spawnPlayer Tile(1, 1)
+        g2 =  g1 addSolidDie Tile(1, 1).floor
+        g3 <- g2 control Player(1)
+        g4 <- g3 spawnPlayer Tile(2, 1)
+        g5 =  g4 addSolidDie Tile(2, 1).floor
+        g6 <- g5 control Player(2)
+        g7 <- g6 move (Player(1), Right, now)
+      } yield g7
       
-      after aka "after move request" must be equalTo before
+      request must fail
     }
     
     "not let a player move with a die from the raised level " +
     "onto a die that is controlled by another player" in {
-      val before = game.spawnPlayer(Tile(1, 1))
-                       .addSolidDie(Tile(1, 1).floor)
-                       .addSolidDie(Tile(1, 1).raised)
-                       .control(Player(1))
-                       .spawnPlayer(Tile(2, 1))
-                       .addSolidDie(Tile(2, 1).floor)
-                       .control(Player(2))
-
-      val after = before.move(Player(1), Right, now)
+      val request = for { 
+        g1 <- game spawnPlayer Tile(1, 1)
+        g2 =  g1 addSolidDie Tile(1, 1).floor
+        g3 =  g2 addSolidDie Tile(1, 1).raised
+        g4 <- g3 control Player(1)
+        g5 <- g4 spawnPlayer Tile(2, 1)
+        g6 =  g5 addSolidDie Tile(2, 1).floor
+        g7 <- g6 control Player(2)
+        g8 <- g7 move (Player(1), Right, now)
+      } yield g8
       
-      after aka "after move request" must be equalTo before
+      request must fail
     }
     
     "not let 2 players move onto the same floor space" in {
-      val before = game.spawnPlayer(Tile(0, 2))
-                       .addSolidDie(Tile(0, 2).floor)
-                       .control(Player(1))
-                       .move(Player(1), Right, now)
-                       .spawnPlayer(Tile(1, 1))
-                       .addSolidDie(Tile(1, 1).floor)
-                       .control(Player(2))
-
-      val after = before.move(Player(2), Backward, now)
+      val request = for {
+        g1 <- game spawnPlayer Tile(0, 2)
+        g2 =  g1 addSolidDie Tile(0, 2).floor
+        g3 <- g2 control Player(1)
+        g4 <- g3 move (Player(1), Right, now)
+        g5 <- g4 spawnPlayer Tile(1, 1)
+        g6 =  g5 addSolidDie Tile(1, 1).floor
+        g7 <- g6 control Player(2)
+        g8 <- g7 move (Player(2), Backward, now)
+      } yield g8
       
-      after aka "after move request" must be equalTo before
+      request must fail
     }
     
     "not let 2 players move onto the same raised space" in {
-      val before = game.addSolidDie(Tile(1, 2).floor)
-                       .spawnPlayer(Tile(0, 2))
-                       .addSolidDie(Tile(0, 2).floor)
-                       .control(Player(1))
-                       .move(Player(1), Right, now)
-                       .spawnPlayer(Tile(1, 1))
-                       .addSolidDie(Tile(1, 1).floor)
-                       .control(Player(2))
-
-      val after = before.move(Player(2), Backward, now)
+      val request = for {
+        g1 <- game spawnPlayer Tile(0, 2)
+        g2 =  g1 addSolidDie Tile(1, 2).floor
+        g3 =  g2 addSolidDie Tile(0, 2).floor
+        g4 <- g3 control Player(1)
+        g5 <- g4 move (Player(1), Right, now)
+        g6 <- g5 spawnPlayer Tile(1, 1)
+        g7 =  g6 addSolidDie(Tile(1, 1).floor)
+        g8 <- g7 control Player(2)
+        g9 <- g8 move(Player(2), Backward, now)
+      } yield g9
       
-      after aka "after move request" must be equalTo before
+      request must fail
     }
   }
   
   def moveLike(move: DieMovement) =
-    (be_===[Assignment](MovingWithADie(move, false)) ^^ ((_: A).players(move.controller) aka "assignment of " + move.controller)) and
-    (be_===[Contents](move)                          ^^ ((_: A).board(move.origin)       aka "contents of origin")) and
-    (be_===[Contents](move)                          ^^ ((_: A).board(move.destination)  aka "contents of destination"))
+    (succeedWith[Assignment](MovingWithADie(move, false)) ^^ ((_: Valid[A]).map(_.players(move.controller)) aka "assignment of " + move.controller)) and
+    (succeedWith[Contents](move)                          ^^ ((_: Valid[A]).map(_.board(move.origin))       aka "contents of origin")) and
+    (succeedWith[Contents](move)                          ^^ ((_: Valid[A]).map(_.board(move.destination))  aka "contents of destination"))
   
   def beAllowedFrom(initial: A, t: Tile): Matcher[Direction.Value] = 
-    ((dir: Direction.Value) => initial.move(Player(1), dir, now) != initial, 
+    ((dir: Direction.Value) => initial.move(Player(1), dir, now) match { 
+        case Success(after) if after != initial => true
+        case _ => false
+      }, 
      (dir: Direction.Value) => dir + " is not allowed from " + t)
   
   def threeOnTop = Die.default.transform(RotateForward)
