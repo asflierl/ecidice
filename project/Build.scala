@@ -46,7 +46,7 @@ object EcidiceBuild extends Build {
     unmanagedJars in Compile <<= unmanagedBase map { libs => (libs ** "*.jar").classpath },
       
     fetchJME <<= (unmanagedBase, streams, sbtVersion) map { (libs, out, version) =>
-      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-02-18.zip")
+      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-04-14.zip")
       val target = libs / "jme"
       IO delete target
       IO createDirectory target
