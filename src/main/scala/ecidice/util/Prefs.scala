@@ -48,7 +48,10 @@ class Prefs(root: Preferences) {
     case v => settings.putString(key, jme.get(key, v.toString))
   }
   
-  def save = {
+  settings.putString("Title", L10n.of.appName)
+  settings.putString("SettingsDialogImage", "/ecidice/logo.png")
+  
+  def save: Unit = {
     for ((key, value) <- settings) (value: Any) match {
       case v: Int => jme.putInt(key, v)
       case v: Boolean => jme.putBoolean(key, v)
@@ -58,6 +61,6 @@ class Prefs(root: Preferences) {
   }
 }
 object Prefs {
-  def load = new Prefs(Preferences.userRoot().node(L10n.of.appName))
-  def uninstall = Preferences.userRoot().node(L10n.of.appName).removeNode()
+  def load = new Prefs(Preferences.userRoot.node("ecidice"))
+  def uninstall: Unit = Preferences.userRoot.node("ecidice").removeNode
 }

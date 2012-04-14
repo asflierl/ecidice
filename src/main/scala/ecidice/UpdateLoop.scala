@@ -49,7 +49,7 @@ import com.jme3.font._
 import util.Logging
 import util.Prefs
 
-class App extends Application with Logging {
+final class UpdateLoop extends Application with Logging {
   val rootNode = new Node("Root Node");
   val guiNode = new Node("Gui Node");
   val prefs = Prefs.load
@@ -58,7 +58,7 @@ class App extends Application with Logging {
   private lazy val fpsText = new BitmapText(guiFont, false)
   private lazy val guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt")
   
-  override def start {
+  override def start: Unit = {
     setSettings(prefs.settings)
     
     if (JmeSystem.showSettingsDialog(settings, false)) {
@@ -69,7 +69,7 @@ class App extends Application with Logging {
     }
   }
   
-  override def initialize {
+  override def initialize: Unit = {
     super.initialize
     
     renderer.applyRenderState(DEFAULT)
@@ -92,7 +92,7 @@ class App extends Application with Logging {
     rootNode.attachChild(geom)
   }
   
-  def loadFPSText {
+  def loadFPSText: Unit = {
     fpsText.setSize(guiFont.getCharSet.getRenderedSize)
     fpsText.setLocalTranslation(0, fpsText.getLineHeight, 0)
     fpsText.setColor(Black)
@@ -101,10 +101,13 @@ class App extends Application with Logging {
     guiNode.attachChild(fpsText)
   }
   
-  override def update {
-    if (speed == 0 || paused) return
-        
-    super.update
+  override def update: Unit =
+    if (speed > 0 && ! paused) {
+      super.update
+      customUpdate
+    }
+  
+  def customUpdate: Unit = {
     val tpf = timer.getTimePerFrame * speed
 
     secondCounter += timer.getTimePerFrame
@@ -116,18 +119,14 @@ class App extends Application with Logging {
 
     stateManager.update(tpf)
 
-    // custom updates here
-    
     rootNode.updateLogicalState(tpf)
     guiNode.updateLogicalState(tpf)
-    rootNode.updateGeometricState()
-    guiNode.updateGeometricState()
+    rootNode.updateGeometricState
+    guiNode.updateGeometricState
 
     stateManager.render(renderManager)
 
     renderManager.render(tpf, true)
-    
-    // custom render things here
   }
   
   override def handleError(message: String, thrown: Throwable): Unit = {

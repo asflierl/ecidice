@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
 import Project.Setting
+import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys
+import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseCreateSrc
 
 object EcidiceBuild extends Build {
   lazy val root = Project(
@@ -20,6 +22,8 @@ object EcidiceBuild extends Build {
     
     fork in run := true,
     mainClass in (Compile, run) := Some("ecidice.Main"),
+    
+    EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource,
     
     testOptions := Seq(
       Tests.Filter(_ == "ecidice.EcidiceSpec"), 
