@@ -13,10 +13,10 @@ object EcidiceBuild extends Build {
     version := "1.0",
     organization := "eu.flierl",
     
-    scalaVersion := "2.9.1",
+    scalaVersion := "2.9.2",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-optimise", "-explaintypes"),
     autoCompilerPlugins := true,
-    addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.1"),
+    addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.2"),
     
     fork in run := true,
     mainClass in (Compile, run) := Some("ecidice.Main"),
@@ -33,11 +33,11 @@ object EcidiceBuild extends Build {
 
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT",
-      "org.scala-tools.time" %% "time" % "0.5",
+      "org.scala-tools.time" % "time_2.9.1" % "0.5",
       "com.typesafe.akka" % "akka-actor" % "2.0",
       
-      "org.specs2" %% "specs2" % "1.9" % "test",
-      "org.scala-tools.testing" %% "scalacheck" % "1.9" % "test",
+      "org.specs2" % "specs2_2.9.1" % "1.9" % "test",
+      "org.scala-tools.testing" % "scalacheck_2.9.1" % "1.9" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",
       "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
