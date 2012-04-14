@@ -45,18 +45,16 @@ import com.jme3.renderer.RenderManager
 import com.jme3.renderer.queue.RenderQueue.Bucket.Gui
 import com.jme3.scene.Spatial.CullHint.Never
 import com.jme3.font._
-
 import util.Logging
 import util.Prefs
+import ecidice.visual.FPSText
 
 final class UpdateLoop extends Application with Logging {
   val rootNode = new Node("Root Node");
   val guiNode = new Node("Gui Node");
   val prefs = Prefs.load
   
-  private var secondCounter = 0.0f
-  private lazy val fpsText = new BitmapText(guiFont, false)
-  private lazy val guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt")
+  private lazy val fpsText = FPSText(assetManager, timer)
   
   override def start: Unit = {
     setSettings(prefs.settings)
@@ -79,7 +77,7 @@ final class UpdateLoop extends Application with Logging {
     
     // custom initialization here
     viewPort.setBackgroundColor(White)
-    loadFPSText
+    guiNode.attachChild(fpsText)
     
     viewPort.attachScene(rootNode)
     guiViewPort.attachScene(guiNode)
@@ -92,15 +90,6 @@ final class UpdateLoop extends Application with Logging {
     rootNode.attachChild(geom)
   }
   
-  def loadFPSText: Unit = {
-    fpsText.setSize(guiFont.getCharSet.getRenderedSize)
-    fpsText.setLocalTranslation(0, fpsText.getLineHeight, 0)
-    fpsText.setColor(Black)
-    fpsText.setText("")
-    
-    guiNode.attachChild(fpsText)
-  }
-  
   override def update: Unit =
     if (speed > 0 && ! paused) {
       super.update
@@ -109,13 +98,6 @@ final class UpdateLoop extends Application with Logging {
   
   def customUpdate: Unit = {
     val tpf = timer.getTimePerFrame * speed
-
-    secondCounter += timer.getTimePerFrame
-    val fps = timer.getFrameRate.toInt
-    if (secondCounter >= 1.0f) {
-        fpsText.setText("%4d fps".format(fps))
-        secondCounter = 0.0f
-    }
 
     stateManager.update(tpf)
 

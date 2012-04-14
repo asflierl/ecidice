@@ -42,6 +42,8 @@ import java.util.logging.Level._
 import org.joda.time.DateTime
 import java.io.StringWriter
 import java.io.PrintWriter
+import java.text.MessageFormat
+import java.util.regex.Pattern
 
 /**
  * Simple and thin wrapper around java.util.logging to mix logging support
@@ -89,14 +91,15 @@ private object Logger {
 
 private object ShortMessageFormatter extends Formatter {
   def format(record: LogRecord): String = {
-    val msg = java.text.MessageFormat.format(record.getMessage, record.getParameters:_*)
+    val msg = MessageFormat.format(record.getMessage, record.getParameters:_*)
     val className = compress(record.getLoggerName)
     val time = new DateTime(record.getMillis)
     
-    val builder = new StringBuilder
-    builder append time append " "
-    builder append record.getLevel append " " append className 
-    builder append ": " append msg append '\n'
+    val builder = (new StringBuilder
+      append time append " "
+      append record.getLevel append " " 
+      append className append ": "
+      append msg append '\n')
       
     if (record.getThrown != null) {
       val stringWriter = new StringWriter
@@ -107,7 +110,7 @@ private object ShortMessageFormatter extends Formatter {
     } else builder.toString
   }
   
-  private def compress(name: String) = pattern.matcher(name).replaceAll("$1.")
+  private def compress(name: String) = pattern matcher name replaceAll "$1."
   
-  private val pattern = java.util.regex.Pattern.compile("([^.])([^.]*)\\.")
+  private val pattern = Pattern compile "([^.])([^.]*)\\."
 }
