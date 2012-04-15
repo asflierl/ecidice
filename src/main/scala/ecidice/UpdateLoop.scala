@@ -75,7 +75,6 @@ final class UpdateLoop extends Application with Logging {
     guiNode.setQueueBucket(Gui)
     guiNode.setCullHint(Never)
     
-    // custom initialization here
     viewPort.setBackgroundColor(White)
     guiNode.attachChild(fpsText)
     
@@ -83,6 +82,7 @@ final class UpdateLoop extends Application with Logging {
     guiViewPort.attachScene(guiNode)
     
     val b = new Box(ZERO, 1, 1, 1)
+    println(b.getVertexCount)
     val geom = new Geometry("Box", b)
     val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
     mat.setColor("Color", Blue)
