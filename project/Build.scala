@@ -38,6 +38,7 @@ object EcidiceBuild extends Build {
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT",
       "joda-time" % "joda-time" % "2.1",
+      "org.joda" % "joda-convert" % "1.2",
       "com.typesafe.akka" % "akka-actor" % "2.0.1",
       
       "org.specs2" %% "specs2" % "1.9" % "test",
