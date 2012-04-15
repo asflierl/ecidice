@@ -54,8 +54,6 @@ final class UpdateLoop extends Application with Logging {
   val guiNode = new Node("Gui Node");
   val prefs = Prefs.load
   
-  private lazy val fpsText = FPSText(assetManager, timer)
-  
   override def start: Unit = {
     setSettings(prefs.settings)
     
@@ -70,19 +68,20 @@ final class UpdateLoop extends Application with Logging {
   override def initialize: Unit = {
     super.initialize
     
-    renderer.applyRenderState(DEFAULT)
+    renderer applyRenderState DEFAULT
 
-    guiNode.setQueueBucket(Gui)
-    guiNode.setCullHint(Never)
+    guiNode setQueueBucket Gui
+    guiNode setCullHint Never
     
-    viewPort.setBackgroundColor(White)
-    guiNode.attachChild(fpsText)
+    viewPort setBackgroundColor White
     
-    viewPort.attachScene(rootNode)
-    guiViewPort.attachScene(guiNode)
+    viewPort attachScene rootNode
+    guiViewPort attachScene guiNode
+    
+    val f = new FPSText
+    stateManager attach f
     
     val b = new Box(ZERO, 1, 1, 1)
-    println(b.getVertexCount)
     val geom = new Geometry("Box", b)
     val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
     mat.setColor("Color", Blue)
@@ -99,16 +98,15 @@ final class UpdateLoop extends Application with Logging {
   def customUpdate: Unit = {
     val tpf = timer.getTimePerFrame * speed
 
-    stateManager.update(tpf)
-
-    rootNode.updateLogicalState(tpf)
-    guiNode.updateLogicalState(tpf)
+    stateManager update tpf
+    rootNode updateLogicalState tpf
+    guiNode updateLogicalState tpf
+    
     rootNode.updateGeometricState
     guiNode.updateGeometricState
 
-    stateManager.render(renderManager)
-
-    renderManager.render(tpf, true)
+    stateManager render renderManager
+    renderManager render (tpf, true)
   }
   
   override def handleError(message: String, thrown: Throwable): Unit = {
