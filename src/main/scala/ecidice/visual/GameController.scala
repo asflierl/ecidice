@@ -11,17 +11,11 @@ import com.jme3.app.state.AppStateManager
 import com.jme3.app.Application
 import com.jme3.scene.Node
 
-final class GameController extends Controller[GameController.Context] {
-  private var app: UpdateLoop = _
+final class GameController extends Controller {
+  case class Context(app: UpdateLoop)
   
-  override def init(asm: AppStateManager, app: UpdateLoop): GameController.Context = {
-    this.app = app
-    new GameController.Context(app)
-  }
+  override def init(asm: AppStateManager, app: UpdateLoop): Context = Context(app)
   
   override def update(tpf: Float): Unit = if (isEnabled) {
   }
-}
-object GameController {
-  private[GameController] final class Context(val app: UpdateLoop)
 }

@@ -6,8 +6,10 @@ import com.jme3.app.Application
 import com.jme3.app.state.AppStateManager
 import scalaz.Scalaz.{ none, some }
 
-abstract class Controller[A] extends AbstractAppState {
-  private[this] var initializedState = none[A]
+abstract class Controller extends AbstractAppState {
+  protected type Context
+  
+  private[this] var initializedState = none[Context]
   
   override final def initialize(asm: AppStateManager, app: Application): Unit = {
     super.initialize(asm, app)
@@ -15,7 +17,7 @@ abstract class Controller[A] extends AbstractAppState {
     onInit
   }
   
-  def init(asm: AppStateManager, app: UpdateLoop): A
+  def init(asm: AppStateManager, app: UpdateLoop): Context
   
   protected final def ctx = initializedState.get // argh >.<
   
