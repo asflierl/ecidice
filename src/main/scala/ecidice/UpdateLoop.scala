@@ -50,8 +50,8 @@ import util.Prefs
 import ecidice.visual.FPSText
 
 final class UpdateLoop extends Application with Logging {
-  val rootNode = new Node("Root Node");
-  val guiNode = new Node("Gui Node");
+  val rootNode = new Node("Root Node")
+  val guiNode = new Node("Gui Node")
   val prefs = Prefs.load
   
   override def start: Unit = {
@@ -78,15 +78,14 @@ final class UpdateLoop extends Application with Logging {
     viewPort attachScene rootNode
     guiViewPort attachScene guiNode
     
-    val f = new FPSText
-    stateManager attach f
+    stateManager attach new FPSText
     
     val b = new Box(ZERO, 1, 1, 1)
     val geom = new Geometry("Box", b)
     val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
-    mat.setColor("Color", Blue)
-    geom.setMaterial(mat)
-    rootNode.attachChild(geom)
+    mat setColor ("Color", Blue)
+    geom setMaterial mat
+    rootNode attachChild geom
   }
   
   override def update: Unit =
@@ -111,6 +110,6 @@ final class UpdateLoop extends Application with Logging {
   
   override def handleError(message: String, thrown: Throwable): Unit = {
     logSevere(message, thrown)
-    System exit 1
+    stop
   }
 }
