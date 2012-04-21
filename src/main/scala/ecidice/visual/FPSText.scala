@@ -25,16 +25,13 @@ final class FPSText extends Controller[FPSText.Context] {
     new FPSText.Context(app, textNode)
   }
   
-  override def postInit: Unit = setEnabled(true)
+  override def onInit: Unit = setEnabled(true)
   
-  override def cleanup: Unit = {
-    super.cleanup
-    ctx.app.guiNode.detachChild(ctx.textNode)
-  }
- 
   override def onEnable: Unit = ctx.app.guiNode.attachChild(ctx.textNode)
   
   override def onDisable: Unit = ctx.app.guiNode.detachChild(ctx.textNode)
+  
+  override def onCleanup: Unit = ctx.app.guiNode.detachChild(ctx.textNode)
   
   override def update(tpf: Float): Unit = if (isEnabled) {
     secondCounter += ctx.timer.getTimePerFrame
@@ -46,7 +43,10 @@ final class FPSText extends Controller[FPSText.Context] {
   }
 }
 object FPSText {
-  private[FPSText] final class Context(val app: UpdateLoop, val textNode: BitmapText) {
+  private[FPSText] final class Context(
+    val app: UpdateLoop, 
+    val textNode: BitmapText
+  ) {
     def timer = app.getTimer
   }
 }
