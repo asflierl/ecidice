@@ -48,10 +48,12 @@ object EcidiceBuild extends Build {
       "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
       "org.mockito" % "mockito-all" % "1.9.0" % "test"),
 
-    unmanagedJars in Compile <<= unmanagedBase map { libs => (libs ** "*.jar").classpath },
+    unmanagedJars in Compile <<= unmanagedBase map { libs =>
+      ((libs / "jme" * "jMonkeyEngine3.jar") +++ (libs / "jme" / "lib" ** "*.jar")).classpath
+    },
       
     fetchJME <<= (unmanagedBase, streams, sbtVersion) map { (libs, out, version) =>
-      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-04-14.zip")
+      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-05-13.zip")
       val target = libs / "jme"
       IO delete target
       IO createDirectory target
