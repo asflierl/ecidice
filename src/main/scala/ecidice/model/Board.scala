@@ -34,7 +34,7 @@ package model
 
 import collection.breakOut
 
-case class Board(columns: Int, rows: Int, spaces: Map[Space, Contents]) {
+case class Board(spaces: Map[Space, Contents]) {
   import Board._
   
   def apply(space: Space) = spaces(space)
@@ -48,8 +48,8 @@ case class Board(columns: Int, rows: Int, spaces: Map[Space, Contents]) {
   def floorSpaces = floor(spaces) 
   def raisedSpaces = raised(spaces)
 }
-object Board extends ((Int, Int, Map[Space, Contents]) => Board) {
-  def sized(columns: Int, rows: Int) = Board(columns, rows, Map.empty ++ contentMappings(columns, rows))
+object Board extends (Map[Space, Contents] => Board) {
+  def sized(columns: Int, rows: Int) = Board(Map.empty ++ contentMappings(columns, rows))
     
   private def contentMappings(columns: Int, rows: Int) = spaces(columns, rows).map(_ -> Empty)
     
