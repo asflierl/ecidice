@@ -34,25 +34,23 @@ package ecidice
 import com.jme3.material.RenderState.BlendMode.Alpha
 import com.jme3.app.Application
 import com.jme3.system.JmeSystem
-import com.jme3.material._
 import com.jme3.material.RenderState.DEFAULT
-import com.jme3.math._
-import com.jme3.math.Vector3f.ZERO
-import com.jme3.scene._
-import com.jme3.scene.shape._
-import com.jme3.math.ColorRGBA._
+import com.jme3.math.ColorRGBA.White
 import com.jme3.renderer.RenderManager
 import com.jme3.renderer.queue.RenderQueue.Bucket.Gui
 import com.jme3.scene.Spatial.CullHint.Never
-import com.jme3.font._
 import util.Logging
 import util.Prefs
 import ecidice.visual.FPSText
+import com.jme3.scene.Node
+import ecidice.visual.GameController
 
 final class UpdateLoop extends Application with Logging {
   val rootNode = new Node("Root Node")
   val guiNode = new Node("Gui Node")
   val prefs = Prefs.load
+  
+  def assets = getAssetManager
   
   override def start: Unit = {
     setSettings(prefs.settings)
@@ -79,13 +77,7 @@ final class UpdateLoop extends Application with Logging {
     guiViewPort attachScene guiNode
     
     stateManager attach new FPSText
-    
-    val b = new Box(ZERO, 1, 1, 1)
-    val geom = new Geometry("Box", b)
-    val mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
-    mat setColor ("Color", Blue)
-    geom setMaterial mat
-    rootNode attachChild geom
+    stateManager attach new GameController
   }
   
   override def update: Unit =

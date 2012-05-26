@@ -43,6 +43,8 @@ case class Board(spaces: Map[Space, Contents]) {
     
   def +(mapping: (Space, Contents)) = copy(spaces = spaces + mapping)
   def ++(contents: Map[Space, Contents]) = copy(spaces = spaces ++ contents)
+  def -(x: Tile) = copy(spaces = spaces - x.floor - x.raised)
+  def --(xs: Traversable[Tile]) = copy(spaces = spaces -- (xs map (_.floor)) -- (xs map (_.raised)))
   
   lazy val tiles: Set[Tile] = spaces.map(spacesToTiles)(breakOut)
   def floorSpaces = floor(spaces) 
