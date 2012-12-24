@@ -30,12 +30,11 @@
  */
 
 import ecidice.util.NotYetImplementedException
-import scala.util.MurmurHash
 import scalaz.ValidationNEL
 import scalaz.Validation.failure
-import scalaz.Validation.validationMonad
 import scalaz.NonEmptyList
 import scalaz.NonEmptyList.nel
+import scala.util.hashing.MurmurHash3
 
 package object ecidice {
   type =/>[-A, +B] = PartialFunction[A, B]
@@ -47,12 +46,6 @@ package object ecidice {
   def ??? = throw new NotYetImplementedException
   
   private[this] val seed = "ecidice"##
-  
-  def murmurHash[A](args: A*): Int = {
-    val generator = new MurmurHash[A](seed)
-    args foreach generator
-    generator hash
-  }
   
   //implicit val gameValidationMonad = scalaz.Validation.validationMonad[scalaz.NonEmptyList[String]]
   

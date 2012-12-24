@@ -47,7 +47,7 @@ final class GameController extends Controller {
   override def onDisable: Unit = ctx.app.rootNode detachChild (ctx gameRoot)
   
   override def update(tpf: Float): Unit = if (isEnabled) {
-    val i = (ctx.app.getTimer.getTime / (ctx.app.getTimer.getResolution / 15L)).toInt % 100
+    val i = (ctx.app.time * 1000d / 50d).toInt % 100
     val b = Board.sized(10, 10) - Tile(i % 10, i / 10)
     ctx.boardView update b
   }

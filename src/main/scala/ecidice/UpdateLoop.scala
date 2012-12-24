@@ -46,11 +46,15 @@ import com.jme3.scene.Node
 import ecidice.visual.GameController
 
 final class UpdateLoop extends Application with Logging {
+  private[this] var internalTime = 0d
+  
   val rootNode = new Node("Root Node")
   val guiNode = new Node("Gui Node")
   val prefs = Prefs.load
   
   def assets = getAssetManager
+  
+  def time = internalTime
   
   override def start: Unit = {
     setSettings(prefs.settings)
@@ -88,6 +92,7 @@ final class UpdateLoop extends Application with Logging {
   
   def customUpdate: Unit = {
     val tpf = timer.getTimePerFrame * speed
+    internalTime += tpf
 
     stateManager update tpf
     rootNode updateLogicalState tpf

@@ -76,7 +76,9 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       (corner, allowed) => 
         val Success(initial) = game spawnPlayer corner
         
-        ((dir: Direction.Value) => dir must beAllowedFrom(initial, corner).iff(allowed contains dir)) foreach Direction.values
+        foreach (Direction values) { dir => 
+          dir must beAllowedFrom(initial, corner) iff (allowed contains dir)
+        } 
       }
     }
     
@@ -91,12 +93,14 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
       (pos, disallowed) =>
         val Success(initial) = game spawnPlayer pos
         
-        ((dir: Direction.Value) => dir must beAllowedFrom(initial, pos).iff(dir != disallowed)) foreach Direction.values
+        foreach (Direction values) { dir =>
+          dir must beAllowedFrom(initial, pos) iff (dir != disallowed)
+        }
       }
     }
     
     "allow a player to move in any direction with a floor die from the center" in {
-      ((somewhere: Direction.Value) => {
+      foreach (Direction values) { somewhere =>
         val origin = center.floor
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
@@ -109,11 +113,11 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
         } yield g4
         
         testGame must moveLike(DieMovement(die, origin, destination, transform, Player(1), now))
-      }) foreach Direction.values
+      }
     }
     
     "allow a player to move in any direction with an upper die from the center" in {
-      ((somewhere: Direction.Value) => {
+      foreach (Direction values)  { somewhere =>
         val origin = center.raised
         val destination = center.look(somewhere).floor
         val transform = Transform(origin, destination, somewhere)
@@ -127,7 +131,7 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
         } yield g5
         
         testGame must moveLike(DieMovement(die, origin, destination, transform, Player(1), now))
-      }) foreach Direction.values
+      }
     }
     
     "allow a player to move with a die from the floor onto another die" in {

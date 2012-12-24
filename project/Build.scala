@@ -15,10 +15,10 @@ object EcidiceBuild extends Build {
     version := "1.0",
     organization := "eu.flierl",
     
-    scalaVersion := "2.9.2",
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-optimise", "-explaintypes"),
+    scalaVersion := "2.10.0",
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-optimise", "-language:_"),
     autoCompilerPlugins := true,
-    addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.2"),
+    addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.0"),
     
     fork in run := true,
     mainClass in (Compile, run) := Some("ecidice.Main"),
@@ -39,10 +39,10 @@ object EcidiceBuild extends Build {
       "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT",
       "joda-time" % "joda-time" % "2.1",
       "org.joda" % "joda-convert" % "1.2",
-      "com.typesafe.akka" % "akka-actor" % "2.0.1",
+      "com.typesafe.akka" %% "akka-actor" % "2.1.0",
       
-      "org.specs2" %% "specs2" % "1.9" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.9" % "test",
+      "org.specs2" %% "specs2" % "1.13" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",
       "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
@@ -53,7 +53,7 @@ object EcidiceBuild extends Build {
     },
       
     fetchJME <<= (unmanagedBase, streams, sbtVersion) map { (libs, out, version) =>
-      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-05-13.zip")
+      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-12-24.zip")
       val target = libs / "jme"
       IO delete target
       IO createDirectory target

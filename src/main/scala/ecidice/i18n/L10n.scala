@@ -32,7 +32,7 @@
 package ecidice
 package i18n
 
-import scala.concurrent.SyncVar
+import java.util.concurrent.atomic.AtomicReference
 
 
 /**
@@ -51,9 +51,7 @@ trait L10n {
  * @author Andreas Flierl
  */
 object L10n {
-  private val loc = new SyncVar[L10n]()
-  
-  loc set English
+  private val loc = new AtomicReference[L10n](English)
   
   /**
    * Returns the current localization (default English).
