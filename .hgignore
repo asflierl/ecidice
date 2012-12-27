@@ -13,5 +13,6 @@ syntax: regexp
 ^project/project/
 ^project/boot/
 ^project/target/
-^liblwjgl\.(jnilib|so|dll)$
-^libbulletjme\.(jnilib|so|dll)$
+^openal\.(jnilib|dylib|so|dll)$
+^liblwjgl\.(jnilib|dylib|so|dll)$
+^libbulletjme\.(jnilib|dylib|so|dll)$
