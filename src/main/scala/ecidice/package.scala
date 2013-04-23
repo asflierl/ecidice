@@ -29,8 +29,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ecidice.util.NotYetImplementedException
-import scalaz.ValidationNEL
+import scalaz.ValidationNel
 import scalaz.Validation.failure
 import scalaz.NonEmptyList
 import scalaz.NonEmptyList.nel
@@ -39,11 +38,9 @@ import scala.util.hashing.MurmurHash3
 package object ecidice {
   type =/>[-A, +B] = PartialFunction[A, B]
   
-  type Valid[A] = ValidationNEL[String, A]
+  type Valid[A] = ValidationNel[String, A]
   
   def init[A](a: A)(f: A => Any) = { f(a); a }
-  
-  def ??? = throw new NotYetImplementedException
   
   private[this] val seed = "ecidice"##
   

@@ -15,4 +15,5 @@ syntax: regexp
 ^project/target/
 ^openal\.(jnilib|dylib|so|dll)$
 ^liblwjgl\.(jnilib|dylib|so|dll)$
+^libjinput-([^.]+)\.(jnilib|dylib|so|dll)$
 ^libbulletjme\.(jnilib|dylib|so|dll)$

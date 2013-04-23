@@ -29,14 +29,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ecidice
-
 import org.specs2._
 import org.junit.runner._
-import runner._
+import org.specs2.runner._
+import ecidice._
 
 @RunWith(classOf[JUnitRunner])
-class EcidiceSpec extends AcceptanceSpec { def is =
+class index extends AcceptanceSpec { def is =
   "ecidice".title                                                                                  ^
                                                                                                   p^
     "ecidice consists of"                                                                          ^

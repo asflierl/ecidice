@@ -15,10 +15,10 @@ object EcidiceBuild extends Build {
     version := "1.0",
     organization := "eu.flierl",
     
-    scalaVersion := "2.10.0",
+    scalaVersion := "2.10.1",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-optimise", "-language:_"),
     autoCompilerPlugins := true,
-    addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.0"),
+    addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.1"),
     
     fork in run := true,
     mainClass in (Compile, run) := Some("ecidice.Main"),
@@ -26,7 +26,7 @@ object EcidiceBuild extends Build {
     EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource,
     
     testOptions := Seq(
-      Tests.Filter(_ == "ecidice.EcidiceSpec"), 
+      Tests.Filter(_ == "index"), 
       Tests.Argument("html", "console")),
 
     testOptions <+= crossTarget map { ct =>
@@ -36,24 +36,26 @@ object EcidiceBuild extends Build {
     },
 
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT",
-      "joda-time" % "joda-time" % "2.1",
-      "org.joda" % "joda-convert" % "1.2",
-      "com.typesafe.akka" %% "akka-actor" % "2.1.0",
+      "org.scalaz" %% "scalaz-core" % "7.0.0",
+      "org.scalaz" %% "scalaz-effect" % "7.0.0",
+      "com.chuusai" %% "shapeless" % "1.2.4",
+      "com.github.nscala-time" %% "nscala-time" % "0.4.0",
+      "org.spire-math" %% "spire" % "0.3.0",
+      "com.typesafe.akka" %% "akka-actor" % "2.1.2",
       
-      "org.specs2" %% "specs2" % "1.13" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
+      "org.specs2" %% "specs2" % "1.15-SNAPSHOT" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
       "junit" % "junit" % "4.7" % "test",
       "org.pegdown" % "pegdown" % "1.0.2" % "test",
       "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
-      "org.mockito" % "mockito-all" % "1.9.0" % "test"),
+      "org.mockito" % "mockito-all" % "1.9.5" % "test"),
 
     unmanagedJars in Compile <<= unmanagedBase map { libs =>
       ((libs / "jme" * "jMonkeyEngine3.jar") +++ (libs / "jme" / "lib" ** "*.jar")).classpath
     },
       
     fetchJME <<= (unmanagedBase, streams, sbtVersion) map { (libs, out, version) =>
-      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2012-12-24.zip")
+      val jme = url("http://jmonkeyengine.com:80/nightly/jME3_2013-04-23.zip")
       val target = libs / "jme"
       IO delete target
       IO createDirectory target
