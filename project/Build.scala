@@ -16,7 +16,7 @@ object EcidiceBuild extends Build {
     organization := "eu.flierl",
     
     scalaVersion := "2.10.1",
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-optimise", "-language:_"),
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-optimise", "-language:_", "-encoding", "UTF-8"),
     autoCompilerPlugins := true,
     addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.1"),
     
@@ -31,7 +31,7 @@ object EcidiceBuild extends Build {
 
     testOptions <+= crossTarget map { ct =>
       Tests.Setup { () => 
-        System.setProperty("specs2.outDir", (ct / "specs2") absolutePath)
+        sys.props += "specs2.outDir" -> (ct / "specs2" absolutePath)
       }
     },
 

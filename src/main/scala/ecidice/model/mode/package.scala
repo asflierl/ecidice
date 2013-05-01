@@ -31,9 +31,8 @@
 
 package ecidice
 package model
-package mode
 
-trait Helpers {
+package object mode {
   def isEmpty(c: Contents) = c match {
     case Empty => true
     case _ => false

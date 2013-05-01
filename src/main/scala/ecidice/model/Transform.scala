@@ -34,22 +34,24 @@ package model
 
 import Direction._
 
-/**
- * Lists possible transformations of a die.
- * 
- * @author Andreas Flierl
- */
-object Transform extends Enumeration {
-  val RotateBackward = Value("rotate backward, away from the player")
-  val RotateForward = Value("rotate forward, towards the player")
-  val RotateLeft = Value("rotate left")
-  val RotateRight = Value("rotate right")
-  val SpinClockwise = Value("spin clockwise")
-  val SpinCounterclockwise = Value("spin counterclockwise")
-  val FlipUpOrDown = Value("flip up or down")
-  val FlipLeftOrRight = Value("flip left or right")
+sealed abstract class Transform(desc: String) {
+  override def toString = s"${getClass getSimpleName}($desc)"
+}
+
+object Transform {
+  case object RotateBackward extends Transform("rotate backward, away from the player")
+  case object RotateForward extends Transform("rotate forward, towards the player")
+  case object RotateLeft extends Transform("rotate left")
+  case object RotateRight extends Transform("rotate right")
+  case object SpinClockwise extends Transform("spin clockwise")
+  case object SpinCounterclockwise extends Transform("spin counterclockwise")
+  case object FlipUpOrDown extends Transform("flip up or down")
+  case object FlipLeftOrRight extends Transform("flip left or right")
   
-  def apply(from: Space, to: Space, dir: Direction.Value): Transform.Value = {
+  val values = Set(RotateBackward, RotateForward, RotateLeft, RotateRight, SpinClockwise,
+    SpinCounterclockwise, FlipUpOrDown, FlipLeftOrRight)
+  
+  def apply(from: Space, to: Space, dir: Direction): Transform = {
     if (from.isFloor == to.isFloor) dir match {
       case Backward => RotateBackward
       case Forward => RotateForward

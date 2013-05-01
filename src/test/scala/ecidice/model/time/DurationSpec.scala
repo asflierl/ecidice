@@ -62,7 +62,7 @@ object DurationSpec extends UnitSpec {
       Duration(1)  ! Duration(0)  ! 1        |
       Duration(0)  ! Duration(1)  ! -1       |
       Duration(42) ! Duration(42) ! 0        | {
-        (a, b, result) => a.compare(b) must be equalTo result
+        (a, b, result) => implicitly[Ordering[Duration]] compare (a, b) must be equalTo result
       }
     }
   }

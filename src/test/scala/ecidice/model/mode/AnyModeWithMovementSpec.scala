@@ -278,12 +278,12 @@ class AnyModeWithMovementSpec[A <: Mode[A] with Movement[A]](game: A) extends Un
     (succeedWith[Contents](move)                          ^^ ((_: Valid[A]).map(_.board(move.origin))       aka "contents of origin")) and
     (succeedWith[Contents](move)                          ^^ ((_: Valid[A]).map(_.board(move.destination))  aka "contents of destination"))
   
-  def beAllowedFrom(initial: A, t: Tile): Matcher[Direction.Value] = 
-    ((dir: Direction.Value) => initial.move(Player(1), dir, now) match { 
+  def beAllowedFrom(initial: A, t: Tile): Matcher[Direction] = 
+    ((dir: Direction) => initial.move(Player(1), dir, now) match { 
         case Success(after) if after != initial => true
         case _ => false
       }, 
-     (dir: Direction.Value) => dir + " is not allowed from " + t)
+     (dir: Direction) => dir + " is not allowed from " + t)
   
   def threeOnTop = Die.default.transform(RotateForward)
 }

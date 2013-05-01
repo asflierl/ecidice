@@ -42,9 +42,9 @@ import scalaz.Scalaz.ToValidationV
  * Players may move alone, which is rather simple: a player can move to any
  * tile on the game board. If she's already moving, movement continues.
  */
-trait Movement[A <: Mode[A]] extends Helpers { this: A =>
+trait Movement[A <: Mode[A]] { this: A =>
 
-  def move(player: Player, dir: Direction.Value, now: Instant): Valid[A] = players(player) match {
+  def move(player: Player, dir: Direction, now: Instant): Valid[A] = players(player) match {
     case Standing(tile) => 
       movePlayer(PlayerMovement(player, tile, tile.look(dir), now))
       
@@ -60,7 +60,7 @@ trait Movement[A <: Mode[A]] extends Helpers { this: A =>
       copy(players = players + (move.player -> MovingAlone(move))).success
     else (move.destination.toString + " outside of " + board).failNel
   
-  private def moveDie(player: Player, origin: Space, dir: Direction.Value, now: Instant): Valid[A] = {
+  private def moveDie(player: Player, origin: Space, dir: Direction, now: Instant): Valid[A] = {
     val destinationTile = origin.tile.look(dir)
     
     def decideLevel = board(destinationTile.floor) match {

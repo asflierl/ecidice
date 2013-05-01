@@ -33,26 +33,22 @@ package ecidice
 package model
 package time
 
-/**
- * Represents a period of time, i.e. the time interval [start, end[
- * 
- * @author Andreas Flierl
- * 
- * @param start the instant this timespan starts
- * @param duration this timespan's duration
- */
+/** Represents a period of time, i.e. the time interval [start, end[
+  *
+  * @param start the instant this timespan starts
+  * @param duration this timespan's duration
+  */
 case class Timespan(start: Instant, duration: Duration) {
   val end = start + duration
 
-  def isOverAt(now: Instant) = (now >= end)
-  
-  /**
-   * Returns where in this timespan the associated game is now as a number in
-   * the interval [0, 1].
-   */
-  def progress(now: Instant) =
-    if (now <= start) 0d
-    else if (now >= end) 1d
+  def isOverAt(now: Instant)(implicit ord: Ordering[Instant]) = ord.gteq(now, end)
+
+  /** Returns where in this timespan the associated game is now as a number in
+    * the interval [0, 1].
+    */
+  def progress(now: Instant)(implicit ord: Ordering[Instant]) =
+    if (ord.lteq(now, start)) 0d
+    else if (ord.gteq(now, end)) 1d
     else (now.time - start.time) / (end.time - start.time)
 }
 

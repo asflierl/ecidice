@@ -32,7 +32,15 @@
 package ecidice
 package model
 
-object Level extends Enumeration {
-  val Floor = Value("floor")
-  val Raised = Value("raised")
+sealed trait Level
+
+object Level {
+  case object Floor extends Level
+  case object Raised extends Level
+  
+  val values = Set(Floor, Raised) 
+  
+  implicit object LevelDefaultOrdering extends Ordering[Level] {
+    def compare(a: Level, b: Level): Int = if (a == b) 0 else if (a == Floor) -1 else 1
+  }
 }

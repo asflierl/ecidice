@@ -32,9 +32,8 @@
 package ecidice
 package model
 
-/**
- * Things a player can do. 
- */
+/** Things a player can do.
+  */
 sealed trait Assignment
 
 case class Standing(location: Tile) extends Assignment

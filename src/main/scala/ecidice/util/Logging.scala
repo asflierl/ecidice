@@ -32,28 +32,21 @@
 package ecidice
 package util
 
-import java.util.logging.{ ConsoleHandler,
-                           Formatter,
-                           Handler,
-                           Level, 
-                           Logger => JLogger, 
-                           LogRecord }
-import java.util.logging.Level._
-import org.joda.time.DateTime
-import java.io.StringWriter
-import java.io.PrintWriter
+import java.io.{PrintWriter, StringWriter}
 import java.text.MessageFormat
+import java.util.logging.{ConsoleHandler, Formatter, Handler, Level}
+import java.util.logging.{LogRecord, Logger => JLogger}
+import java.util.logging.Level.{INFO, SEVERE, WARNING}
 import java.util.regex.Pattern
 
-/**
- * Simple and thin wrapper around java.util.logging to mix logging support
- * into a class.
- * 
- * @author Andreas Flierl
- */
+import org.joda.time.DateTime
+
+/** Simple and thin wrapper around java.util.logging to mix logging support
+  * into a class.
+  */
 trait Logging {
   private def logger = JLogger.getLogger(getClass.getName)
-  
+
   def logSevere(msg: => String): Unit = Logger.log(logger, SEVERE, msg)
   def logSevere(msg: => String, exc: Throwable): Unit = Logger.log(logger, SEVERE, msg, exc)
   def logWarn(msg: => String): Unit = Logger.log(logger, WARNING, msg)
@@ -64,9 +57,9 @@ trait Logging {
 
 object Logging {
   private lazy val rootLogger = JLogger.getLogger("")
-  
+
   def disable: Unit = removeAllHandlers
-    
+
   def showInfoAndHigher: Unit = rootLogger setLevel INFO
   def showWarningsAndHigher: Unit = rootLogger setLevel WARNING
   def showSevereOnly: Unit = rootLogger setLevel SEVERE
@@ -75,32 +68,32 @@ object Logging {
     removeAllHandlers
     handlers foreach rootLogger.addHandler
   }
-  
+
   def console: Handler = init(new ConsoleHandler())(_ setFormatter ShortMessageFormatter)
-  
-  private def removeAllHandlers: Unit = rootLogger.getHandlers foreach rootLogger.removeHandler 
+
+  private def removeAllHandlers: Unit = rootLogger.getHandlers foreach rootLogger.removeHandler
 }
 
 private object Logger {
-  def log(logger: JLogger, level: Level, msg: => String): Unit = 
+  def log(logger: JLogger, level: Level, msg: => String): Unit =
     if (logger.isLoggable(level)) logger.log(level, msg)
-    
-  def log(logger: JLogger, level: Level, msg: => String, exc: Throwable): Unit = 
+
+  def log(logger: JLogger, level: Level, msg: => String, exc: Throwable): Unit =
     if (logger.isLoggable(level)) logger.log(level, msg, exc)
 }
 
 private object ShortMessageFormatter extends Formatter {
   def format(record: LogRecord): String = {
-    val msg = MessageFormat.format(record.getMessage, record.getParameters:_*)
+    val msg = MessageFormat.format(record.getMessage, record.getParameters: _*)
     val className = compress(record.getLoggerName)
     val time = new DateTime(record.getMillis)
-    
+
     val builder = (new StringBuilder
       append time append " "
-      append record.getLevel append " " 
+      append record.getLevel append " "
       append className append ": "
       append msg append '\n')
-      
+
     if (record.getThrown != null) {
       val stringWriter = new StringWriter
       val printWriter = new PrintWriter(stringWriter)
@@ -109,8 +102,8 @@ private object ShortMessageFormatter extends Formatter {
       builder.toString + stringWriter.toString
     } else builder.toString
   }
-  
+
   private def compress(name: String) = pattern matcher name replaceAll "$1."
-  
+
   private val pattern = Pattern compile "([^.])([^.]*)\\."
 }

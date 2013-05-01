@@ -34,14 +34,10 @@ package model
 
 import Direction._
 
-final case class Tile(column: Int, row: Int) extends Ordered[Tile] {
+case class Tile(column: Int, row: Int) {
   def floor = Space(this, Level.Floor)
   def raised = Space(this, Level.Raised)
   
-  def compare(other: Tile) =
-    if (row == other.row) column compare other.column
-    else row compare other.row
-    
  /** 
   * Determines the tile resulting from a movement from this tile in 
   * direction `dir`.
@@ -49,10 +45,20 @@ final case class Tile(column: Int, row: Int) extends Ordered[Tile] {
   * @param dir the direction to move in
   * @return the tile resulting from the movement
   */
-  def look(dir: Direction.Value): Tile = dir match {
+  def look(dir: Direction): Tile = dir match {
     case Backward => Tile(column, row + 1)
     case Forward => Tile(column, row - 1)
     case Right => Tile(column + 1, row)
     case Left => Tile(column - 1, row)
+  }
+}
+object Tile extends ((Int, Int) => Tile) {
+  implicit object TileDefaultOrdering extends Ordering[Tile] {
+    def compare(a: Tile, b: Tile): Int = intCompare(a row, b row) match { 
+      case 0 => intCompare(a column, b column)
+      case n => n
+    }
+    
+    private val intCompare = implicitly[Ordering[Int]].compare _
   }
 }

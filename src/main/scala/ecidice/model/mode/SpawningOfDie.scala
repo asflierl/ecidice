@@ -37,18 +37,15 @@ import time._
 import Level._
 import scalaz.Scalaz.ToValidationV
 
-/**
- * Defines the rules for spawning a new die.
- * 
- * A new die is only spawned if and only if both spaces at a given tile are
- * empty. The new dice always appears on the floor.
- * 
- * @author Andreas Flierl
- */
-trait SpawningOfDie[A <: Mode[A]] extends Helpers { this: A =>
+/** Defines the rules for spawning a new die.
+  *
+  * A new die is only spawned if and only if both spaces at a given tile are
+  * empty. The new dice always appears on the floor.
+  */
+trait SpawningOfDie[A <: Mode[A]] { this: A =>
   def spawnDie(tile: Tile, now: Instant, die: Die = Die.random): Valid[A] = {
-    val free = Level.values.forall(l => isEmpty(board(Space(tile, l)))) 
-    
+    val free = Level.values.forall(l => isEmpty(board(Space(tile, l))))
+
     if (free) {
       val space = Space(tile, Floor)
       val activity = DieAppearing(Die.default, space, now)

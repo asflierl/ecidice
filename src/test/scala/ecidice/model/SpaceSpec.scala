@@ -43,7 +43,7 @@ import org.specs2._
 object SpaceSpec extends UnitSpec {
   "A space on the game board" should {
     "be consistent in equivalence and ordering" in check {
-      (a: Space, b: Space) => (a == b) must be equalTo ((a compare b) == 0)
+      (a: Space, b: Space) => (a == b) must be equalTo (implicitly[Ordering[Space]].compare(a, b) == 0)
     }
     
     "have correct ordering behaviour" in {
@@ -53,10 +53,10 @@ object SpaceSpec extends UnitSpec {
                         Space(Tile(3, 0), Floor))
       
       spaces.sorted aka "the ordered spaces" must be equalTo (
-          List(Space(Tile(3, 0), Floor),
-               Space(Tile(5, 0), Floor),
-               Space(Tile(0, 1), Raised),
-               Space(Tile(3, 1), Raised))
+        List(Space(Tile(3, 0), Floor),
+             Space(Tile(5, 0), Floor),
+             Space(Tile(0, 1), Raised),
+             Space(Tile(3, 1), Raised))
       )
     }
     

@@ -32,7 +32,11 @@
 package ecidice
 package model
 
-object Visibility extends Enumeration {
-  val Visible = Value("visible")
-  val Hidden = Value("hidden")
+sealed trait Visibility
+
+object Visibility {
+  case object Visible extends Visibility
+  case object Hidden extends Visibility
+  
+  val values = Set(Visible, Hidden)
 }

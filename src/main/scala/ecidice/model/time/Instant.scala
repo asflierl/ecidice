@@ -33,14 +33,15 @@ package ecidice
 package model
 package time
 
-/**
- * An instant in time.
- */
-case class Instant(time: Double = 0d) extends Ordered[Instant] {
+case class Instant(time: Double = 0d) {
   require(time >= 0d, "an instant may never be negative")
-  
+
   def +(duration: Duration) = Instant(time + duration.seconds)
   def -(duration: Duration) = Instant(time - duration.seconds)
-  def -(other: Instant)= Duration((time - other.time).abs)
-  def compare(other: Instant) = time.compare(other.time)
+  def -(other: Instant) = Duration((time - other.time).abs)
+}
+object Instant extends (Double => Instant) {
+  implicit object InstantDefaultOrdering extends Ordering[Instant] {
+    def compare(a: Instant, b: Instant) = implicitly[Ordering[Double]] compare (a time, b time)
+  }
 }

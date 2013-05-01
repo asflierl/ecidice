@@ -59,7 +59,7 @@ case class Die(top: Int, right: Int, front: Int) extends Contents {
   
   private def opposite(eyes: Int) = 7 - eyes
   
-  def transform(how: Transform.Value) = how match {
+  def transform(how: Transform) = how match {
     case RotateBackward => Die(front, right, bottom)
     case RotateForward => Die(back, right, top)
     case RotateRight => Die(left, top, front)

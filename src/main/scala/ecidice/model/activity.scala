@@ -34,11 +34,7 @@ package model
 
 import time._
 
-/**
- * Indicates that a game event is timed and needs to be tracked/managed.
- * 
- * @author Andreas Flierl
- */
+/** Indicates that a game event is timed and needs to be tracked/managed. */
 sealed trait Activity {
   def start: Instant
   def duration: Duration
@@ -61,13 +57,13 @@ case class DieMovement(
   die: Die,
   origin: Space,
   destination: Space, 
-  transform: Transform.Value,
+  transform: Transform,
   controller: Player,
   start: Instant
 ) extends Activity with Contents {
   def duration = DieMovement.duration
 }
-object DieMovement extends ((Die, Space, Space, Transform.Value, Player, Instant) => DieMovement) {
+object DieMovement extends ((Die, Space, Space, Transform, Player, Instant) => DieMovement) {
   val duration = Duration(.25d)
 }
 

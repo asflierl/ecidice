@@ -32,9 +32,13 @@
 package ecidice
 package model
 
-object Direction extends Enumeration {
-  val Backward = Value("backward")
-  val Forward = Value("forward")
-  val Left = Value("left")
-  val Right = Value("right")
+sealed trait Direction
+
+object Direction {
+  object Backward extends Direction
+  object Forward extends Direction
+  object Left extends Direction
+  object Right extends Direction
+  
+  val values = Set(Backward, Forward, Left, Right)
 }

@@ -56,7 +56,7 @@ trait Mode[A <: Mode[A]] { this: A =>
   
   def control(player: Player): Valid[A]
   def relinquish(player: Player): A
-  def move(player: Player, dir: Direction.Value, now: Instant): Valid[A]
+  def move(player: Player, dir: Direction, now: Instant): Valid[A]
   
   def copy(board: Board = board, 
            locks: Set[DieLock[_]] = locks,

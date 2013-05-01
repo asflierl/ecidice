@@ -41,7 +41,7 @@ import org.specs2._
 object TileSpec extends UnitSpec {
   "A tile" should {
     "be consistent in equivalence and ordering" in check {
-      (a: Tile, b: Tile) => (a == b) must be equalTo ((a compare b) == 0)
+      (a: Tile, b: Tile) => (a == b) must be equalTo (implicitly[Ordering[Tile]].compare(a, b) == 0)
     }
     
     "have correct ordering behaviour" in {

@@ -33,13 +33,15 @@ package ecidice
 package model
 package time
 
-/**
- * A duration in seconds.
- */
-case class Duration(seconds: Double = 0d) extends Ordered[Duration] {
+case class Duration(seconds: Double = 0d) {
   require(seconds >= 0d, "a duration may never be negative")
   
   def +(other: Duration) = Duration(seconds + other.seconds)
   def +(instant: Instant) = instant + this 
-  def compare(other: Duration) = seconds.compare(other.seconds)
+}
+
+object Duration extends (Double => Duration) {
+  implicit object DurationDefaultOrdering extends Ordering[Duration] {
+    def compare(a: Duration, b: Duration): Int = implicitly[Ordering[Double]] compare (a seconds, b seconds)
+  }
 }

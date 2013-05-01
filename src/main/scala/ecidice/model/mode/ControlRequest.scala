@@ -50,10 +50,8 @@ import scalaz.Scalaz.ToValidationV
  * control is granted on that die.
  * 
  * In all other cases, the control request will be rejected.
- * 
- * @author Andreas Flierl
  */
-trait ControlRequest[A <: Mode[A]] extends Helpers { this: A =>
+trait ControlRequest[A <: Mode[A]] { this: A =>
   def control(player: Player): Valid[A] = {
     def controlTile(loc: Tile): Valid[A] = 
       if (! isEmpty(board(loc.raised))) controlSpace(loc.raised)  

@@ -32,9 +32,7 @@
 package ecidice
 package model
 
-/**
- * Marker trait for things that can occupy a space.
- */
+/** Something that can occupy a space. */
 trait Contents
 
 case object Empty extends Contents

@@ -54,7 +54,7 @@ object InstantSpec extends UnitSpec {
       Instant(1)  ! Instant(0)  ! 1        |
       Instant(0)  ! Instant(1)  ! -1       |
       Instant(42) ! Instant(42) ! 0        | {
-        (a, b, result) => a.compare(b) must be equalTo result
+        (a, b, result) => implicitly[Ordering[Instant]].compare(a, b) must be equalTo result
       }
     }
     
