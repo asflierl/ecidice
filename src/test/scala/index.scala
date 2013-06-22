@@ -36,7 +36,7 @@ import ecidice._
 
 @RunWith(classOf[JUnitRunner])
 class index extends AcceptanceSpec { def is =
-  "ecidice".title                                                                                  ^
+  "ecidice".title.urlIs("index.html")                                                              ^
                                                                                                   p^
     "ecidice consists of"                                                                          ^
                                                                                                   p^
