@@ -115,7 +115,7 @@ object EcidiceBuild extends Build {
       
       jmeClean <<= jmeDir map IO.delete,
       
-      jmeURL := SVNURL parseURIEncoded "http://jmonkeyengine.googlecode.com/svn/tags/jme3-3.0rc2",
+      jmeURL := SVNURL parseURIEncoded "http://jmonkeyengine.googlecode.com/svn/trunk",
       
       jmeDir <<= baseDirectory / "jme",
       
