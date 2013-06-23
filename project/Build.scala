@@ -115,12 +115,7 @@ object EcidiceBuild extends Build {
         }
         
         work
-      },
-      
-      resolvers ++= Seq(
-        "Typesafe Repository"   at "http://repo.typesafe.com/typesafe/releases/",
-        "Sonatype Snapshots"    at "http://oss.sonatype.org/content/repositories/snapshots",
-        "Sonatype Releases"     at "http://oss.sonatype.org/content/repositories/releases")
+      }
     )
   
   val jmeDir = SettingKey[File]("jme-dir", "directory where JME will be checked out to from SVN")
