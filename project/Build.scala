@@ -54,9 +54,6 @@ object EcidiceBuild extends Build {
         "org.pegdown" % "pegdown" % "1.2.1" % "test",
         "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
         "org.mockito" % "mockito-all" % "1.9.5" % "test"),
-  
-      
-      offline := false,
       
       jmeURL := SVNURL parseURIEncoded "http://jmonkeyengine.googlecode.com/svn/trunk",
       jmeRevision := HEAD, // HEAD or rev(number)
@@ -67,6 +64,12 @@ object EcidiceBuild extends Build {
       logLevel in antTaskKey("jar") := Level.Error,
       logLevel in antTaskKey("clean") := Level.Error,
       logLevel in antStartServer := Level.Error,
+
+      antServerLogger := { logger => new ProcessLogger {
+        def buffer[T](f: ⇒ T): T = f
+        def error(s: ⇒ String): Unit = logger warn s
+        def info(s: ⇒ String): Unit = logger info s
+      }},
       
       jmeClean <<= jmeDir map IO.delete,
       

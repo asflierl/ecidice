@@ -18,3 +18,4 @@ syntax: regexp
 ^liblwjgl\.(jnilib|dylib|so|dll)$
 ^libjinput-([^.]+)\.(jnilib|dylib|so|dll)$
 ^libbulletjme\.(jnilib|dylib|so|dll)$
+^user.sbt$
