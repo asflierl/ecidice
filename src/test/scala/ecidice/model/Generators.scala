@@ -33,8 +33,6 @@ package ecidice
 package model
 
 import org.scalacheck._
-import Prop.forAll
-import Arbitrary.arbitrary
 import Gen._
 import time._
 

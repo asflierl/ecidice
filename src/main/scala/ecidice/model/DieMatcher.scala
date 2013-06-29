@@ -32,10 +32,8 @@
 package ecidice
 package model
 
-import Level._
 import Board.spacesToTiles
 
-import collection.breakOut
 import annotation.tailrec
 
 final class DieMatcher(board: Board) {

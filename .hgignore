@@ -17,5 +17,6 @@ syntax: regexp
 ^openal\.(jnilib|dylib|so|dll)$
 ^liblwjgl\.(jnilib|dylib|so|dll)$
 ^libjinput-([^.]+)\.(jnilib|dylib|so|dll)$
+^\.idea$
 ^libbulletjme\.(jnilib|dylib|so|dll)$
-^user.sbt$
+^\.idea_modules$
