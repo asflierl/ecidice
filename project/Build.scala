@@ -1,12 +1,11 @@
 import sbt._
 import Keys._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin.{EclipseKeys, EclipseCreateSrc}
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.wc.{SVNClientManager, SVNRevision}
 import org.tmatesoft.svn.core.wc.SVNRevision.{HEAD, WORKING, create => rev}
 import org.tmatesoft.svn.core.SVNDepth.INFINITY
 import de.johoop.ant4sbt.Ant4Sbt._
-import Def.{bind, value, Setting}
+import Def.bind
 
 object EcidiceBuild extends Build {
   lazy val root = Project(id = "ecidice", base = file("."))
@@ -18,15 +17,13 @@ object EcidiceBuild extends Build {
       version := "1.0",
       organization := "eu.flierl",
       
-      scalaVersion := "2.10.2",
+      scalaVersion := "2.10.3",
       scalacOptions := Seq("-deprecation", "-unchecked", "-optimise", "-language:_", "-encoding", "UTF-8"),
       autoCompilerPlugins := true,
-      addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.2"),
+      addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.3"),
       
       fork in run := true,
       mainClass in (Compile, run) := Some("ecidice.Main"),
-      
-      EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource,
       
       testOptions := Seq(
         Tests.Filter(_ == "index"), 
@@ -39,20 +36,14 @@ object EcidiceBuild extends Build {
       },
   
       libraryDependencies ++= Seq(
-        "org.scalaz" %% "scalaz-core" % "7.0.3",
-        "org.scalaz" %% "scalaz-effect" % "7.0.3",
-        "com.chuusai" %% "shapeless" % "1.2.4",
+        "org.scalaz" %% "scalaz-core" % "7.0.4",
+        "org.scalaz" %% "scalaz-effect" % "7.0.4",
+        "com.chuusai" % "shapeless_2.10.2" % "2.0.0-M1",
         "com.github.nscala-time" %% "nscala-time" % "0.6.0",
         "org.spire-math" %% "spire" % "0.6.1",
-        "com.typesafe.akka" %% "akka-actor" % "2.2.1",
+        "com.typesafe.akka" %% "akka-actor" % "2.2.3",
         
-        "org.specs2" %% "specs2" % "2.2.2" % "test",
-        "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-        "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-        "junit" % "junit" % "4.11" % "test",
-        "org.pegdown" % "pegdown" % "1.2.1" % "test",
-        "org.hamcrest" % "hamcrest-all" % "1.3" % "test",
-        "org.mockito" % "mockito-all" % "1.9.5" % "test"),
+        "org.specs2" %% "specs2" % "2.3.3" % "test"),
       
       jmeURL := SVNURL parseURIEncoded "http://jmonkeyengine.googlecode.com/svn/trunk",
       jmeRevision := HEAD, // HEAD or rev(number)
