@@ -32,8 +32,7 @@
 package ecidice
 package model
 
-import org.scalacheck._
-import Gen._
+import org.scalacheck.{ Gen, Arbitrary }, Gen._
 import time._
 
 object Generators {

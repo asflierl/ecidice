@@ -20,3 +20,4 @@ syntax: regexp
 ^\.idea$
 ^libbulletjme\.(jnilib|dylib|so|dll)$
 ^\.idea_modules$
+\.iml$

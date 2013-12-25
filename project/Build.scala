@@ -36,14 +36,14 @@ object EcidiceBuild extends Build {
       },
   
       libraryDependencies ++= Seq(
-        "org.scalaz" %% "scalaz-core" % "7.0.4",
-        "org.scalaz" %% "scalaz-effect" % "7.0.4",
-        "com.chuusai" % "shapeless_2.10.2" % "2.0.0-M1",
+        "org.scalaz" %% "scalaz-core" % "7.0.5",
+        "org.scalaz" %% "scalaz-effect" % "7.0.5",
+        "com.chuusai" % "shapeless_2.10.3" % "2.0.0-M1",
         "com.github.nscala-time" %% "nscala-time" % "0.6.0",
-        "org.spire-math" %% "spire" % "0.6.1",
+        "org.spire-math" %% "spire" % "0.7.1",
         "com.typesafe.akka" %% "akka-actor" % "2.2.3",
         
-        "org.specs2" %% "specs2" % "2.3.3" % "test"),
+        "org.specs2" %% "specs2" % "2.3.6" % "test"),
       
       jmeURL := SVNURL parseURIEncoded "http://jmonkeyengine.googlecode.com/svn/trunk",
       jmeRevision := HEAD, // HEAD or rev(number)
